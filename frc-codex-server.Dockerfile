@@ -1,4 +1,4 @@
-FROM amazoncorretto:21
+FROM amazoncorretto:22
 
 COPY gradle/ /gradle/
 COPY src/ /src/
