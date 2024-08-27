@@ -3,10 +3,12 @@ package com.frc.codex;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 public interface FilingIndexProperties {
-	public String companiesHouseDocumentApiBaseUrl();
-	public String companiesHouseInformationApiBaseUrl();
-	public String companiesHouseRestApiKey();
-	public String companiesHouseStreamApiBaseUrl();
-	public String companiesHouseStreamApiKey();
+	String companiesHouseDocumentApiBaseUrl();
+	String companiesHouseInformationApiBaseUrl();
+	String companiesHouseRestApiKey();
+	String companiesHouseStreamApiBaseUrl();
+	String companiesHouseStreamApiKey();
+	String fcaDataApiBaseUrl();
+	String fcaSearchApiUrl();
 }
 

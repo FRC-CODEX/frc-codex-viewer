@@ -1,28 +1,35 @@
 package com.frc.codex.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.frc.codex.FilingIndexProperties;
 
 @Component
+@Profile("application")
 public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String COMPANIES_HOUSE_DOCUMENT_API_BASE_URL = "COMPANIES_HOUSE_DOCUMENT_API_BASE_URL";
 	private static final String COMPANIES_HOUSE_INFORMATION_API_BASE_URL = "COMPANIES_HOUSE_INFORMATION_API_BASE_URL";
 	private static final String COMPANIES_HOUSE_REST_API_KEY = "COMPANIES_HOUSE_REST_API_KEY";
 	private static final String COMPANIES_HOUSE_STREAM_API_BASE_URL = "COMPANIES_HOUSE_STREAM_API_BASE_URL";
 	private static final String COMPANIES_HOUSE_STREAM_API_KEY = "COMPANIES_HOUSE_STREAM_API_KEY";
+	private static final String FCA_DATA_API_BASE_URL = "FCA_DATA_API_BASE_URL";
+	private static final String FCA_SEARCH_API_URL = "FCA_SEARCH_API_URL";
 	private static final String SECRETS_FILEPATH = "/run/secrets/frc-codex-server.secrets";
 	private final String companiesHouseDocumentApiBaseUrl;
 	private final String companiesHouseInformationApiBaseUrl;
 	private final String companiesHouseRestApiKey;
 	private final String companiesHouseStreamApiBaseUrl;
 	private final String companiesHouseStreamApiKey;
+	private final String fcaDataApiBaseUrl;
+	private final String fcaSearchApiUrl;
 
 	public FilingIndexPropertiesImpl() {
 		companiesHouseDocumentApiBaseUrl = System.getenv(COMPANIES_HOUSE_DOCUMENT_API_BASE_URL);
@@ -40,6 +47,9 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		} else {
 			companiesHouseStreamApiKey = System.getenv(COMPANIES_HOUSE_STREAM_API_KEY);
 		}
+
+		fcaDataApiBaseUrl = System.getenv(FCA_DATA_API_BASE_URL);
+		fcaSearchApiUrl = System.getenv(FCA_SEARCH_API_URL);
 	}
 
 	private static Properties getSecrets() {
@@ -78,4 +88,11 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		return companiesHouseStreamApiKey;
 	}
 
+	public String fcaDataApiBaseUrl() {
+		return fcaDataApiBaseUrl;
+	}
+
+	public String fcaSearchApiUrl() {
+		return fcaSearchApiUrl;
+	}
 }
