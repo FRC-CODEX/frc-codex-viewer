@@ -13,6 +13,8 @@ services:
       COMPANIES_HOUSE_DOCUMENT_API_BASE_URL: "https://document-api.companieshouse.gov.uk"
       COMPANIES_HOUSE_INFORMATION_API_BASE_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_STREAM_API_BASE_URL: "https://stream.companieshouse.gov.uk"
+      FCA_DATA_API_BASE_URL: "https://data.fca.org.uk/artefacts/"
+      FCA_SEARCH_API_URL: "https://api.data.fca.org.uk/search?index=fca-nsm-searchdata"
     secrets:
       - frc-codex-server.secrets
     ports:
