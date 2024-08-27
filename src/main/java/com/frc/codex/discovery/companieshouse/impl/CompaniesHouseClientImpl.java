@@ -13,6 +13,8 @@ import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.frc.codex.discovery.companieshouse.CompaniesHouseClient;
 import com.frc.codex.discovery.companieshouse.CompaniesHouseConfig;
 
+@Component
+@Profile("application")
 public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 	private static final Set<String> IGNORED_CONTENT_TYPES = Set.of("application/pdf");
 	private final Logger LOG = LoggerFactory.getLogger(CompaniesHouseClientImpl.class);
