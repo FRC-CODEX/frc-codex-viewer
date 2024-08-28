@@ -41,35 +41,13 @@ public class FcaClientImpl implements FcaClient {
 		this.searchApiUrl = properties.fcaSearchApiUrl();
 	}
 
+	/*
+	 * Builds a JSON request body for fetching FCA filings.
+	 * @param sinceDate The date to fetch filings since.
+	 * @param page The page number to fetch.
+	 * @return The JSON request body.
+	 */
 	private String buildJson(Date sinceDate, int page) {
-		/*
-		Builds JSON payload string in the following format:
-		{
-            "from": this.pageSize * (page-1),
-            "size": this.pageSize,
-            "sort": "submitted_date",
-            "sortorder": "desc",
-            "criteriaObj": {
-                "criteria": [
-                    {
-                        "name": "tag_esef",
-                        "value": [
-                            "Tagged"
-                        ]
-                    }
-                ],
-                "dateCriteria": [
-                    {
-                        "name": "submitted_date",
-                        "value": {
-                            "from": submittedAfterDate
-                            "to": null,
-                        }
-                    }
-                ]
-            }
-        }
-	 	*/
 		ObjectNode node = new ObjectMapper().createObjectNode();
 		node.put("from", this.pageSize * (page - 1));
 		node.put("size", this.pageSize);
@@ -87,6 +65,11 @@ public class FcaClientImpl implements FcaClient {
 		return node.toString();
 	}
 
+	/*
+	 * Fetches all FCA filings submitted since a given date.
+	 * @param sinceDate The date to fetch filings since.
+	 * @return A list of FCA filings.
+	 */
 	public List<FcaFiling> fetchAllSinceDate(Date sinceDate) {
 		List<FcaFiling> filings = new ArrayList<>();
 		int page = 1;
@@ -99,6 +82,14 @@ public class FcaClientImpl implements FcaClient {
 		return filings;
 	}
 
+	/*
+	 * Fetches a page of FCA filings submitted since a given date.
+	 * Returns true if there are more pages to fetch.
+	 * @param sinceDate The date to fetch filings since.
+	 * @param page The page number to fetch.
+	 * @param filings The list to add fetched filings to.
+	 * @return true if there are more pages to fetch.
+	 */
 	private boolean fetchPage(Date sinceDate, int page, List<FcaFiling> filings) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -110,10 +101,17 @@ public class FcaClientImpl implements FcaClient {
 				entity,
 				String.class
 		);
-		return processPage(response, filings);
+		int processed = processPage(response, filings);
+		return processed >= this.pageSize;
 	}
 
-	private boolean processPage(ResponseEntity<String> response, List<FcaFiling> filings) {
+	/*
+	 * Processes a page of FCA filings.
+	 * @param response The response to process.
+	 * @param filings The list to add fetched filings to.
+	 * @return The number of filings processed.
+	 */
+	private int processPage(ResponseEntity<String> response, List<FcaFiling> filings) {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root;
 		try {
@@ -121,7 +119,7 @@ public class FcaClientImpl implements FcaClient {
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
-		boolean foundAny = false;
+		int processed = 0;
 		for(JsonNode hit : root.get("hits").get("hits")) {
 			JsonNode source = hit.get("_source");
 			String downloadLink = source.get("download_link").asText();
@@ -138,8 +136,8 @@ public class FcaClientImpl implements FcaClient {
 					sequenceId,
 					submittedDate
 			));
-			foundAny = true;
+			processed += 1;
 		}
-		return foundAny;
+		return processed;
 	}
 }
