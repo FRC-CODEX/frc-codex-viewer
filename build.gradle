@@ -21,7 +21,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.3.2'
 	implementation 'com.google.guava:guava:31.0.1-jre'
 	implementation 'com.zaxxer:HikariCP:5.1.0'
-	implementation 'org.flywaydb:flyway-core:8.5.3'
+	implementation 'org.flywaydb:flyway-core:10.17.2'
 	implementation 'org.postgresql:postgresql:42.3.3'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.3'
 	implementation 'org.springframework.boot:spring-boot-starter-web:3.3.3'
