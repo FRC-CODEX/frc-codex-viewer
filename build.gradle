@@ -28,7 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web:3.3.4'
 	implementation 'software.amazon.awssdk:lambda:2.28.17'
 	implementation 'software.amazon.awssdk:s3:2.28.17'
-	implementation 'software.amazon.awssdk:sqs:2.28.17'
+	implementation 'software.amazon.awssdk:sqs:2.28.21'
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.14.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.4'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.2'
