@@ -1,9 +1,9 @@
-FROM node:22 AS node
+FROM node:23 AS node
 WORKDIR /usr/app
 COPY package.json ./
 RUN npm install
 
-FROM amazoncorretto:21
+FROM amazoncorretto:23
 
 COPY gradle/ /gradle/
 COPY build.gradle /build.gradle
