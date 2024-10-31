@@ -17,8 +17,9 @@ public class FilingResultRequest {
 	private final String error;
 	private final UUID filingId;
 	private final String logs;
-	private final String stubViewerUrl;
+	private final String filename;
 	private final String oimDirectory;
+	private final String stubViewerUrl;
 	private final boolean success;
 	private final Double totalProcessingTime;
 	private final Long totalUploadedBytes;
@@ -33,6 +34,7 @@ public class FilingResultRequest {
 		this.error = builder.error;
 		this.filingId = builder.filingId;
 		this.logs = builder.logs;
+		this.filename = builder.filename;
 		this.oimDirectory = builder.oimDirectory;
 		this.stubViewerUrl = builder.stubViewerUrl;
 		this.success = builder.success;
@@ -72,6 +74,10 @@ public class FilingResultRequest {
 
 	public String getLogs() {
 		return logs;
+	}
+
+	public String getFilename() {
+		return filename;
 	}
 
 	public String getOimDirectory() {
@@ -114,6 +120,7 @@ public class FilingResultRequest {
 		private String error;
 		private UUID filingId;
 		private String logs;
+		private String filename;
 		private String oimDirectory;
 		private String stubViewerUrl;
 		private boolean success;
@@ -167,11 +174,13 @@ public class FilingResultRequest {
 		public Builder json(JsonNode jsonNode) {
 			boolean success = Objects.equals(jsonNode.get("Success").asText(), "true");
 			String error = null;
+			String filename = null;
 			String oimDirectory = null;
 			String viewerEntrypoint = null;
 			if (!success) {
 				error = jsonNode.get("Error").asText();
 			} else {
+				filename = jsonNode.get("Filename").asText();
 				oimDirectory = jsonNode.get("OimDirectory").asText();
 				viewerEntrypoint = jsonNode.get("ViewerEntrypoint").asText();
 			}
@@ -197,6 +206,7 @@ public class FilingResultRequest {
 					.error(error)
 					.filingId(filingId)
 					.logs(logs)
+					.filename(filename)
 					.oimDirectory(oimDirectory)
 					.stubViewerUrl(viewerEntrypoint)
 					.success(success);
@@ -204,6 +214,11 @@ public class FilingResultRequest {
 
 		public Builder logs(String logs) {
 			this.logs = logs;
+			return this;
+		}
+
+		public Builder filename(String filename) {
+			this.filename = filename;
 			return this;
 		}
 

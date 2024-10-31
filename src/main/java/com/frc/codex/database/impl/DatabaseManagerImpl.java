@@ -64,6 +64,7 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 					"error = ?, " +
 					"logs = ?, " +
 					"status = ?, " +
+					"filename = ?, " +
 					"oim_directory = ?, " +
 					"stub_viewer_url = ?, " +
 					"company_name = COALESCE(company_name, ?), " +
@@ -80,6 +81,7 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			statement.setString(++i, filingResultRequest.getError());
 			statement.setString(++i, filingResultRequest.getLogs());
 			statement.setString(++i, filingResultRequest.getStatus().toString());
+			statement.setString(++i, filingResultRequest.getFilename());
 			statement.setString(++i, filingResultRequest.getOimDirectory());
 			statement.setString(++i, filingResultRequest.getStubViewerUrl());
 			statement.setString(++i, filingResultRequest.getCompanyName());
