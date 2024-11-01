@@ -1,12 +1,13 @@
 import datetime
 import logging
+import shutil
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
-from arelle.RuntimeOptions import RuntimeOptions  # type: ignore
 from arelle.api.Session import Session  # type: ignore
+from arelle.RuntimeOptions import RuntimeOptions  # type: ignore
 
 from processor.base.filing_download_result import FilingDownloadResult
 from processor.base.job_message import JobMessage
@@ -15,6 +16,8 @@ from processor.processor_options import ProcessorOptions
 
 VIEWER_HTML_FILENAME = 'ixbrlviewer.html'
 OIM_DIRECTORY = 'OIM'
+XBRL_CSV_DIRECTORY = 'CSV'
+XBRL_JSON_DIRECTORY = 'JSON'
 
 
 logger = logging.getLogger(__name__)
@@ -75,7 +78,7 @@ class IxbrlViewerWorker(Worker):
             elif f.name.endswith('.json'):
                 xbrl_json_files.append(f)
             else:
-                logger.warning(f'Unexpected file found in OIM directory: {f.name}')
+                logger.error(f'Unexpected file found in OIM directory: {f.name}')
         if len(xbrl_json_files) == 0:
             return WorkerResult(
                 job_message.filing_id,
@@ -88,6 +91,14 @@ class IxbrlViewerWorker(Worker):
                 error='Arelle reported success but no xBRL-CSV reports found. Check the logs for details.',
                 logs=result.logs
             )
+        xbrl_csv_path = oim_path / XBRL_CSV_DIRECTORY
+        xbrl_csv_path.mkdir(exist_ok=True)
+        for f in xbrl_csv_files:
+            shutil.move(f, xbrl_csv_path)
+        xbrl_json_path = oim_path / XBRL_JSON_DIRECTORY
+        xbrl_json_path.mkdir(exist_ok=True)
+        for f in xbrl_json_files:
+            shutil.move(f, xbrl_json_path)
         return WorkerResult(
             job_message.filing_id,
             success=True,
