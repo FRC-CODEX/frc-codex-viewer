@@ -27,6 +27,7 @@ def lambda_handler(event, context):
         'FilingId': worker_result.filing_id,
         'Logs': worker_result.logs,
         'Success': worker_result.success,
+        "Filename": worker_result.filename,
         'ViewerEntrypoint': worker_result.viewer_entrypoint,
         'OimDirectory': worker_result.oim_directory,
         # Analytics

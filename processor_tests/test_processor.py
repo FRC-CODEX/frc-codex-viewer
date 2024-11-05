@@ -2,6 +2,7 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
+from processor.base.filing_download_result import FilingDownloadResult
 from processor.base.job_message import JobMessage
 from processor.base.worker import WorkerResult
 from processor.processor import Processor
@@ -45,7 +46,7 @@ class TestProcessor(TestCase):
                 success=False,
             ),
         }
-        mock_get_target_path.return_value = (Path('download_url1'), [])
+        mock_get_target_path.return_value = FilingDownloadResult(Path('download_url1'), Path('filing.zip'), [])
         upload_manager = MockUploadManager()
         processor = Processor(
             download_manager=Mock(),

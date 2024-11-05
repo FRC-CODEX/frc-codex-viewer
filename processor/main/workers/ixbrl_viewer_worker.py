@@ -8,6 +8,7 @@ from typing import cast
 from arelle.RuntimeOptions import RuntimeOptions  # type: ignore
 from arelle.api.Session import Session  # type: ignore
 
+from processor.base.filing_download_result import FilingDownloadResult
 from processor.base.job_message import JobMessage
 from processor.base.worker import Worker, WorkerResult
 from processor.processor_options import ProcessorOptions
@@ -37,20 +38,21 @@ class IxbrlViewerWorker(Worker):
     def work(
             self,
             job_message: JobMessage,
-            target_path: Path,
+            filingDownload: FilingDownloadResult,
             viewer_directory: Path,
             taxonomy_package_urls: list[str],
     ) -> WorkerResult:
+        assert filingDownload.target_path is not None
         packages = list(taxonomy_package_urls)
         report_path = None
-        for parent in target_path.parents:
+        for parent in filingDownload.target_path.parents:
             if parent.name == 'reports':
                 report_path = parent
                 continue
             if report_path and zipfile.is_zipfile(parent):
                 packages.append(str(parent))
                 break
-        result = self._generate_viewer(target_path, viewer_directory, packages)
+        result = self._generate_viewer(filingDownload.target_path, viewer_directory, packages)
         if not result.success:
             return WorkerResult(
                 job_message.filing_id,
@@ -92,6 +94,7 @@ class IxbrlViewerWorker(Worker):
             viewer_entrypoint=VIEWER_HTML_FILENAME,
             oim_directory=OIM_DIRECTORY,
             logs=result.logs,
+            filename=filingDownload.download_path.name,
             company_name=result.company_name,
             company_number=result.company_number,
             document_date=result.document_date,

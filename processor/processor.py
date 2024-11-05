@@ -6,6 +6,7 @@ import zipfile
 from pathlib import Path
 
 from processor.base.download_manager import DownloadManager
+from processor.base.filing_download_result import FilingDownloadResult
 from processor.base.job_message import JobMessage
 from processor.base.queue_manager import QueueManager
 from processor.base.upload_manager import UploadManager
@@ -27,7 +28,7 @@ class Processor:
         self._upload_manager = upload_manager
         self._worker_factory = worker_factory
 
-    def _download_filing(self, job_message: JobMessage, directory: Path) -> tuple[Path | None, list[str]]:
+    def _download_filing(self, job_message: JobMessage, directory: Path) -> FilingDownloadResult:
         filing_path = self._download_manager.download_filing(
             job_message.filing_id,
             job_message.registry_code,
@@ -36,16 +37,16 @@ class Processor:
         )
         return self._get_target_path(filing_path)
 
-    def _get_target_path(self, filing_path: Path) -> tuple[Path | None, list[str]]:
+    def _get_target_path(self, filing_path: Path) -> FilingDownloadResult:
         if not zipfile.is_zipfile(filing_path):
-            return filing_path, []
+            return FilingDownloadResult(filing_path, filing_path, [])
         target_path = None
         with zipfile.ZipFile(filing_path) as zip_file:
             for file in zip_file.namelist():
                 if file.endswith('.html') or file.endswith('.xhtml'):
                     target_path = filing_path / file
                     break
-            return target_path, zip_file.namelist()
+            return FilingDownloadResult(filing_path, target_path, zip_file.namelist())
 
     def _handle_message(self, job_message: JobMessage, queue_manager: QueueManager) -> WorkerResult:
         logger.info(
@@ -77,18 +78,18 @@ class Processor:
                 # Download filing
                 download_start_ts = time.perf_counter()
                 taxonomy_package_urls = self._download_manager.get_package_urls()
-                target_path, namelist = self._download_filing(job_message, temp_dir_path)
+                filingDownloadResult = self._download_filing(job_message, temp_dir_path)
 
-                if not target_path:
+                if not filingDownloadResult.target_path:
                     logger.error(
                         "Target path could not be determined in filing from %s: (Message: %s, Filing: %s)",
-                        namelist, job_message.message_id, job_message.filing_id
+                        filingDownloadResult.namelist, job_message.message_id, job_message.filing_id
                     )
                     return WorkerResult(
                         job_message.filing_id,
-                        error=f'Target path could not be determined in filing from {namelist}.'
+                        error=f'Target path could not be determined in filing from {filingDownloadResult.namelist}.'
                     )
-                logger.info('Using target path: %s', target_path)
+                logger.info('Using target path: %s', filingDownloadResult.target_path)
                 # Prepare directory for viewer files
 
                 viewer_directory = temp_dir_path / 'viewer'
@@ -98,7 +99,7 @@ class Processor:
                 worker = self._worker_factory.create_worker(job_message)
                 worker_result = worker.work(
                     job_message,
-                    target_path,
+                    filingDownloadResult,
                     viewer_directory,
                     taxonomy_package_urls
                 )

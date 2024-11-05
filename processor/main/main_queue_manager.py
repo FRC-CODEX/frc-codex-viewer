@@ -102,6 +102,11 @@ class MainQueueManager(QueueManager):
             }),
             'DataType': 'String'
         }
+        if worker_result.filename:
+            message_attributes['Filename'] = {
+                'StringValue': worker_result.filename,
+                'DataType': 'String'
+            }
         if worker_result.viewer_entrypoint:
             message_attributes['ViewerEntrypoint'] = {
                 'StringValue': worker_result.viewer_entrypoint,

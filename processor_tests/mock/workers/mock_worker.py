@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from processor.base.filing_download_result import FilingDownloadResult
 from processor.base.job_message import JobMessage
 from processor.base.worker import Worker, WorkerResult
 
@@ -12,7 +13,7 @@ class MockWorker(Worker):
     def work(
             self,
             job_message: JobMessage,
-            target_path: Path,
+            filingDownload: FilingDownloadResult,
             viewer_directory: Path,
             taxonomy_package_urls: list[str]
     ) -> WorkerResult:

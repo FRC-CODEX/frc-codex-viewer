@@ -3,6 +3,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 
+from processor.base.filing_download_result import FilingDownloadResult
 from processor.base.job_message import JobMessage
 
 
@@ -16,6 +17,7 @@ class WorkerResult:
     document_date: datetime.datetime | None = None
     viewer_entrypoint: str = ''
     oim_directory: str = ''
+    filename: str = ''
     success: bool = False
 
     # Analytics
@@ -32,7 +34,7 @@ class Worker:
     def work(
             self,
             job_message: JobMessage,
-            target_path: Path,
+            filingDownload: FilingDownloadResult,
             viewer_directory: Path,
             taxonomy_package_urls: list[str]
     ) -> WorkerResult:
