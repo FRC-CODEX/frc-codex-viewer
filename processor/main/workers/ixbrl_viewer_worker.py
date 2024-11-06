@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import cast
 
 from arelle.api.Session import Session  # type: ignore
+from arelle.packages.report.DetectReportPackage import isReportPackageExtension  # type: ignore
 from arelle.RuntimeOptions import RuntimeOptions  # type: ignore
 
 from processor.base.filing_download_result import FilingDownloadResult
@@ -99,6 +100,10 @@ class IxbrlViewerWorker(Worker):
         xbrl_json_path.mkdir(exist_ok=True)
         for f in xbrl_json_files:
             shutil.move(f, xbrl_json_path)
+        if isReportPackageExtension(filingDownload.download_path.name):
+            # Save packages for constructing OIM versions of the packages.
+            oim_package_dest = oim_path / filingDownload.download_path.name
+            shutil.copy(filingDownload.download_path, oim_package_dest)
         return WorkerResult(
             job_message.filing_id,
             success=True,
