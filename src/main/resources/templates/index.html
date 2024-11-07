@@ -349,14 +349,14 @@
                     </div>
                     <div class="govuk-grid-column-one-third">
                         <div class="govuk-button-group">
-                            <a th:href="${filing.getDownloadUrl()}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-                                Filing
+                            <a th:href="${filing.getViewerLink()}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                                Viewer
                             </a>
                             <a th:href="${filing.getOIMDownloadLink()}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
                                 Download
                             </a>
-                            <a th:href="${filing.getViewerLink()}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-                                Viewer
+                            <a th:href="${filing.getDownloadUrl()}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+                                Filing
                             </a>
                         </div>
                     </div>
