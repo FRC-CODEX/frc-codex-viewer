@@ -25,7 +25,11 @@ public class CompaniesHouseHttpClient {
 	private final HttpEntity<String> getJsonEntity;
 	private final RestTemplate restTemplate;
 
-	public CompaniesHouseHttpClient(CompaniesHouseRateLimiter rateLimiter, String baseUrl, String apiKey) {
+	public CompaniesHouseHttpClient(
+		CompaniesHouseRateLimiter rateLimiter,
+		RestTemplate restTemplate,
+		String baseUrl,
+		String apiKey) {
 		this.rateLimiter = requireNonNull(rateLimiter);
 		this.baseUrl = requireNonNull(baseUrl);
 		HttpHeaders headers = new HttpHeaders();
@@ -33,7 +37,7 @@ public class CompaniesHouseHttpClient {
 		// https://developer-specs.company-information.service.gov.uk/guides/authorisation
 		headers.setBasicAuth(requireNonNull(apiKey), "");
 		this.getJsonEntity = new HttpEntity<>("parameters", headers);
-		this.restTemplate = new RestTemplate();
+		this.restTemplate = requireNonNull(restTemplate);
 	}
 
 	public String get(String relativeUrl) {

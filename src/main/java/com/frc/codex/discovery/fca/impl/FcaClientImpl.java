@@ -1,7 +1,7 @@
 package com.frc.codex.discovery.fca.impl;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-
+import static java.util.Objects.requireNonNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,10 +40,10 @@ public class FcaClientImpl implements FcaClient {
 	private final RestTemplate restTemplate;
 	private final String searchApiUrl;
 
-	public FcaClientImpl(FilingIndexProperties properties) {
+	public FcaClientImpl(FilingIndexProperties properties, RestTemplate restTemplate) {
 		this.dataApiBaseUrl = properties.fcaDataApiBaseUrl();
 		this.pageSize = 1000;
-		this.restTemplate = new RestTemplate();
+		this.restTemplate = requireNonNull(restTemplate);
 		this.searchApiUrl = properties.fcaSearchApiUrl();
 	}
 

@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
-
+import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,8 +56,8 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		String streamApiKey = config.streamApiKey();
 		if (restApiKey != null && streamApiKey != null) {
 			this.enabled = true;
-			this.document = new CompaniesHouseHttpClient(rateLimiter, config.documentApiBaseUrl(), config.restApiKey());
-			this.information = new CompaniesHouseHttpClient(rateLimiter, config.informationApiBaseUrl(), config.restApiKey());
+			this.document = new CompaniesHouseHttpClient(rateLimiter, new RestTemplate(), config.documentApiBaseUrl(), config.restApiKey());
+			this.information = new CompaniesHouseHttpClient(rateLimiter, new RestTemplate(), config.informationApiBaseUrl(), config.restApiKey());
 			this.stream = new CompaniesHouseStreamClient(config.streamApiBaseUrl(), config.streamApiKey());
 		} else {
 			LOG.info("Companies House API key(s) not set. Client disabled.");

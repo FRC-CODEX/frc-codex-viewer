@@ -1,5 +1,6 @@
 package com.frc.codex.filingindex.controller;
 
+import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,6 +48,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 @RestController
 public class ViewController {
 	private static final Logger LOG = LoggerFactory.getLogger(ViewController.class);
+
 	private final DatabaseManager databaseManager;
 	private final LambdaManager lambdaManager;
 	private final FilingIndexProperties properties;
@@ -54,18 +56,19 @@ public class ViewController {
 	private final S3Client s3Client;
 	private final ConcurrentHashMap<UUID, CompletableFuture<InvokeResponse>> invokeFutures;
 	private final RateLimiter publicPageRateLimiter;
+
 	public ViewController(
 			FilingIndexProperties properties,
 			DatabaseManager databaseManager,
-			LambdaManager lambdaManager
+			LambdaManager lambdaManager,
+			RestTemplate restTemplate,
+			S3Client s3Client
 	) {
-		this.properties = properties;
-		this.databaseManager = databaseManager;
-		this.lambdaManager = lambdaManager;
-		this.restTemplate = new RestTemplate();
-		this.s3Client = S3Client.builder()
-				.forcePathStyle(true)
-				.build();
+		this.properties = requireNonNull(properties);
+		this.databaseManager = requireNonNull(databaseManager);
+		this.lambdaManager = requireNonNull(lambdaManager);
+		this.restTemplate = requireNonNull(restTemplate);
+		this.s3Client = requireNonNull(s3Client);
 		this.invokeFutures = new ConcurrentHashMap<>();
 		this.publicPageRateLimiter = new RateLimiter(
 				properties.companiesHouseRapidRateLimit(),

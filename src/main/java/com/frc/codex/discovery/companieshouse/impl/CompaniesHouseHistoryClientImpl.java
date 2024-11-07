@@ -38,12 +38,12 @@ public class CompaniesHouseHistoryClientImpl implements CompaniesHouseHistoryCli
 	private final Pattern monthlyHrefPattern;
 	private final RestTemplate restTemplate;
 
-	public CompaniesHouseHistoryClientImpl() {
+	public CompaniesHouseHistoryClientImpl(RestTemplate restTemplate) {
 		this.archiveHrefPattern = Pattern.compile("archive/Accounts_Monthly_Data-.*\\.zip");
 		this.dailyHrefPattern = Pattern.compile("Accounts_Bulk_Data-.*\\.zip");
 		this.hrefPattern = Pattern.compile("<a href=\"(.*?)\">");
 		this.monthlyHrefPattern = Pattern.compile("Accounts_Monthly_Data-.*\\.zip");
-		this.restTemplate = new RestTemplate();
+		this.restTemplate = requireNonNull(restTemplate);
 	}
 
 	@Override
