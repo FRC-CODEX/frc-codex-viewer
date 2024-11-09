@@ -95,6 +95,17 @@ public class Filing {
 		return filename;
 	}
 
+	public String getFilenameStem() {
+		if (filename == null) {
+			return null;
+		}
+		int dotIndex = filename.lastIndexOf('.');
+		if (dotIndex > 0) {
+			return filename.substring(0, dotIndex);
+		}
+		return filename;
+	}
+
 	public String getFilingType() {
 		return filingType;
 	}
@@ -127,8 +138,12 @@ public class Filing {
 		return oimDirectory;
 	}
 
-	public String getOIMDownloadLink() {
-		return "download/" + filingId.toString() + "/oim";
+	public String getXbrlCsvUrl() {
+		return "download/" + filingId.toString() + "/csv";
+	}
+
+	public String getXbrlJsonUrl() {
+		return "download/" + filingId.toString() + "/json";
 	}
 
 	public String getViewerLink() {

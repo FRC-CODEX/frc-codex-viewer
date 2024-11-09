@@ -4,12 +4,10 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.slf4j.Logger;
@@ -33,6 +31,8 @@ import com.frc.codex.model.Filing;
 import com.frc.codex.model.FilingPayload;
 import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
+import com.frc.codex.model.OimFormat;
+import com.frc.codex.oim.ReportPackageProvider;
 import com.frc.codex.tools.RateLimiter;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,9 +41,6 @@ import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import software.amazon.awssdk.services.s3.model.S3Object;
 
 @RestController
 public class ViewController {
@@ -54,6 +51,7 @@ public class ViewController {
 	private final FilingIndexProperties properties;
 	private final RestTemplate restTemplate;
 	private final S3Client s3Client;
+	private final ReportPackageProvider reportPackageProvider;
 	private final ConcurrentHashMap<UUID, CompletableFuture<InvokeResponse>> invokeFutures;
 	private final RateLimiter publicPageRateLimiter;
 
@@ -62,13 +60,15 @@ public class ViewController {
 			DatabaseManager databaseManager,
 			LambdaManager lambdaManager,
 			RestTemplate restTemplate,
-			S3Client s3Client
+			S3Client s3Client,
+			ReportPackageProvider reportPackageProvider
 	) {
 		this.properties = requireNonNull(properties);
 		this.databaseManager = requireNonNull(databaseManager);
 		this.lambdaManager = requireNonNull(lambdaManager);
 		this.restTemplate = requireNonNull(restTemplate);
 		this.s3Client = requireNonNull(s3Client);
+		this.reportPackageProvider = requireNonNull(reportPackageProvider);
 		this.invokeFutures = new ConcurrentHashMap<>();
 		this.publicPageRateLimiter = new RateLimiter(
 				properties.companiesHouseRapidRateLimit(),
@@ -115,11 +115,17 @@ public class ViewController {
 		return model;
 	}
 
-	@GetMapping("/download/{filingId}/oim")
+	@GetMapping("/download/{filingId}/{format}")
 	@ResponseBody
-	public void downloadOim(
+	public void download(
 			HttpServletResponse response,
-			@PathVariable("filingId") String filingId) throws IOException {
+			@PathVariable("filingId") String filingId,
+			@PathVariable("format") String format) throws IOException, InterruptedException {
+		OimFormat oimFormat = OimFormat.fromFormat(format);
+		if (oimFormat == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
 		UUID filingUuid = UUID.fromString(filingId);
 		Filing filing = databaseManager.getFiling(filingUuid);
 		boolean internalError = false;
@@ -132,42 +138,21 @@ public class ViewController {
 				this.processFiling(filing);
 			}
 			internalError = !waitForFiling(filingUuid);
+			// Reload the filing object from the database now with processed filename details.
+			filing = databaseManager.getFiling(filingUuid);
 		}
-		if (internalError) {
+		if (internalError || filing.getFilename() == null) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 			response.getWriter().write("Failed to process filing.");
 			return;
 		}
-		filing = databaseManager.getFiling(filingUuid);
-		String s3Prefix = filingId + "/" + filing.getOimDirectory() + "/";
-		ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
-				.bucket(properties.s3ResultsBucketName())
-				.prefix(s3Prefix)
-				.build();
-
-		ListObjectsV2Response listObjectsResponse = s3Client.listObjectsV2(listObjectsRequest);
-
 		response.setContentType("application/zip");
 		response.setStatus(HttpServletResponse.SC_OK);
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
-		String filename = filing.getCompanyName().replace(" ", "_") + "-"
-				+ dateTimeFormatter.format(filing.getDocumentDate()) + ".zip";
+		String filename = String.format("%s.%s.zip", filing.getFilenameStem(), oimFormat.getFormat().toLowerCase());
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-
 		try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
-			for (S3Object s3Object : listObjectsResponse.contents()) {
-				GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-						.bucket(properties.s3ResultsBucketName())
-						.key(s3Object.key())
-						.build();
-
-				try (ResponseInputStream<GetObjectResponse> responseInputStream = s3Client.getObject(getObjectRequest)) {
-					zipOutputStream.putNextEntry(new ZipEntry(s3Object.key().substring(s3Prefix.length())));
-					responseInputStream.transferTo(zipOutputStream);
-					zipOutputStream.closeEntry();
-				}
-			}
+			reportPackageProvider.writeReportPackage(filing, oimFormat, zipOutputStream);
 		}
 	}
 
