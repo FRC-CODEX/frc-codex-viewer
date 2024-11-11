@@ -311,7 +311,8 @@ public class ViewController {
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			LOG.error("Encountered exception while awaiting Lambda result for filing: {}", filingUuid, e);
+			return false;
 		}
-		return false;
+		return true;
 	}
 }
