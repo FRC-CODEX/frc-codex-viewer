@@ -74,6 +74,10 @@ services:
   frc-codex-processor:
     volumes:
       - ../../frc-ixbrl-viewer/iXBRLViewerPlugin:/processor/plugins/iXBRLViewerPlugin
+  postgres:
+    volumes:
+      # Persists the database data in the tmp directory between startups
+      - ./tmp/postgres:/var/lib/postgresql/data
 ```
 
 ### Compose
