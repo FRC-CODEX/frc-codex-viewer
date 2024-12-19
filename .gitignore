@@ -14,6 +14,8 @@ node_modules
 Pipfile
 Pipfile.lock
 src/main/resources/static/assets
+src/main/resources/static/i18next.min.js
+src/main/resources/static/i18nextBrowserLanguageDetector.min.js
 src/main/resources/static/ixbrlviewer.js
 tmp
 src/main/resources/static/localhost:8080

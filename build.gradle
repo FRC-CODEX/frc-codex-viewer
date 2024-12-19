@@ -48,6 +48,9 @@ tasks.register('copyNodeModules', Copy) {
 		from "node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.css"
 		from "node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js"
 
+		from "node_modules/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"
+		from "node_modules/i18next/i18next.min.js"
+
 		from "node_modules/ixbrl-viewer/iXBRLViewerPlugin/viewer/dist/ixbrlviewer.js"
 	}
 	into("assets") {
