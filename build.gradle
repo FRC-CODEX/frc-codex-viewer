@@ -45,10 +45,10 @@ tasks.register('copyNodeModules', Copy) {
 	description = 'Copy node_modules assets.'
 	into "src/main/resources/static"
 	into("/") {
-		from "node_modules/ixbrl-viewer/iXBRLViewerPlugin/viewer/dist/ixbrlviewer.js"
-
 		from "node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.css"
 		from "node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.js"
+
+		from "node_modules/ixbrl-viewer/iXBRLViewerPlugin/viewer/dist/ixbrlviewer.js"
 	}
 	into("assets") {
 		from "node_modules/govuk-frontend/dist/govuk/assets/manifest.json"
