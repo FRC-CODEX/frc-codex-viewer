@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.0'
-	id 'io.spring.dependency-management' version '1.1.6'
+	id 'org.springframework.boot' version '3.4.1'
+	id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.frc.codex'
@@ -17,22 +17,22 @@ repositories {
 }
 
 dependencies {
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:3.4.0"
-	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.4.0'
-	implementation 'com.google.guava:guava:33.3.1-jre'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:3.4.1"
+	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.4.1'
+	implementation 'com.google.guava:guava:33.4.0-jre'
 	implementation 'com.zaxxer:HikariCP:6.2.1'
 	implementation 'org.flywaydb:flyway-core:11.1.0'
 	implementation 'org.flywaydb:flyway-database-postgresql:11.1.0'
 	implementation 'org.postgresql:postgresql:42.7.4'
-    implementation 'org.springframework.boot:spring-boot-starter-security:3.4.0'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.4.0'
-	implementation 'org.springframework.boot:spring-boot-starter-web:3.4.0'
-	implementation 'software.amazon.awssdk:lambda:2.29.34'
-	implementation 'software.amazon.awssdk:netty-nio-client:2.29.34'
-	implementation 'software.amazon.awssdk:s3:2.29.34'
-	implementation 'software.amazon.awssdk:sqs:2.29.34'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.4.1'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.4.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.4.1'
+	implementation 'software.amazon.awssdk:lambda:2.29.39'
+	implementation 'software.amazon.awssdk:netty-nio-client:2.29.39'
+	implementation 'software.amazon.awssdk:s3:2.29.39'
+	implementation 'software.amazon.awssdk:sqs:2.29.39'
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.4.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.4.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
 }
 
