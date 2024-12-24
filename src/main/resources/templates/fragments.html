@@ -23,4 +23,12 @@
   <link rel="stylesheet" href="/style-admin.css">
 </head>
 
+<body>
+
+  <script th:fragment="script-govuk-frontend-supported">
+    document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
+  </script>
+
+</body>
+
 </html>
