@@ -29,6 +29,17 @@
     document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
   </script>
 
+  <header th:fragment="header-main" class="govuk-header" data-module="govuk-header">
+    <div class="govuk-header__container govuk-width-container">
+      <div class="govuk-header__logo">
+        <img src="/logo.svg" alt="CODEx Logo" height="30" width="110">
+      </div>
+      <div class="govuk-header__content">
+        <a href="/" class="govuk-header__link govuk-header__service-name">UK iXBRL Viewer</a>
+      </div>
+    </div>
+  </header>
+
 </body>
 
 </html>
