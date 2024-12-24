@@ -3,7 +3,7 @@
 <head th:replace="fragments :: head-main (_)"></head>
 <body class="govuk-template__body">
 <script th:replace="fragments :: script-govuk-frontend-supported"></script>
-<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+<a th:replace="fragments :: link-skip-to-main"></a>
 <header th:replace="fragments :: header"></header>
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">

@@ -29,6 +29,10 @@
     document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
   </script>
 
+  <a th:fragment="link-skip-to-main" href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">
+    Skip to main content
+  </a>
+
   <header th:fragment="header-main" class="govuk-header" data-module="govuk-header">
     <div class="govuk-header__container govuk-width-container">
       <div class="govuk-header__logo">
