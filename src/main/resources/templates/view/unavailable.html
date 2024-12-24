@@ -19,13 +19,7 @@
     </main>
 </div>
 <footer th:replace="fragments :: footer-main"></footer>
-<script type="module" src="/govuk-frontend.min.js"></script>
-<script type="module">
-    import {
-        initAll
-    } from '/govuk-frontend.min.js'
-    initAll()
-</script>
+<script th:replace="fragments :: script-govuk-frontend"></script>
 </body>
 
 </html>

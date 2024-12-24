@@ -29,6 +29,13 @@
     document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
   </script>
 
+  <script type="module" th:fragment="script-govuk-frontend">
+    import {
+      initAll
+    } from '/govuk-frontend.min.js'
+    initAll()
+  </script>
+
   <a th:fragment="link-skip-to-main" href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">
     Skip to main content
   </a>
