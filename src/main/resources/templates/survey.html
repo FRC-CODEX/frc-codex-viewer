@@ -98,7 +98,7 @@
                         <div class="govuk-radios__item" th:each="rating, iter : ${T(com.frc.codex.model.Rating).values()}">
                             <input class="govuk-radios__input" type="radio" th:field="${surveyRequest.searchSpeedRating}" th:value="${rating.getValue()}">
                             <label class="govuk-label govuk-radios__label" th:for="'searchSpeedRating' + ${iter.index + 1}" th:text="${rating.getLabel()}"></label>
-                        Utility>
+                        </div>
                     </div>
                 </fieldset>
             </div>
