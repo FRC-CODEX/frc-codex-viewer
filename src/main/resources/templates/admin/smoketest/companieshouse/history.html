@@ -3,9 +3,9 @@
 <head th:replace="fragments :: head-admin"></head>
 <body>
 <div class="container">
-    <h1><a href="/">UK iXBRL Viewer</a></h1>
-    <h2>Companies House Bulk Downloads</h2>
-    <h3>Daily</h3>
+    <h1><a href="/" data-i18n="admin:home">UK iXBRL Viewer</a></h1>
+    <h2 data-i18n="admin:coho.history.header">Companies House Bulk Downloads</h2>
+    <h3 data-i18n="admin:coho.history.daily">Daily</h3>
     <ul>
         <th:block th:each="link : ${dailyLinks}">
             <li>
@@ -13,7 +13,7 @@
             </li>
         </th:block>
     </ul>
-    <h3>Monthly</h3>
+    <h3 data-i18n="admin:coho.history.monthly">Monthly</h3>
     <ul>
         <th:block th:each="link : ${monthlyLinks}">
             <li>
@@ -21,7 +21,7 @@
             </li>
         </th:block>
     </ul>
-    <h3>Archive</h3>
+    <h3 data-i18n="admin:coho.history.archive">Archive</h3>
     <ul>
         <th:block th:each="link : ${archiveLinks}">
             <li>

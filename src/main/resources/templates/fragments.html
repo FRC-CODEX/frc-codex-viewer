@@ -3,7 +3,7 @@
 
 <head th:fragment="head-main (title)">
   <meta charset="utf-8">
-  <title th:replace="${title}">UK iXBRL Viewer</title>
+  <title th:replace="${title}" data-i18n="fragments:title">UK iXBRL Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0c0c">
   <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico">
@@ -63,6 +63,13 @@
           }
         }
       });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        const translation = i18next.t(key);
+        if (translation && translation !== el.placeholer) {
+          el.placeholer = translation;
+        }
+      });
     }
     
     const languageSelect = document.getElementById('language');
@@ -83,7 +90,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>UK iXBRL Viewer</title>
+  <title data-i18n="fragments:title">UK iXBRL Viewer</title>
   <link rel="stylesheet" href="/style-admin.css">
 </head>
 
@@ -100,7 +107,7 @@
     initAll()
   </script>
 
-  <a th:fragment="link-skip-to-main" href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">
+  <a th:fragment="link-skip-to-main" href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link" data-i18n="fragments:skipToMain">
     Skip to main content
   </a>
 
@@ -110,7 +117,7 @@
         <img src="/logo.svg" alt="CODEx Logo" height="30" width="110">
       </div>
       <div class="govuk-header__content">
-        <a href="/" class="govuk-header__link govuk-header__service-name">UK iXBRL Viewer</a>
+        <a href="/" class="govuk-header__link govuk-header__service-name" data-i18n="fragments:title">UK iXBRL Viewer</a>
       </div>
       <div>
         <label class="govuk-label govuk-visually-hidden" for="language" data-i18n="fragments:selectLanguage">
@@ -124,11 +131,11 @@
 
   <div th:fragment="banner-beta" class="govuk-phase-banner">
     <p class="govuk-phase-banner__content">
-      <strong class="govuk-tag govuk-phase-banner__content__tag">
+      <strong class="govuk-tag govuk-phase-banner__content__tag" data-i18n="fragments:beta.header">
         Beta
       </strong>
       <span class="govuk-phase-banner__text">
-        This is a new service – your <a class="govuk-link" href="/help">feedback</a> will help us to improve it.
+        <span data-i18n="fragments:beta.intro">This is a new service – your</span> <a class="govuk-link" href="/help" data-i18n="fragments:beta.link">feedback</a> <span data-i18n="fragments:beta.outro">will help us to improve it.</span>
       </span>
     </p>
   </div>
@@ -137,30 +144,30 @@
     <div class="govuk-width-container">
       <div class="govuk-footer__meta">
         <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-          <h2 class="govuk-visually-hidden">Support</h2>
+          <h2 class="govuk-visually-hidden" data-i18n="fragments:support">Support</h2>
           <ul class="govuk-footer__inline-list">
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/FRC_Codex_User_Guide.pdf">
+              <a class="govuk-footer__link" href="/FRC_Codex_User_Guide.pdf" data-i18n="fragments:userGuide">
                 User Guide
               </a>
             </li>
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/help">
+              <a class="govuk-footer__link" href="/help" data-i18n="fragments:contactUs">
                 Contact Us
               </a>
             </li>
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/survey">
+              <a class="govuk-footer__link" href="/survey" data-i18n="fragments:survey">
                 Survey
               </a>
             </li>
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/UK_iXBRL_Viewer_Accessibility_Statement_January_2025.pdf">
+              <a class="govuk-footer__link" href="/UK_iXBRL_Viewer_Accessibility_Statement_January_2025.pdf" data-i18n="fragments:accessibilityStatement">
                 Accessibility Statement
               </a>
             </li>
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="https://www.frc.org.uk/Stakeholder_Engagement_Privacy_Notice">
+              <a class="govuk-footer__link" href="https://www.frc.org.uk/Stakeholder_Engagement_Privacy_Notice" data-i18n="fragments:privacyNotice">
                 Privacy Notice
               </a>
             </li>
@@ -170,10 +177,10 @@
             <path fill="currentColor"
               d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145" />
           </svg>
-          <span class="govuk-footer__licence-description">All content is available under the <a
+          <span class="govuk-footer__licence-description"><span data-i18n="fragments:license.intro">All content is available under the</span> <a
               class="govuk-footer__link"
-              href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open
-              Government Licence v3.0</a>, except where otherwise stated</span>
+              href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license" data-i18n="fragments:license.link">Open
+              Government Licence v3.0</a><span data-i18n="fragments:license.outro">, except where otherwise stated</span></span>
         </div>
         <div class="govuk-footer__meta-item">
           <div>

@@ -3,14 +3,14 @@
 <head th:replace="fragments :: head-admin"></head>
 <body>
 <div class="container">
-    <h1><a href="/">UK iXBRL Viewer</a></h1>
+    <h1><a href="/" data-i18n="admin:home">UK iXBRL Viewer</a></h1>
     <table>
         <tr>
-            <th>Company</th>
+            <th data-i18n="admin:coho.company.header">Company</th>
             <td th:text="${company}"></td>
         </tr>
         <tr>
-            <th>Filing URLs</th>
+            <th data-i18n="admin:coho.company.filingUrls">Filing URLs</th>
             <td><pre th:text="${filingUrls}"></pre></td>
         </tr>
     </table>

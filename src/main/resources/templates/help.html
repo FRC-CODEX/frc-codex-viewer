@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head th:replace="fragments :: head-main (~{ :: title})">
-    <title>Contact Us - UK iXBRL Viewer</title>
+    <title data-i18n="help:title">Contact Us - UK iXBRL Viewer</title>
 </head>
 <body class="govuk-template__body">
 <script th:replace="fragments :: script-govuk-frontend-supported"></script>
@@ -10,43 +10,43 @@
 <div class="govuk-width-container">
     <div th:replace="fragments :: banner-beta"></div>
     <main class="govuk-main-wrapper">
-        <h1 class="govuk-heading-l" id="main-content">Contact Us</h1>
+        <h1 class="govuk-heading-l" id="main-content" data-i18n="help:contactUs">Contact Us</h1>
         <div th:if="${success == true}" class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
             <div class="govuk-notification-banner__header">
-                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title" data-i18n="help:success">
                     Success
                 </h2>
             </div>
             <div class="govuk-notification-banner__content">
-                <h3 class="govuk-notification-banner__heading">
+                <h3 class="govuk-notification-banner__heading" data-i18n="help:thankYou">
                     Thank you! We've received your message.
                 </h3>
-                <p class="govuk-body">
+                <p class="govuk-body" data-i18n="help:respond">
                     A member of our staff will respond to your request as soon as possible.
                 </p>
                 <p th:if="${id != null}" class="govuk-body-s">
-                    Request ID: <span th:text="${id}"></span>
+                    <span data-i18n="help:respondId">Request ID</span>: <span th:text="${id}"></span>
                 </p>
             </div>
         </div>
         <div th:if="${success == false}" class="govuk-error-summary" data-module="govuk-error-summary">
             <div role="alert">
-                <h2 class="govuk-error-summary__title">
+                <h2 class="govuk-error-summary__title" data-i18n="help:unexpectedError">
                     An unexpected error occurred.
                 </h2>
-                <div class="govuk-error-summary__body">
+                <div class="govuk-error-summary__body" data-i18n="help:tryAgainLater">
                     We were not able to process your request. Please try again later.
                 </div>
             </div>
         </div>
-        <p class="govuk-body">
+        <p class="govuk-body" data-i18n="help:emailInstructions">
             Use this email address to contact our staff with any questions, issues,
             or feedback you have about the UK iXBRL Viewer.<br>
             Some helpful details may include the company name, company number,
             or URL associated with a specific viewer or filing.
         </p>
         <p class="govuk-body">
-            <span th:if="${supportEmail == null}">Service deployed without support email address (environment variable: SUPPORT_EMAIL).</span>
+            <span th:if="${supportEmail == null}" data-i18n="help:noEmail">Service deployed without support email address (environment variable: SUPPORT_EMAIL).</span>
             <a th:unless="${supportEmail == null}" class="govuk-link" th:href="'mailto:' + ${supportEmail}" th:text="${supportEmail}"></a>
         </p>
     </main>

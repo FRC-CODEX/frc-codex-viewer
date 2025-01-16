@@ -10,30 +10,31 @@
     <main class="govuk-main-wrapper">
         <details class="govuk-details">
             <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
+                <span class="govuk-details__summary-text" data-i18n="index:whatXbrlSummary">
                     What is iXBRL?
                 </span>
             </summary>
             <div class="govuk-details__text">
-            iXBRL is an extension of XBRL (eXtensible Business Reporting Language), the international
+            <span data-i18n="index:whatXbrlDetails">iXBRL is an extension of XBRL (eXtensible Business Reporting Language), the international
             standard for sharing business information electronically. In the UK, iXBRL is used to tag
             accounts and other business information in annual reports and submit them as inline XBRL (iXBRL)
             reports to the UK Business Register: Companies House; Securities Regulator: Financial Conduct Authority;
             Tax Authority: HM Revenue & Customs, Charities Regulator: Charity Commission for England and Wales.
             With UK iXBRL Viewer, you can access machine-readable structured data (XBRL facts) from tagged iXBRL
             reports available in the Companies House Registry and the National Storage Mechanism.
-            For more information on the UK iXBRL Viewer, please see the <a href="/FRC_Codex_User_Guide.pdf">User Guide</a>.
+            For more information on the UK iXBRL Viewer, please see the</span> <a href="/FRC_Codex_User_Guide.pdf" data-i18n="index:userGuide">User Guide</a>.
             </div>
         </details>
-        <h1 class="govuk-heading-l" id="main-content">Search Filings</h1>
+        <h1 class="govuk-heading-l" id="main-content" data-i18n="index:searchFilings">Search Filings</h1>
         <form action="#" th:action="@{/}" th:object="${searchFilingsRequest}" method="get">
             <div class="govuk-form-group">
-                <label class="govuk-label" for="company-name-or-number">
+                <label class="govuk-label" for="company-name-or-number" data-i18n="index:searchByNameOrNumber">
                     Search by Company Name or Number
                 </label>
                 <input class="govuk-input"
                        id="company-name-or-number"
                        placeholder="Company Name, CRN (Company Registration Number), or LEI (Legal Entity Identifier)"
+                       data-i18n="index:searchPlaceholder"
                        type="text"
                        required
                        th:field="*{searchText}">
@@ -43,20 +44,20 @@
                     <div class="govuk-form-group" th:classappend="${minFilingDateError != null} ? govuk-form-group--error : govuk-form-group--valid">
                         <fieldset class="govuk-fieldset" role="group" aria-describedby="min-filing-date-hint">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-fieldset__legend">
+                                <h1 class="govuk-fieldset__legend" data-i18n="index:dateFiled.header">
                                     Date Filed
                                 </h1>
                             </legend>
-                            <div id="min-filing-date-hint" class="govuk-hint">
+                            <div id="min-filing-date-hint" class="govuk-hint" data-i18n="index:dateFiled.from">
                                 From
                             </div>
                             <p th:if="${minFilingDateError != null}" id="min-filing-date-error" class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span><span th:text="${minFilingDateError}"></span>
+                                <span class="govuk-visually-hidden" data-i18n="index:dateFiled.error">Error:</span><span th:text="${minFilingDateError}"></span>
                             </p>
                             <div class="govuk-date-input" id="min-filing-date">
                                 <div class="govuk-date-input__item">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="min-filing-date-year">
+                                        <label class="govuk-label govuk-date-input__label" for="min-filing-date-year" data-i18n="index:dateFiled.year">
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="min-filing-date-year" th:field="*{minFilingDateYear}" type="text" inputmode="numeric">
@@ -64,7 +65,7 @@
                                 </div>
                                 <div class="govuk-date-input__item">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="min-filing-date-month">
+                                        <label class="govuk-label govuk-date-input__label" for="min-filing-date-month" data-i18n="index:dateFiled.month">
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="min-filing-date-month" th:field="*{minFilingDateMonth}" type="text" inputmode="numeric">
@@ -72,7 +73,7 @@
                                 </div>
                                 <div class="govuk-date-input__item">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="min-filing-date-day">
+                                        <label class="govuk-label govuk-date-input__label" for="min-filing-date-day" data-i18n="index:dateFiled.day">
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="min-filing-date-day" th:field="*{minFilingDateDay}" type="text" inputmode="numeric">
@@ -87,19 +88,19 @@
                         <fieldset class="govuk-fieldset" role="group" aria-describedby="max-filing-date-hint">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-fieldset__legend">
-                                    <span class="govuk-visually-hidden">Date Filed</span>&nbsp;
+                                    <span class="govuk-visually-hidden" data-i18n="index:dateFiled.header">Date Filed</span>&nbsp;
                                 </h1>
                             </legend>
-                            <div id="max-filing-date-hint" class="govuk-hint">
+                            <div id="max-filing-date-hint" class="govuk-hint" data-i18n="index:dateFiled.to">
                                 To
                             </div>
                             <p th:if="${maxFilingDateError != null}" id="max-filing-date-error" class="govuk-error-message">
-                                <span class="govuk-visually-hidden">Error:</span><span th:text="${maxFilingDateError}"></span>
+                                <span class="govuk-visually-hidden" data-i18n="index:dateFiled.error">Error:</span><span th:text="${maxFilingDateError}"></span>
                             </p>
                             <div class="govuk-date-input" id="max-filing-date">
                                 <div class="govuk-date-input__item">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="max-filing-date-year">
+                                        <label class="govuk-label govuk-date-input__label" for="max-filing-date-year" data-i18n="index:dateFiled.year">
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="max-filing-date-year" th:field="*{maxFilingDateYear}" type="text" inputmode="numeric">
@@ -107,7 +108,7 @@
                                 </div>
                                 <div class="govuk-date-input__item">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="max-filing-date-month">
+                                        <label class="govuk-label govuk-date-input__label" for="max-filing-date-month" data-i18n="index:dateFiled.month">
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="max-filing-date-month" th:field="*{maxFilingDateMonth}" type="text" inputmode="numeric">
@@ -115,7 +116,7 @@
                                 </div>
                                 <div class="govuk-date-input__item">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="max-filing-date-day">
+                                        <label class="govuk-label govuk-date-input__label" for="max-filing-date-day" data-i18n="index:dateFiled.day">
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="max-filing-date-day" th:field="*{maxFilingDateDay}" type="text" inputmode="numeric">
@@ -130,13 +131,13 @@
                 <div class="govuk-grid-column-full">
                     <div class="govuk-form-group">
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="registryCode">
+                            <label class="govuk-label" for="registryCode" data-i18n="index:registry.header">
                                 Registry
                             </label>
                             <div id="registryCode-hint" class="govuk-hint">
                             </div>
                             <select class="govuk-select" id="registryCode" th:field="*{registryCode}" aria-describedby="registryCode-hint">
-                                <option value="" selected>Any</option>
+                                <option value="" selected data-i18n="index:registry.any">Any</option>
                                 <option th:each="registry:${T(com.frc.codex.model.RegistryCode).values()}"
                                         th:value="${registry.getCode()}"
                                         th:text="${registry.getFullName()}"></option>
@@ -147,7 +148,7 @@
             </div>
             <div class="govuk-button-group" style="justify-content: flex-end;">
                 <button type="submit" class="govuk-button govuk-button--start" data-module="govuk-button" data-prevent-double-click="true">
-                    Search
+                    <span data-i18n="index:searchButton">Search</span>
                     <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                         <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
                     </svg>
@@ -158,7 +159,7 @@
             <i th:text="${message}"></i>
         </p>
         <div th:if="${filings != null && filings.size() > 0}" class="search-result">
-            <h3 class="govuk-heading-m">Results</h3>
+            <h3 class="govuk-heading-m" data-i18n="index:results.header">Results</h3>
             <div th:each="filing, iter : ${filings}" th:id="|result-${iter.index}|">
                 <hr/>
                 <div class="govuk-grid-row">
@@ -171,12 +172,12 @@
                                     <span th:each="registryCode:${T(com.frc.codex.model.RegistryCode).values()}"
                                           th:case="${registryCode.code}"
                                           th:text="${registryCode.companyFileReference} + ': '" ></span>
-                                    <span th:case="*">Company No.</span>
+                                    <span th:case="*" data-i18n="index:results.companyNo">Company No.</span>
                                 </dt>
                                 <dd th:text="${filing.getCompanyNumber()}"></dd>
                             </dl>
                             <dl style="flex-basis: 25%;">
-                                <dt>Registry: </dt>
+                                <dt data-i18n="index:results.registry">Registry: </dt>
                                 <dd th:switch="${filing.registryCode}">
                                     <span th:each="registryCode:${T(com.frc.codex.model.RegistryCode).values()}"
                                           th:case="${registryCode.code}"
@@ -184,66 +185,66 @@
                                 </dd>
                             </dl>
                             <dl style="flex-basis: 20%;">
-                                <dt>Document Date: </dt>
+                                <dt data-i18n="index:results.documentDate">Document Date: </dt>
                                 <dd th:text="${filing.displayDocumentDate()}"></dd>
                             </dl>
                             <dl style="flex-basis: 15%;">
-                                <dt>Date Filed: </dt>
+                                <dt data-i18n="index:results.dateFiled">Date Filed: </dt>
                                 <dd th:text="${filing.displayFilingDate()}"></dd>
                             </dl>
                         </div>
                     </div>
                     <div class="govuk-grid-column-one-third" style="text-align: right;">
                         <div class="govuk-button-group" style="justify-content: flex-end;margin-bottom: 0;">
-                            <a th:href="${filing.getViewerLink()}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+                            <a th:href="${filing.getViewerLink()}" role="button" draggable="false" class="govuk-button" data-module="govuk-button" data-i18n="index:results.downloads.openViewer">
                                 Open Viewer
                             </a>
                         </div>
                         <div>
                             <img src="/icons/download.svg" alt="Download icon" height="16" width="16">
-                            <b>Downloads:</b>
+                            <b data-i18n="index:results.downloads.header">Downloads:</b>
                         </div>
                         <span th:if="${!(filing.isCompleted() && filing.getOimDirectory() == null)}">
                             <span class="download-link">
-                                <a th:href="${filing.getXbrlCsvUrl()}" class="govuk-link govuk-link--no-underline">
+                                <a th:href="${filing.getXbrlCsvUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.csv.header">
                                     xBRL-CSV
                                 </a>
                                 <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
                                 <span class="download-tooltip">
-                                    XBRL facts as CSV files in a zip report package.<br/>
-                                    <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-csv-report">Learn more.</a>
+                                    <span data-i18n="index:results.downloads.csv.description">XBRL facts as CSV files in a zip report package.</span><br/>
+                                    <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-csv-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
                                 </span>
                             </span>
                             |
                             <span class="download-link">
-                                <a th:href="${filing.getXbrlJsonUrl()}" class="govuk-link govuk-link--no-underline">
+                                <a th:href="${filing.getXbrlJsonUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.json.header">
                                     xBRL-JSON
                                 </a>
                                 <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
                                 <span class="download-tooltip">
-                                    XBRL facts as JSON files in a zip report package.<br/>
-                                    <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-json-report">Learn more.</a>
+                                    <span data-i18n="index:results.downloads.json.description">XBRL facts as JSON files in a zip report package.</span><br/>
+                                    <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-json-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
                                 </span>
                             </span>
                             |
                         </span>
                         <span class="download-link">
-                            <a th:href="${filing.getDownloadUrl()}" class="govuk-link govuk-link--no-underline">
+                            <a th:href="${filing.getDownloadUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.ixbrl.header">
                                 Filing
                             </a>
                             <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
                             <span class="download-tooltip">
-                                The original inline XBRL filing.<br/>
-                                <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#ixbrl-report">Learn more.</a>
+                                <span data-i18n="index:results.downloads.ixbrl.description">The original inline XBRL filing.</span><br/>
+                                <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#ixbrl-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
                             </span>
                         </span>
                     </div>
                 </div>
             </div>
             <p th:if="${moreResultsLink != null}" class="govuk-body" style="text-align: center; padding:1em;">
-                <a th:href="${moreResultsLink}">Load more filings</a>
+                <a th:href="${moreResultsLink}" data-i18n="index:loadMore">Load more filings</a>
             </p>
-            <p th:if="${maximumResultsReturned}" class="govuk-body" style="text-align: center">
+            <p th:if="${maximumResultsReturned}" class="govuk-body" style="text-align: center" data-i18n="index:maxResults">
                 Maximum number of results returned. Please refine your search.
             </p>
         </div>

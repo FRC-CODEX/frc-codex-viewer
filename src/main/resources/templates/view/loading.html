@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head th:replace="fragments :: head-main (~{ :: title})">
-    <title>Loading viewer...</title>
+    <title data-i18n="loading:title">Loading viewer...</title>
 </head>
 <body class="govuk-template__body">
 <script th:replace="fragments :: script-govuk-frontend-supported"></script>
@@ -12,8 +12,8 @@
         <img src="/icons/loading.svg" alt="Loading icon"/>
     </div>
     <div style="max-width:50%;">
-        <h2 class="govuk-heading-m" style="margin:0;">Loading...</h2>
-        <p class="govuk-body" style="margin:0;">
+        <h2 class="govuk-heading-m" style="margin:0;" data-i18n="loading:status">Loading...</h2>
+        <p class="govuk-body" style="margin:0;" data-i18n="loading:pleaseWait">
             This viewer is currently being generated. Please wait a moment...
         </p>
     </div>

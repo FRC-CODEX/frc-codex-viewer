@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head th:replace="fragments :: head-main (~{ :: title})">
-    <title>Survey - UK iXBRL Viewer</title>
+    <title data-i18n="survey:title">Survey - UK iXBRL Viewer</title>
 </head>
 <body class="govuk-template__body">
 <script th:replace="fragments :: script-govuk-frontend-supported"></script>
@@ -10,30 +10,30 @@
 <div class="govuk-width-container">
     <div th:replace="fragments :: banner-beta"></div>
     <main class="govuk-main-wrapper">
-        <h1 class="govuk-heading-l" id="main-content">Customer Satisfaction Survey</h1>
+        <h1 class="govuk-heading-l" id="main-content" data-i18n="survey:header">Customer Satisfaction Survey</h1>
         <div id="success-banner" class="govuk-notification-banner govuk-notification-banner--success"
              role="alert" aria-labelledby="govuk-notification-banner-title"
              data-module="govuk-notification-banner" hidden>
             <div class="govuk-notification-banner__header">
-                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title" data-i18n="survey:success">
                     Success
                 </h2>
             </div>
             <div class="govuk-notification-banner__content">
-                <h3 class="govuk-notification-banner__heading">
+                <h3 class="govuk-notification-banner__heading" data-i18n="survey:thankYou">
                     Thank you! We've received your response.
                 </h3>
                 <p th:if="${id != null}" class="govuk-body-s">
-                    Response ID: <span th:text="${id}"></span>
+                    <span data-i18n="survey:responseId">Response ID</span>: <span th:text="${id}"></span>
                 </p>
             </div>
         </div>
         <div th:if="${success == false}" class="govuk-error-summary" data-module="govuk-error-summary">
             <div role="alert">
-                <h2 class="govuk-error-summary__title">
+                <h2 class="govuk-error-summary__title" data-i18n="survey:unexpectedError">
                     An unexpected error occurred.
                 </h2>
-                <div class="govuk-error-summary__body">
+                <div class="govuk-error-summary__body" data-i18n="survey:tryAgainLater">
                     We were not able to process your request. Please try again later.
                 </div>
             </div>
@@ -41,8 +41,8 @@
         <form id="survey-form" th:action="@{/survey}" th:object="${surveyRequest}" method="post" hidden>
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend">
-                        How satisfied are you with the <b>usefulness</b> of the index search tool?
+                    <legend class="govuk-fieldset__legend" data-i18n="survey:searchUtility">
+                        How satisfied are you with the usefulness of the index search tool?
                     </legend>
                     <div class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item" th:each="rating, iter : ${T(com.frc.codex.model.Rating).values()}">
@@ -54,8 +54,8 @@
             </div>
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend">
-                        How satisfied are you with the <b>speed</b> of the index search tool?
+                    <legend class="govuk-fieldset__legend" data-i18n="survey:searchSpeed">
+                        How satisfied are you with the speed of the index search tool?
                     </legend>
                     <div class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item" th:each="rating, iter : ${T(com.frc.codex.model.Rating).values()}">
@@ -67,8 +67,8 @@
             </div>
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend">
-                        How satisfied are you with the <b>loading speed</b> of the viewers?
+                    <legend class="govuk-fieldset__legend" data-i18n="survey:loadingSpeed">
+                        How satisfied are you with the loading speed of the viewers?
                     </legend>
                     <div class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item" th:each="rating, iter : ${T(com.frc.codex.model.Rating).values()}">
@@ -79,7 +79,7 @@
                 </fieldset>
             </div>
             <div class="govuk-button-group">
-                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-i18n="survey:sendButton">
                     Send
                 </button>
             </div>

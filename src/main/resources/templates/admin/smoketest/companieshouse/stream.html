@@ -3,10 +3,10 @@
 <head th:replace="fragments :: head-admin"></head>
 <body>
 <div class="container">
-    <h1><a href="/">UK iXBRL Viewer</a></h1>
+    <h1><a href="/" data-i18n="admin:home">UK iXBRL Viewer</a></h1>
     <table>
         <tr>
-            <th>CH Filings Stream</th>
+            <th data-i18n="admin:coho.stream.filings">CH Filings Stream</th>
             <td th:text="${stream}"></td>
         </tr>
     </table>

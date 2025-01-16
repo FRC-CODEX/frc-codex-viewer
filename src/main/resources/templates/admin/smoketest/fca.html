@@ -3,13 +3,13 @@
 <head th:replace="fragments :: head-admin"></head>
 <body>
 <div class="container">
-    <h1><a href="/">UK iXBRL Viewer</a></h1>
-    <h3>FCA Filings Since <span th:text="(${sinceDate})"></span></h3>
+    <h1><a href="/" data-i18n="admin:home">UK iXBRL Viewer</a></h1>
+    <h3> <span data-i18n="admin:fca.header">FCA Filings Since</span> <span th:text="(${sinceDate})"></span></h3>
     <table>
         <tr>
-            <th>Filings (<span th:text="(${filings.size()})"></span>)</th>
-            <th>Sequence</th>
-            <th>Submitted</th>
+            <th><span data-i18n="admin:fca.filings">Filings</span> (<span th:text="(${filings.size()})"></span>)</th>
+            <th data-i18n="admin:fca.sequence">Sequence</th>
+            <th data-i18n="admin:fca.submitted">Submitted</th>
             <th></th>
             <th></th>
         </tr>
@@ -18,8 +18,8 @@
                 <td th:text="${filing.filename()}">...</td>
                 <td th:text="${filing.sequenceId()}">...</td>
                 <td th:text="${filing.submittedDate()}">...</td>
-                <td><a th:href="${filing.infoUrl()}">Info</a></td>
-                <td><a th:href="${filing.downloadUrl()}">Download</a></td>
+                <td><a th:href="${filing.infoUrl()}" data-i18n="admin:fca.info">Info</a></td>
+                <td><a th:href="${filing.downloadUrl()}" data-i18n="admin:fca.download">Download</a></td>
             </tr>
         </th:block>
     </table>
