@@ -1,0 +1,22 @@
+{
+  "accessibilityStatement": "Accessibility Statement",
+  "beta": {
+    "header": "Beta",
+    "intro": "This is a new service – your",
+    "link": "feedback",
+    "outro": "will help us to improve it."
+  },
+  "contactUs": "Contact Us",
+  "license": {
+    "intro": "All content is available under the",
+    "link": "Open Government Licence v3.0",
+    "outro": ", except where otherwise stated"
+  },
+  "privacyNotice": "Privacy Notice",
+  "selectLanguage": "Select language",
+  "skipToMain": "Skip to main content",
+  "support": "Support",
+  "survey": "Survey",
+  "title": "UK iXBRL Viewer",
+  "userGuide": "User Guide"
+}

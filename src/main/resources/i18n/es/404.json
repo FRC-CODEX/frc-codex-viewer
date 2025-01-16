@@ -1,0 +1,10 @@
+{
+  "contactUs": {
+    "assistance": "si necesita ayuda.",
+    "check": "Si la dirección web es correcta o seleccionó un enlace o botón,",
+    "link": "contacta con nosotros"
+  },
+  "header": "Página no encontrada",
+  "pastedMessage": "Si pegó la dirección web, verifique que haya copiado la dirección completa.",
+  "typedMessage": "Si escribió la dirección web, verifique que sea correcta."
+}

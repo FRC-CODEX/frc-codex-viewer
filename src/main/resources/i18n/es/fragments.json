@@ -1,0 +1,22 @@
+{
+  "accessibilityStatement": "Declaración de Accesibilidad",
+  "beta": {
+    "header": "Beta",
+    "intro": "Este es un nuevo servicio - su",
+    "link": "comentario",
+    "outro": "nos ayudará a mejorarlo."
+  },
+  "contactUs": "Contacta con Nosotros",
+  "license": {
+    "intro": "Todo el contenido está disponible en",
+    "link": "Licencia de Gobierno Abierto v3.0",
+    "outro": ", salvo que se indique lo contrario"
+  },
+  "privacyNotice": "Aviso de Privacidad",
+  "selectLanguage": "Seleccione idioma",
+  "skipToMain": "Saltar al contenido principal",
+  "support": "Apoyo",
+  "survey": "Encuesta",
+  "title": "Visor iXBRL del Reino Unido",
+  "userGuide": "Guía del Usuario"
+}

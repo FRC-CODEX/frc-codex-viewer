@@ -1,0 +1,13 @@
+{
+  "header": "Customer Satisfaction Survey",
+  "loadingSpeed": "How satisfied are you with the loading speed of the viewers?",
+  "responseId": "Response ID",
+  "searchSpeed": "How satisfied are you with the speed of the index search tool?",
+  "searchUtility": "How satisfied are you with the usefulness of the index search tool?",
+  "sendButton": "Send",
+  "success": "Success",
+  "thankYou": "Thank you! We've received your response.",
+  "title": "Survey - UK iXBRL Viewer",
+  "tryAgainLater": "We were not able to process your request. Please try again later.",
+  "unexpectedError": "An unexpected error occurred."
+}

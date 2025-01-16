@@ -1,0 +1,22 @@
+{
+  "accessibilityStatement": "Datganiad Hygyrchedd",
+  "beta": {
+    "header": "Beta",
+    "intro": "Mae hwn yn wasanaeth newydd - eich",
+    "link": "adborth",
+    "outro": "bydd yn ein helpu i'w wella."
+  },
+  "contactUs": "Cysylltwch â Ni",
+  "license": {
+    "intro": "Mae'r holl gynnwys ar gael o dan y",
+    "link": "Trwydded Llywodraeth Agored v3.0",
+    "outro": ", ac eithrio lle nodir yn wahanol"
+  },
+  "privacyNotice": "Hysbysiad Preifatrwydd",
+  "selectLanguage": "Dewiswch iaith",
+  "skipToMain": "Neidio i'r prif gynnwys",
+  "support": "Cefnogaeth",
+  "survey": "Arolwg",
+  "title": "Gwyliwr iXBRL DU",
+  "userGuide": "Canllaw Defnyddiwr"
+}

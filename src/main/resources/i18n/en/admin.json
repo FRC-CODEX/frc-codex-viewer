@@ -1,0 +1,82 @@
+{
+  "coho": {
+    "company": {
+      "filingUrls": "Filing URLs",
+      "header": "Company"
+    },
+    "history": {
+      "archive": "Archive",
+      "daily": "Daily",
+      "header": "Companies House Bulk Downloads",
+      "monthly": "Monthly"
+    },
+    "stream": {
+      "filings": "CH Filings Stream"
+    }
+  },
+  "database": {
+    "companyName": "Company Name",
+    "completed": "Completed Filings",
+    "discovered": "Discovered",
+    "download": "Download",
+    "failed": "Failed Filings",
+    "filings": "Filings",
+    "registry": "Registry",
+    "status": "Status",
+    "stubViewer": "Stub Viewer",
+    "unprocessed": "Unprocessed Filings"
+  },
+  "fca": {
+    "download": "Download",
+    "filings": "Filings",
+    "header": "FCA Filings Since",
+    "info": "Info",
+    "sequence": "Sequence",
+    "submitted": "Submitted"
+  },
+  "home": "CODEx Admin",
+  "index": {
+    "configuration": {
+      "coho": {
+        "docApiUrl": "Companies House Document API URL",
+        "infoApiUrl": "Companies House Information API URL",
+        "rateLimiter": "Companies House Rate Limiter",
+        "restApiKey": "Companies House REST API Key Configured",
+        "streamApiKey": "Companies House Stream API Key Configured",
+        "streamApiUrl": "Companies House Stream API URL"
+      },
+      "fca": {
+        "dataApiUrl": "FCA Data API Base URL",
+        "searchApiUrl": "FCA Search API URL"
+      },
+      "header": "Configuration"
+    },
+    "logout": "Log Out",
+    "tests": {
+      "coho": {
+        "company": "Companies House - Company",
+        "history": "Companies House - History"
+      },
+      "database": "Database",
+      "errorPage": "Error Page",
+      "fca": "FCA",
+      "header": "Tests",
+      "indexer": "Indexer",
+      "queue": "Queue"
+    },
+    "tools": {
+      "header": "Admin Tools",
+      "reset": {
+        "button": "Reset",
+        "header": "Reset Filing",
+        "placeholder": "Filing ID"
+      }
+    }
+  },
+  "indexer": {
+    "status": "Indexer Status"
+  },
+  "queue": {
+    "header": "Queue Status"
+  }
+}
