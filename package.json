@@ -3,7 +3,7 @@
     "govuk-frontend": "^5.8.0",
     "i18next": "^24.2.2",
     "i18next-browser-languagedetector": "^8.0.2",
-    "ixbrl-viewer": "^1.4.51"
+    "ixbrl-viewer": "^1.4.54"
   },
   "devDependencies": {
     "@babel/core": "^7.26.7",
