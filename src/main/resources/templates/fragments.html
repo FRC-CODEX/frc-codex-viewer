@@ -16,18 +16,7 @@
   <script type="module" src="/i18next.min.js"></script>
   <script type="module" src="/i18nextBrowserLanguageDetector.min.js"></script>
   <script type="module" th:inline="javascript">
-    const translationResources = {
-      en: {
-        index: {
-          searchFilings: "Search Filings"
-        }
-      },
-      cy: {
-        index: {
-          searchFilings: "Chwilio Ffeiliau"
-        }
-      }
-    };
+    const translationResources = /*[[${translations}]]*/ {};
     const defaultLang = "en";
     const supportedLanguages = Object.keys(translationResources).sort((a, b) => {
       if (a === defaultLang) return -1;
