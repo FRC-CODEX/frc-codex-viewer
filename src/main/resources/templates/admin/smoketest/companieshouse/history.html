@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="fragments :: head-admin"></head>
+<head th:replace="fragments :: head (_)"></head>
 <body>
-<div class="container">
+<header th:replace="fragments :: header"></header>
+<div class="admin-container">
     <h1><a href="/" data-i18n="admin:home">UK iXBRL Viewer</a></h1>
     <h2 data-i18n="admin:coho.history.header">Companies House Bulk Downloads</h2>
     <h3 data-i18n="admin:coho.history.daily">Daily</h3>

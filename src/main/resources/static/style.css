@@ -93,3 +93,20 @@ html, body {
 .search-result hr {
     margin: 20px 0;
 }
+
+.admin-container {
+    font-family: sans-serif;
+    margin:1em;
+    padding:1em;
+    border-left: 1px solid black;
+    border-radius: 1em;
+    box-shadow: 0 0 6px 0 lightgrey
+}
+
+.admin-container th, .admin-container td {
+    text-align: left;
+}
+
+.admin-container td {
+    font-family: monospace;
+}

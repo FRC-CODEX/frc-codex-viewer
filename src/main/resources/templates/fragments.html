@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head th:fragment="head-main (title)">
+<head th:fragment="head (title)">
   <meta charset="utf-8">
   <title th:replace="${title}" data-i18n="fragments:title">UK iXBRL Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -73,14 +73,6 @@
     updateTexts();
     languageSelect.addEventListener('change', e => i18next.changeLanguage(e.target.value, updateTexts));
   </script>
-</head>
-
-<head th:fragment="head-admin">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title data-i18n="fragments:title">UK iXBRL Viewer</title>
-  <link rel="stylesheet" href="/style-admin.css">
 </head>
 
 <body>
