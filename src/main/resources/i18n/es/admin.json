@@ -1,0 +1,82 @@
+{
+  "coho": {
+    "company": {
+      "filingUrls": "URL de Archivo",
+      "header": "Compañía"
+    },
+    "history": {
+      "archive": "Archivo",
+      "daily": "Diario",
+      "header": "Descargas Masivas de Companies House",
+      "monthly": "Mensual"
+    },
+    "stream": {
+      "filings": "Flujo de Presentaciones de CH"
+    }
+  },
+  "database": {
+    "companyName": "Nombre de Empresa",
+    "completed": "Expedientes Completados",
+    "discovered": "Descubierto",
+    "download": "Descargar",
+    "failed": "Presentaciones Fallidas",
+    "filings": "Limaduras",
+    "registry": "Registro",
+    "status": "Estado",
+    "stubViewer": "Visor de Stubs",
+    "unprocessed": "Expedientes sin Procesar"
+  },
+  "fca": {
+    "download": "Descargar",
+    "filings": "Limaduras",
+    "header": "Presentaciones Ante la FCA Desde Entonces",
+    "info": "Información",
+    "sequence": "Secuencia",
+    "submitted": "Enviado"
+  },
+  "home": "Administrador de CODEx",
+  "index": {
+    "configuration": {
+      "coho": {
+        "docApiUrl": "URL de la API de documentos de Companies House",
+        "infoApiUrl": "URL de la API de información de Companies House",
+        "rateLimiter": "Limitador de tarifas de Companies House",
+        "restApiKey": "Clave API REST de Companies House configurada",
+        "streamApiKey": "Clave API de transmisión de Companies House configurada",
+        "streamApiUrl": "URL de API de transmisión de Companies House"
+      },
+      "fca": {
+        "dataApiUrl": "URL de la Base de Datos de la API de FCA",
+        "searchApiUrl": "URL de la API de Búsqueda de FCA"
+      },
+      "header": "Configuración"
+    },
+    "logout": "Finalizar la sesión",
+    "tests": {
+      "coho": {
+        "company": "Companies House - Empresa",
+        "history": "Companies House - Historia"
+      },
+      "database": "Base de Datos",
+      "errorPage": "Página de Error",
+      "fca": "FCA",
+      "header": "Pruebas",
+      "indexer": "Indexador",
+      "queue": "Cola"
+    },
+    "tools": {
+      "header": "Herramientas de Administración",
+      "reset": {
+        "button": "Reiniciar",
+        "header": "Restablecer Archivo",
+        "placeholder": "Identificación de Archivo"
+      }
+    }
+  },
+  "indexer": {
+    "status": "Estado del Indexador"
+  },
+  "queue": {
+    "header": "Estado de la Cola"
+  }
+}

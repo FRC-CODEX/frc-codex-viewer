@@ -1,0 +1,48 @@
+{
+  "dateFiled": {
+    "day": "Day",
+    "error": "Error:",
+    "from": "From",
+    "header": "Date Filed",
+    "month": "Month",
+    "to": "To",
+    "year": "Year"
+  },
+  "loadMore": "Load more filings",
+  "maxResults": "Maximum number of results returned. Please refine your search.",
+  "registry": {
+    "any": "Any",
+    "header": "Registry"
+  },
+  "results": {
+    "companyNo": "Company No.",
+    "dateFiled": "Date Filed: ",
+    "documentDate": "Document Date: ",
+    "downloads": {
+      "csv": {
+        "description": "XBRL facts as CSV files in a zip report package.",
+        "header": "xBRL-CSV"
+      },
+      "header": "Downloads:",
+      "ixbrl": {
+        "description": "The original inline XBRL filing.",
+        "header": "Filing"
+      },
+      "json": {
+        "description": "XBRL facts as JSON files in a zip report package.",
+        "header": "xBRL-JSON"
+      },
+      "learnMore": "Learn more.",
+      "openViewer": "Open Viewer"
+    },
+    "header": "Registry",
+    "registry": "Registry: "
+  },
+  "searchButton": "Search",
+  "searchByNameOrNumber": "Search by Company Name or Number",
+  "searchFilings": "Search Filings",
+  "searchPlaceholder": "Company Name, CRN (Company Registration Number), or LEI (Legal Entity Identifier)",
+  "userGuide": "User Guide",
+  "whatXbrlDetails": "iXBRL is an extension of XBRL (eXtensible Business Reporting Language), the international standard for sharing business information electronically. In the UK, iXBRL is used to tag accounts and other business information in annual reports and submit them as inline XBRL (iXBRL) reports to the UK Business Register: Companies House; Securities Regulator: Financial Conduct Authority; Tax Authority: HM Revenue & Customs, Charities Regulator: Charity Commission for England and Wales.  With UK iXBRL Viewer, you can access machine-readable structured data (XBRL facts) from tagged iXBRL reports available in the Companies House Registry and the National Storage Mechanism.  For more information on the UK iXBRL Viewer, please see the",
+  "whatXbrlSummary": "What is iXBRL?"
+}

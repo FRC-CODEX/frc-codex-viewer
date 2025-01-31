@@ -1,0 +1,48 @@
+{
+  "dateFiled": {
+    "day": "Dydd",
+    "error": "Gwall:",
+    "from": "Oddiwrth",
+    "header": "Dyddiad Ffeilio",
+    "month": "Mis",
+    "to": "I",
+    "year": "Blwyddyn"
+  },
+  "loadMore": "Llwytho mwy o ffeilio",
+  "maxResults": "Uchafswm nifer y canlyniadau a ddychwelwyd. Mireiniwch eich chwiliad.",
+  "registry": {
+    "any": "Unrhyw",
+    "header": "Cofrestrfa"
+  },
+  "results": {
+    "companyNo": "Rhif Cwmni",
+    "dateFiled": "Dyddiad Ffeil:",
+    "documentDate": "Dyddiad y Ddogfen: ",
+    "downloads": {
+      "csv": {
+        "description": "Ffeithiau XBRL fel ffeiliau CSV mewn pecyn adroddiad sip.",
+        "header": "xBRL-CSV"
+      },
+      "header": "Lawrlwythiadau:",
+      "ixbrl": {
+        "description": "Y ffeil XBRL mewnol gwreiddiol.",
+        "header": "Ffeilio"
+      },
+      "json": {
+        "description": "Ffeithiau XBRL fel ffeiliau JSON mewn pecyn adroddiad sip.",
+        "header": "xBRL-JSON"
+      },
+      "learnMore": "Dysgwch fwy.",
+      "openViewer": "Gwyliwr Agored"
+    },
+    "header": "Cofrestrfa",
+    "registry": "Cofrestrfa: "
+  },
+  "searchButton": "Chwiliwch",
+  "searchByNameOrNumber": "Chwilio yn ôl Enw neu Rif Cwmni",
+  "searchFilings": "Chwilio Ffeiliau",
+  "searchPlaceholder": "Enw'r Cwmni, CRN (Rhif Cofrestru'r Cwmni), neu LEI (Dynodwr Endid Cyfreithiol)",
+  "userGuide": "Canllaw Defnyddiwr",
+  "whatXbrlDetails": "Mae iXBRL yn estyniad o XBRL (iaith adrodd busnes estynadwy), y safon ryngwladol ar gyfer rhannu gwybodaeth fusnes yn electronig. Yn y DU, defnyddir iXBRL i dagio cyfrifon a gwybodaeth fusnes arall mewn adroddiadau blynyddol a'u cyflwyno fel adroddiadau XBRL (iXBRL) mewnol i Gofrestr Busnes y DU: Tŷ'r Cwmnïau; Rheoleiddiwr Gwarantau: Awdurdod Ymddygiad Ariannol; Awdurdod Treth: Cyllid a Thollau EM, Rheoleiddiwr Elusennau: Comisiwn Elusennau Cymru a Lloegr. Gyda gwyliwr iXBRL y DU, gallwch gyrchu data strwythuredig y gellir ei ddarllen gan beiriant (ffeithiau XBRL) o adroddiadau iXBRL wedi'u tagio sydd ar gael yng Nghofrestrfa Tŷ'r Cwmnïau a'r Mecanwaith Storio Cenedlaethol. I gael rhagor o wybodaeth am wyliwr iXBRL y DU, gweler y",
+  "whatXbrlSummary": "Beth yw iXBRL?"
+}

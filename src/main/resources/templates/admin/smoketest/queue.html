@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>UK iXBRL Viewer</title>
-    <link rel="stylesheet" href="/style-admin.css">
-</head>
+<head th:replace="fragments :: head (_)"></head>
 <body>
-<div class="container">
-    <h1><a href="/">UK iXBRL Viewer</a></h1>
-    <h3>Queue Status</h3>
+<header th:replace="fragments :: header"></header>
+<div class="admin-container">
+    <h1><a href="/" data-i18n="admin:home">UK iXBRL Viewer</a></h1>
+    <h3 data-i18n="admin:queue.header">Queue Status</h3>
     <pre th:text="${queueStatus}"></pre>
 </div>
 </body>

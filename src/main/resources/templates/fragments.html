@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:fragment="head (title)">
+  <meta charset="utf-8">
+  <title th:replace="${title}" data-i18n="fragments:title">UK iXBRL Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0c0c">
+  <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico">
+  <link rel="icon" sizes="any" href="/favicon.svg" type="image/svg+xml">
+  <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c">
+  <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png">
+  <link rel="manifest" href="/assets/manifest.json">
+  <link rel="stylesheet" href="/govuk-frontend.min.css">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/i18next.min.js"></script>
+  <script type="module" src="/i18nextBrowserLanguageDetector.min.js"></script>
+  <script type="module" th:inline="javascript">
+    const translationResources = /*[[${translations}]]*/ {};
+    const defaultLang = "en";
+    const supportedLanguages = Object.keys(translationResources).sort((a, b) => {
+      if (a === defaultLang) return -1;
+      if (b === defaultLang) return 1;
+      return a.localeCompare(b);
+    });
+    i18next
+      .use(i18nextBrowserLanguageDetector)
+      .init(
+        {
+          detection: {
+            lookupLocalStorage: "ixbrl-viewer-app-language",
+            order: ["localStorage", "navigator"],
+            supportedLngs: supportedLanguages,
+          },
+          fallbackLng: defaultLang,
+          load: 'languageOnly',
+          resources: translationResources,
+        });
+    
+    function updateTexts() {
+      const language = i18next.resolvedLanguage;
+      document.getElementById('language').value = language;
+      document.documentElement.lang = language;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        const translation = i18next.t(key);
+        if (translation) {
+          if (el.tagName === "INPUT") {
+            el.placeholder = translation;
+          } else {
+            el.textContent = translation;
+          }
+        }
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        const translation = i18next.t(key);
+        if (translation && translation !== el.placeholer) {
+          el.placeholer = translation;
+        }
+      });
+    }
+    
+    const languageSelect = document.getElementById('language');
+    const docLangNames = new Intl.DisplayNames(supportedLanguages, { "type": "language" });
+    for (const lang of supportedLanguages) {
+      const option = document.createElement('option');
+      option.value = lang;
+      option.textContent = docLangNames.of(lang);
+      languageSelect.appendChild(option);
+    }
+
+    updateTexts();
+    languageSelect.addEventListener('change', e => i18next.changeLanguage(e.target.value, updateTexts));
+  </script>
+</head>
+
+<body>
+
+  <script th:fragment="script-govuk-frontend-supported">
+    document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
+  </script>
+
+  <script type="module" th:fragment="script-govuk-frontend">
+    import {
+      initAll
+    } from '/govuk-frontend.min.js'
+    initAll()
+  </script>
+
+  <a th:fragment="link-skip-to-main" href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link" data-i18n="fragments:skipToMain">
+    Skip to main content
+  </a>
+
+  <header th:fragment="header-main" class="govuk-header" data-module="govuk-header">
+    <div class="govuk-header__container govuk-width-container">
+      <div class="govuk-header__logo">
+        <img src="/logo.svg" alt="CODEx Logo" height="30" width="110">
+      </div>
+      <div class="govuk-header__content">
+        <a href="/" class="govuk-header__link govuk-header__service-name" data-i18n="fragments:title">UK iXBRL Viewer</a>
+      </div>
+      <div>
+        <label class="govuk-label govuk-visually-hidden" for="language" data-i18n="fragments:selectLanguage">
+          Select language
+        </label>
+        <select class="govuk-select" id="language" name="language">
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <div th:fragment="banner-beta" class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag" data-i18n="fragments:beta.header">
+        Beta
+      </strong>
+      <span class="govuk-phase-banner__text">
+        <span data-i18n="fragments:beta.intro">This is a new service – your</span> <a class="govuk-link" href="/help" data-i18n="fragments:beta.link">feedback</a> <span data-i18n="fragments:beta.outro">will help us to improve it.</span>
+      </span>
+    </p>
+  </div>
+
+  <footer th:fragment="footer-main" class="govuk-footer">
+    <div class="govuk-width-container">
+      <div class="govuk-footer__meta">
+        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+          <h2 class="govuk-visually-hidden" data-i18n="fragments:support">Support</h2>
+          <ul class="govuk-footer__inline-list">
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/FRC_Codex_User_Guide.pdf" data-i18n="fragments:userGuide">
+                User Guide
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/help" data-i18n="fragments:contactUs">
+                Contact Us
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/survey" data-i18n="fragments:survey">
+                Survey
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/UK_iXBRL_Viewer_Accessibility_Statement_January_2025.pdf" data-i18n="fragments:accessibilityStatement">
+                Accessibility Statement
+              </a>
+            </li>
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="https://www.frc.org.uk/Stakeholder_Engagement_Privacy_Notice" data-i18n="fragments:privacyNotice">
+                Privacy Notice
+              </a>
+            </li>
+          </ul>
+          <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
+            <path fill="currentColor"
+              d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145" />
+          </svg>
+          <span class="govuk-footer__licence-description"><span data-i18n="fragments:license.intro">All content is available under the</span> <a
+              class="govuk-footer__link"
+              href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license" data-i18n="fragments:license.link">Open
+              Government Licence v3.0</a><span data-i18n="fragments:license.outro">, except where otherwise stated</span></span>
+        </div>
+        <div class="govuk-footer__meta-item">
+          <div>
+            <img src="/logo_black.svg" alt="CODEx Logo" height="30" width="110">
+          </div>
+          <a class="govuk-footer__link"
+            href="https://www.frc.org.uk/about-us/policies-and-procedures/disclaimer-and-copyright/">
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

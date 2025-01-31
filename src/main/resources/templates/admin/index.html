@@ -1,73 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>UK iXBRL Viewer</title>
-    <link rel="stylesheet" href="/style-admin.css">
-</head>
+<head th:replace="fragments :: head (_)"></head>
 <body>
-<div class="container">
-    <h1><a href="/">CODEx Admin</a></h1>
-    <a href="/admin/logout">Log Out</a>
-    <div class="container">
-        <h2>Tests</h2>
+<header th:replace="fragments :: header"></header>
+<div class="admin-container">
+    <h1><a href="/" data-i18n="admin:home">CODEx Admin</a></h1>
+    <a href="/admin/logout" data-i18n="admin:index.logout">Log Out</a>
+    <div class="admin-container">
+        <h2 data-i18n="admin:index.tests.header">Tests</h2>
         <ul>
-            <li><a href="/nonexistent">Error Page</a></li>
-            <li><a href="/admin/smoketest/companieshouse/company/00324341">Companies House - Company</a></li>
-            <li><a href="/admin/smoketest/companieshouse/history">Companies House - History</a></li>
-            <li><a href="/admin/smoketest/database">Database</a></li>
-            <li><a href="/admin/smoketest/fca">FCA</a></li>
-            <li><a href="/admin/smoketest/indexer">Indexer</a></li>
-            <li><a href="/admin/smoketest/queue">Queue</a></li>
+            <li><a href="/nonexistent" data-i18n="admin:index.tests.errorPage">Error Page</a></li>
+            <li><a href="/admin/smoketest/companieshouse/company/00324341" data-i18n="admin:index.tests.coho.company">Companies House - Company</a></li>
+            <li><a href="/admin/smoketest/companieshouse/history" data-i18n="admin:index.tests.coho.history">Companies House - History</a></li>
+            <li><a href="/admin/smoketest/database" data-i18n="admin:index.tests.database">Database</a></li>
+            <li><a href="/admin/smoketest/fca" data-i18n="admin:index.tests.fca">FCA</a></li>
+            <li><a href="/admin/smoketest/indexer" data-i18n="admin:index.tests.indexer">Indexer</a></li>
+            <li><a href="/admin/smoketest/queue" data-i18n="admin:index.tests.queue">Queue</a></li>
         </ul>
     </div>
-    <div class="container">
-        <h2>Configuration</h2>
+    <div class="admin-container">
+        <h2 data-i18n="admin:index.configuration.header">Configuration</h2>
         <table>
             <tr>
-                <th>Companies House Document API URL</th>
+                <th data-i18n="admin:index.configuration.coho.docApiUrl">Companies House Document API URL</th>
                 <td th:text="${chDocumentUrl}">N/A</td>
             </tr>
             <tr>
-                <th>Companies House Information API URL</th>
+                <th data-i18n="admin:index.configuration.coho.infoApiUrl">Companies House Information API URL</th>
                 <td th:text="${chInformationUrl}">N/A</td>
             </tr>
             <tr>
-                <th>Companies House Rate Limiter</th>
+                <th data-i18n="admin:index.configuration.coho.rateLimiter">Companies House Rate Limiter</th>
                 <td th:text="${chRateLimiter}">N/A</td>
             </tr>
             <tr>
-                <th>Companies House Stream API URL</th>
+                <th data-i18n="admin:index.configuration.coho.streamApiUrl">Companies House Stream API URL</th>
                 <td th:text="${chStreamUrl}">N/A</td>
             </tr>
             <tr>
-                <th>Companies House REST API Key Configured</th>
+                <th data-i18n="admin:index.configuration.coho.restApiKey">Companies House REST API Key Configured</th>
                 <td th:text="${chRestApiKey}">N/A</td>
             </tr>
             <tr>
-                <th>Companies House Stream API Key Configured</th>
+                <th data-i18n="admin:index.configuration.coho.streamApiKey">Companies House Stream API Key Configured</th>
                 <td th:text="${chStreamApiKey}">N/A</td>
             </tr>
             <tr>
-                <th>FCA Data API Base URL</th>
+                <th data-i18n="admin:index.configuration.fca.dataApiUrl">FCA Data API Base URL</th>
                 <td th:text="${fcaDataApiBaseUrl}">N/A</td>
             </tr>
             <tr>
-                <th>FCA Search API URL</th>
+                <th data-i18n="admin:index.configuration.fca.searchApiUrl">FCA Search API URL</th>
                 <td th:text="${fcaSearchApiUrl}">N/A</td>
             </tr>
         </table>
     </div>
 </div>
-<div class="container">
-    <h2>Admin Tools</h2>
+<div class="admin-container">
+    <h2 data-i18n="admin:index.tools.header">Admin Tools</h2>
     <div style="display:flex; justify-content: space-between; flex-wrap: wrap;">
-        <form class="container" method="post" action="/admin/filing/reset">
-            <h4>Reset Filing</h4>
-            <input type="text" name="filingId" placeholder="Filing ID">
-            <button type="submit">Reset</button>
+        <form class="admin-container" method="post" action="/admin/filing/reset">
+            <h4 data-i18n="admin:index.tools.reset.header">Reset Filing</h4>
+            <input type="text" name="filingId" placeholder="Filing ID" data-i18n="admin:index.tools.reset.placeholder">
+            <button type="submit" data-i18n="admin:index.tools.reset.button">Reset</button>
         </form>
     </div>
 </div>

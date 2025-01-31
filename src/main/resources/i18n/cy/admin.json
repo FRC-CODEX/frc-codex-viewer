@@ -1,0 +1,82 @@
+{
+  "coho": {
+    "company": {
+      "filingUrls": "Ffeilio URLs",
+      "header": "Cwmni"
+    },
+    "history": {
+      "archive": "Archif",
+      "daily": "Dyddiol",
+      "header": "Llawrlwythiadau Swmp Companies House",
+      "monthly": "Yn fisol"
+    },
+    "stream": {
+      "filings": "Ffrwd Ffeilio CH"
+    }
+  },
+  "database": {
+    "companyName": "Enw'r Cwmni",
+    "completed": "Ffeiliau wedi'u Cwblhau",
+    "discovered": "Wedi Darganfod",
+    "download": "Lawrlwythwch",
+    "failed": "Ffeiliau wedi Methu",
+    "filings": "Ffeiliau",
+    "registry": "Cofrestrfa",
+    "status": "Statws",
+    "stubViewer": "Gwyliwr Stub",
+    "unprocessed": "Ffeiliau heb eu Prosesu"
+  },
+  "fca": {
+    "download": "Lawrlwythwch",
+    "filings": "Ffeiliau",
+    "header": "Ffeiliau FCA Ers hynny",
+    "info": "Gwybodaeth",
+    "sequence": "Dilyniant",
+    "submitted": "Cyflwynwyd"
+  },
+  "home": "CODEx Gweinyddol",
+  "index": {
+    "configuration": {
+      "coho": {
+        "docApiUrl": "URL API Dogfen Companies House",
+        "infoApiUrl": "URL API Gwybodaeth Companies House",
+        "rateLimiter": "Cyfyngwr Trethi Companies House",
+        "restApiKey": "Allwedd REST API Companies House wedi'i Ffurfweddu",
+        "streamApiKey": "Allwedd API Ffrwd Companies House wedi'i Ffurfweddu",
+        "streamApiUrl": "URL API Ffrwd Companies House"
+      },
+      "fca": {
+        "dataApiUrl": "URL Sylfaen API Data FCA",
+        "searchApiUrl": "URL FCA Search API"
+      },
+      "header": "Cyfluniad"
+    },
+    "logout": "Allgofnodi",
+    "tests": {
+      "coho": {
+        "company": "Companies House - Cwmni",
+        "history": "Companies House - Hanes"
+      },
+      "database": "Cronfa Ddata",
+      "errorPage": "Tudalen Gwall",
+      "fca": "FCA",
+      "header": "Profion",
+      "indexer": "Mynegeiwr",
+      "queue": "Ciw"
+    },
+    "tools": {
+      "header": "Offer Gweinyddol",
+      "reset": {
+        "button": "Ailosod",
+        "header": "Ailosod Ffeilio",
+        "placeholder": "Identificación de Archivo"
+      }
+    }
+  },
+  "indexer": {
+    "status": "Statws Mynegeiwr"
+  },
+  "queue": {
+    "header": "Statws Ciw"
+  }
+}

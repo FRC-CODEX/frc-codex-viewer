@@ -1,0 +1,48 @@
+{
+  "dateFiled": {
+    "day": "Día",
+    "error": "Error:",
+    "from": "De",
+    "header": "Fecha de Presentación",
+    "month": "Mes",
+    "to": "A",
+    "year": "Año"
+  },
+  "loadMore": "Cargar más presentaciones",
+  "maxResults": "Número máximo de resultados devueltos. Por favor, refine su búsqueda.",
+  "registry": {
+    "any": "Cualquier",
+    "header": "Registro"
+  },
+  "results": {
+    "companyNo": "Número de Empresa",
+    "dateFiled": "Fecha de presentación: ",
+    "documentDate": "Fecha del Documento: ",
+    "downloads": {
+      "csv": {
+        "description": "Datos XBRL como archivos CSV en un paquete de informes zip.",
+        "header": "xBRL-CSV"
+      },
+      "header": "Descargas:",
+      "ixbrl": {
+        "description": "La presentación XBRL en línea original.",
+        "header": "Presentación"
+      },
+      "json": {
+        "description": "Datos XBRL como archivos JSON en un paquete de informes zip.",
+        "header": "xBRL-JSON"
+      },
+      "learnMore": "Más información.",
+      "openViewer": "Visor Abierto"
+    },
+    "header": "Registro",
+    "registry": "Registro: "
+  },
+  "searchButton": "Buscar",
+  "searchByNameOrNumber": "Búsqueda por Nombre o Número de Empresa",
+  "searchFilings": "Búsqueda de Expedientes",
+  "searchPlaceholder": "Nombre de la Empresa, CRN (número de registro de la empresa) o LEI (identificador de entidad legal)",
+  "userGuide": "Guía del Usuario",
+  "whatXbrlDetails": "iXBRL es una extensión de XBRL (lenguaje extensible de informes comerciales), el estándar internacional para compartir información comercial electrónicamente. En el Reino Unido, iXBRL se utiliza para etiquetar cuentas y otra información comercial en informes anuales y enviarlos como informes XBRL en línea (iXBRL) al Registro Comercial del Reino Unido: Companies House; Regulador de valores: Financial Conduct Authority; Autoridad fiscal: HM Revenue & Customs; Regulador de organizaciones benéficas: Charity Commission for England and Wales. Con el visor iXBRL del Reino Unido, puede acceder a datos estructurados legibles por máquina (hechos XBRL) de informes iXBRL etiquetados disponibles en el Registro de Companies House y el Mecanismo de almacenamiento nacional. Para obtener más información sobre el visor iXBRL del Reino Unido, consulte la",
+  "whatXbrlSummary": "¿Qué es iXBRL?"
+}

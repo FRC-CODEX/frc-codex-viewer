@@ -1,0 +1,12 @@
+{
+  "contactUs": "Contact Us",
+  "emailInstructions": "Use this email address to contact our staff with any questions, issues, or feedback you have about the UK iXBRL Viewer.<br> Some helpful details may include the company name, company number, or URL associated with a specific viewer or filing.",
+  "noEmail": "Service deployed without support email address (environment variable: SUPPORT_EMAIL).",
+  "respond": "A member of our staff will respond to your request as soon as possible.",
+  "respondId": "Request ID",
+  "success": "Success",
+  "thankYou": "Thank you! We've received your message.",
+  "title": "Contact Us - UK iXBRL Viewer",
+  "tryAgainLater": "We were not able to process your request. Please try again later.",
+  "unexpectedError": "An unexpected error occurred."
+}

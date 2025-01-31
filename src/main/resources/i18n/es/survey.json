@@ -1,0 +1,13 @@
+{
+  "header": "Encuesta de satisfacción del cliente",
+  "loadingSpeed": "¿Qué tan satisfecho está usted con la velocidad de carga de los visores?",
+  "responseId": "ID de Respuesta",
+  "searchSpeed": "¿Qué tan satisfecho está con la velocidad de la herramienta de búsqueda de índice?",
+  "searchUtility": "¿Qué tan satisfecho está usted con la utilidad de la herramienta de búsqueda de índice?",
+  "sendButton": "Enviar",
+  "success": "Éxito",
+  "thankYou": "¡Gracias! Hemos recibido tu respuesta.",
+  "title": "Encuesta - Visor iXBRL del Reino Unido",
+  "tryAgainLater": "No pudimos procesar su solicitud. Inténtelo nuevamente más tarde.",
+  "unexpectedError": "Se produjo un error inesperado."
+}
