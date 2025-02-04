@@ -1,12 +1,14 @@
 import json
 import logging
 
+from support.actions.get_ch_indexing_stats_action import GetChIndexingStatsAction
 from support.actions.list_errors_action import ListErrorsAction
 from support.actions.reset_filings_action import ResetFilingsAction
 
 logger = logging.getLogger(__name__)
 
 ACTIONS_MAP = {
+    'get_ch_indexing_stats': GetChIndexingStatsAction,
     'list_errors': ListErrorsAction,
     'reset_filings': ResetFilingsAction,
 }
