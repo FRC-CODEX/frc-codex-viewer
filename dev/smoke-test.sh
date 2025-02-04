@@ -36,6 +36,10 @@ curl $CURL_OPTS http://localhost:8080/admin/smoketest/queue
 echo "Test database page"
 curl $CURL_OPTS http://localhost:8080/admin/smoketest/database
 
+echo "Test support action: get_ch_indexing_stats"
+curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
+  --data '{"action":"get_ch_indexing_stats"}'
+
 echo "Test support action: list_errors"
 curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
   --data '{"action":"list_errors"}'
