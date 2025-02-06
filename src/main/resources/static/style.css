@@ -110,3 +110,7 @@ html, body {
 .admin-container td {
     font-family: monospace;
 }
+
+.pre-line {
+    white-space: pre-line;
+}
