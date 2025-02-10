@@ -31,6 +31,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -43,6 +44,7 @@ public class UploadIndexerImpl implements UploadIndexer {
 	private final S3Client s3Client;
 	private int sessionFilingCount;
 	private int sessionUploadCount;
+	private Integer remainingFileCount;
 
 	public UploadIndexerImpl(
 			DatabaseManager databaseManager,
@@ -83,11 +85,14 @@ public class UploadIndexerImpl implements UploadIndexer {
 
 	public String getStatus() {
 		return String.format("""
-						Upload Indexer:
+						Upload Indexer: %s
 						\tFilings indexed this session: %s
-						\tUploads completed this session: %s""",
+						\tUploads completed this session: %s
+						\tFiles remaining at last check: %s""",
+				isHealthy() ? "Healthy" : "Unhealthy",
 				sessionFilingCount,
-				sessionUploadCount
+				sessionUploadCount,
+				remainingFileCount
 		);
 	}
 
@@ -103,6 +108,14 @@ public class UploadIndexerImpl implements UploadIndexer {
 	}
 
 	public boolean isHealthy() {
+		try {
+			HeadBucketRequest headBucketRequest = HeadBucketRequest.builder()
+					.bucket(properties.s3IndexerUploadsBucketName())
+					.build();
+			s3Client.headBucket(headBucketRequest);
+		} catch (Exception e) {
+			return false;
+		}
 		return true;
 	}
 
@@ -173,7 +186,8 @@ public class UploadIndexerImpl implements UploadIndexer {
 			return;
 		}
 		List<String> uploadKeys = getUploadKeys();
-		LOG.info("Found {} uploaded file(s) for indexing.", uploadKeys.size());
+		remainingFileCount = uploadKeys.size();
+		LOG.info("Found {} uploaded file(s) for indexing.", remainingFileCount);
 		for(String uploadKey : uploadKeys) {
 			if (!continueCallback.get()) {
 				return;
@@ -194,5 +208,6 @@ public class UploadIndexerImpl implements UploadIndexer {
 			sessionUploadCount += 1;
 			deleteUpload(uploadKey);
 		}
+		remainingFileCount = getUploadKeys().size();
 	}
 }
