@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -136,15 +135,25 @@ public class UploadIndexerImpl implements UploadIndexer {
 		}
 		String downloadUrl = assertValidUrl(row[column++]);
 		String companyName = row[column++];
+		if (companyName.isBlank()) {
+			throw new RuntimeException("Company name is missing.");
+		}
 		String companyNumber = row[column++];
+		if (companyNumber.isBlank() || !companyNumber.matches("[a-zA-Z0-9]+")) {
+			throw new RuntimeException("Invalid company number: " + companyNumber);
+		}
 		String externalFilingId = row[column++];
-		if (this.databaseManager.filingExists(registryCode.getCode(), externalFilingId)) {
-			LOG.debug("Skipping existing filing: {}", externalFilingId);
-			return;
+		if (externalFilingId.isBlank() || !externalFilingId.matches("[a-zA-Z0-9]+")) {
+			throw new RuntimeException("Invalid external filing ID: " + externalFilingId);
 		}
 		String externalViewUrl = assertValidUrl(row[column++]);
 		LocalDateTime filingDate = parseDate(row[column++]);
 		LocalDateTime documentDate = parseDate(row[column++]);
+
+		if (this.databaseManager.filingExists(registryCode.getCode(), externalFilingId)) {
+			LOG.debug("Skipping existing filing: {}", externalFilingId);
+			return;
+		}
 		UUID filingId = this.databaseManager.createFiling(NewFilingRequest.builder()
 				.companyName(companyName)
 				.companyNumber(companyNumber)
