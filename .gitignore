@@ -6,6 +6,7 @@ _HTTP_CACHE
 bin
 build
 dev/compose-local.yml
+dev/indexer_uploads/*.csv
 dev/logs
 dev/taxonomy_packages/*.zip
 frc-codex-server.secrets
