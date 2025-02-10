@@ -1,0 +1,187 @@
+package com.frc.codex.indexer.impl;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.util.Objects.requireNonNull;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Supplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.frc.codex.database.DatabaseManager;
+import com.frc.codex.indexer.UploadIndexer;
+import com.frc.codex.model.NewFilingRequest;
+import com.frc.codex.model.RegistryCode;
+import com.frc.codex.properties.FilingIndexProperties;
+
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.S3Object;
+
+@Component
+public class UploadIndexerImpl implements UploadIndexer {
+	private static final Logger LOG = LoggerFactory.getLogger(UploadIndexerImpl.class);
+	private final DatabaseManager databaseManager;
+	private final FilingIndexProperties properties;
+	private final S3Client s3Client;
+	private int sessionFilingCount;
+	private int sessionUploadCount;
+
+	public UploadIndexerImpl(
+			DatabaseManager databaseManager,
+			FilingIndexProperties properties,
+			S3Client s3Client
+	) {
+		this.databaseManager = requireNonNull(databaseManager);
+		this.properties = requireNonNull(properties);
+		this.s3Client = requireNonNull(s3Client);
+	}
+
+	private void deleteUpload(String uploadKey) {
+		DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+				.bucket(properties.s3IndexerUploadsBucketName())
+				.key(uploadKey)
+				.build();
+		s3Client.deleteObject(deleteObjectRequest);
+		LOG.info("Deleted uploaded index file: {}", uploadKey);
+	}
+
+	private BufferedReader getReader(String uploadKey) {
+		GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+				.bucket(properties.s3IndexerUploadsBucketName())
+				.key(uploadKey)
+				.build();
+		ResponseInputStream<GetObjectResponse> responseInputStream = s3Client.getObject(getObjectRequest);
+		return new BufferedReader(new InputStreamReader(responseInputStream));
+	}
+
+	public String getStatus() {
+		return String.format("""
+						Upload Indexer:
+						\tFilings indexed this session: %s
+						\tUploads completed this session: %s""",
+				sessionFilingCount,
+				sessionUploadCount
+		);
+	}
+
+	private List<String> getUploadKeys() {
+		ListObjectsRequest listObjectsRequest = ListObjectsRequest.builder()
+				.bucket(properties.s3IndexerUploadsBucketName())
+				.build();
+		ListObjectsResponse response = s3Client.listObjects(listObjectsRequest);
+		return response.contents().stream()
+				.map(S3Object::key)
+				.filter(key -> key.toLowerCase().endsWith(".csv"))
+				.toList();
+	}
+
+	public boolean isHealthy() {
+		return true;
+	}
+
+	private void indexCsvRow(List<String> row) {
+		int column = 0;
+		RegistryCode registryCode;
+		if (row.size() == 8) {
+			// registry_code,download_url,company_name,company_number,external_filing_id,external_view_url,filing_date,document_date
+			registryCode = RegistryCode.valueOf(row.get(column++));
+		} else if (row.size() == 7) {
+			// download_url,company_name,company_number,external_filing_id,external_view_url,filing_date,document_date
+			registryCode = RegistryCode.COMPANIES_HOUSE;
+		} else {
+			throw new RuntimeException("Invalid CSV row: " + row);
+		}
+		String downloadUrl = row.get(column++);
+		String companyName = row.get(column++);
+		String companyNumber = row.get(column++);
+		String externalFilingId = row.get(column++);
+		if (this.databaseManager.filingExists(registryCode.getCode(), externalFilingId)) {
+			LOG.debug("Skipping existing filing: {}", externalFilingId);
+			return;
+		}
+		String externalViewUrl = row.get(column++);
+		LocalDateTime filingDate = parseDate(row.get(column++));
+		LocalDateTime documentDate = parseDate(row.get(column++));
+		UUID filingId = this.databaseManager.createFiling(NewFilingRequest.builder()
+				.companyName(companyName)
+				.companyNumber(companyNumber)
+				.documentDate(documentDate)
+				.downloadUrl(downloadUrl)
+				.externalFilingId(externalFilingId)
+				.externalViewUrl(externalViewUrl)
+				.filingDate(filingDate)
+				.registryCode(registryCode.getCode())
+				.build()
+		);
+		LOG.info("Indexed filing filing from CSV: ({}, {}) {}", registryCode, externalFilingId, filingId);
+	}
+
+	private List<String> parseCsvRow(String line) {
+		List<String> result = new ArrayList<>();
+		StringBuilder currentField = new StringBuilder();
+		boolean inQuotes = false;
+
+		for (char c : line.toCharArray()) {
+			if (c == '"') {
+				inQuotes = !inQuotes; // toggle state
+			} else if (c == ',' && !inQuotes) {
+				result.add(currentField.toString());
+				currentField.setLength(0); // reset the buffer
+			} else {
+				currentField.append(c);
+			}
+		}
+		result.add(currentField.toString()); // add the last field
+		return result;
+	}
+
+	private LocalDateTime parseDate(String date) {
+		if (date.length() > 10) date = date.substring(0, 10);
+		TemporalAccessor parsedDate = ISO_LOCAL_DATE.parse(date);
+		return LocalDate.from(parsedDate).atStartOfDay();
+	}
+
+	public void run(Supplier<Boolean> continueCallback) throws IOException {
+		if (!continueCallback.get()) {
+			return;
+		}
+		List<String> uploadKeys = getUploadKeys();
+		LOG.info("Found {} uploaded file(s) for indexing.", uploadKeys.size());
+		for(String uploadKey : uploadKeys) {
+			if (!continueCallback.get()) {
+				return;
+			}
+			LOG.info("Indexing uploaded index file: {}", uploadKey);
+			try(BufferedReader reader = getReader(uploadKey)) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					if (!continueCallback.get()) {
+						return;
+					}
+					List<String> row = parseCsvRow(line);
+					indexCsvRow(row);
+					sessionFilingCount += 1;
+				}
+			}
+			LOG.info("Completed uploaded index file: {}", uploadKey);
+			sessionUploadCount += 1;
+			deleteUpload(uploadKey);
+		}
+	}
+}

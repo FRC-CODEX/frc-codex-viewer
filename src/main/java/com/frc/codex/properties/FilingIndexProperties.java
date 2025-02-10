@@ -29,6 +29,7 @@ public interface FilingIndexProperties {
 	boolean isDbMigrateAsync();
 	int lambdaPreprocessingConcurrency();
 	long maximumSearchResults();
+	String s3IndexerUploadsBucketName();
 	String s3ResultsBucketName();
 	long searchPageSize();
 	String sqsJobsQueueName();

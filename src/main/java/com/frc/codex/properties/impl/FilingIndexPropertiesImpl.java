@@ -44,6 +44,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String FILING_LIMIT_FCA = "FILING_LIMIT_FCA";
 	private static final String LAMBDA_PREPROCESSING_CONCURRENCY = "LAMBDA_PREPROCESSING_CONCURRENCY";
 	private static final String MAXIMUM_SEARCH_RESULTS = "MAXIMUM_SEARCH_RESULTS";
+	private static final String S3_INDEXER_UPLOADS_BUCKET_NAME = "S3_INDEXER_UPLOADS_BUCKET_NAME";
 	private static final String S3_RESULTS_BUCKET_NAME = "S3_RESULTS_BUCKET_NAME";
 	private static final String SEARCH_PAGE_SIZE = "SEARCH_PAGE_SIZE";
 	private static final String SECRETS_FILEPATH = "/run/secrets/frc-codex-server.secrets";
@@ -77,6 +78,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final long awsLambdaTimeoutSeconds;
 	private final int lambdaPreprocessingConcurrency;
 	private final long maximumSearchResults;
+	private final String s3IndexerUploadsBucketName;
 	private final String s3ResultsBucketName;
 	private final long searchPageSize;
 	private final String sqsJobsQueueName;
@@ -126,6 +128,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		maximumSearchResults = Long.parseLong(requireNonNull(getEnv(MAXIMUM_SEARCH_RESULTS, "100")));
 		searchPageSize = Long.parseLong(requireNonNull(getEnv(SEARCH_PAGE_SIZE, "10")));
 
+		s3IndexerUploadsBucketName = requireNonNull(getEnv(S3_INDEXER_UPLOADS_BUCKET_NAME));
 		s3ResultsBucketName = requireNonNull(getEnv(S3_RESULTS_BUCKET_NAME));
 		sqsJobsQueueName = requireNonNull(getEnv(SQS_JOBS_QUEUE_NAME));
 		sqsResultsQueueName = requireNonNull(getEnv(SQS_RESULTS_QUEUE_NAME));
@@ -301,6 +304,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public long maximumSearchResults() {
 		return maximumSearchResults;
+	}
+
+	public String s3IndexerUploadsBucketName() {
+		return s3IndexerUploadsBucketName;
 	}
 
 	public String s3ResultsBucketName() {
