@@ -6,6 +6,8 @@ import static java.util.Objects.requireNonNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAccessor;
@@ -50,6 +52,15 @@ public class UploadIndexerImpl implements UploadIndexer {
 		this.databaseManager = requireNonNull(databaseManager);
 		this.properties = requireNonNull(properties);
 		this.s3Client = requireNonNull(s3Client);
+	}
+
+	private String assertValidUrl(String urlString) {
+		try {
+			new URI(urlString);
+			return urlString;
+		} catch (URISyntaxException e) {
+			throw new RuntimeException("Invalid URL found in CSV: " + urlString, e);
+		}
 	}
 
 	private void deleteUpload(String uploadKey) {
@@ -107,7 +118,7 @@ public class UploadIndexerImpl implements UploadIndexer {
 		} else {
 			throw new RuntimeException("Invalid CSV row: " + row);
 		}
-		String downloadUrl = row.get(column++);
+		String downloadUrl = assertValidUrl(row.get(column++));
 		String companyName = row.get(column++);
 		String companyNumber = row.get(column++);
 		String externalFilingId = row.get(column++);
@@ -115,7 +126,7 @@ public class UploadIndexerImpl implements UploadIndexer {
 			LOG.debug("Skipping existing filing: {}", externalFilingId);
 			return;
 		}
-		String externalViewUrl = row.get(column++);
+		String externalViewUrl = assertValidUrl(row.get(column++));
 		LocalDateTime filingDate = parseDate(row.get(column++));
 		LocalDateTime documentDate = parseDate(row.get(column++));
 		UUID filingId = this.databaseManager.createFiling(NewFilingRequest.builder()
