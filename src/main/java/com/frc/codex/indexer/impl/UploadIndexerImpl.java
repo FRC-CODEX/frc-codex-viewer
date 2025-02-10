@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -25,6 +26,8 @@ import com.frc.codex.indexer.UploadIndexer;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.properties.FilingIndexProperties;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -119,29 +122,29 @@ public class UploadIndexerImpl implements UploadIndexer {
 		return true;
 	}
 
-	private void indexCsvRow(List<String> row) {
+	private void indexCsvRow(String[] row) {
 		int column = 0;
 		RegistryCode registryCode;
-		if (row.size() == 8) {
+		if (row.length == 8) {
 			// registry_code,download_url,company_name,company_number,external_filing_id,external_view_url,filing_date,document_date
-			registryCode = RegistryCode.valueOf(row.get(column++));
-		} else if (row.size() == 7) {
+			registryCode = RegistryCode.valueOf(row[column++]);
+		} else if (row.length == 7) {
 			// download_url,company_name,company_number,external_filing_id,external_view_url,filing_date,document_date
 			registryCode = RegistryCode.COMPANIES_HOUSE;
 		} else {
-			throw new RuntimeException("Invalid CSV row: " + row);
+			throw new RuntimeException("Invalid CSV row: " + Arrays.stream(row).toList());
 		}
-		String downloadUrl = assertValidUrl(row.get(column++));
-		String companyName = row.get(column++);
-		String companyNumber = row.get(column++);
-		String externalFilingId = row.get(column++);
+		String downloadUrl = assertValidUrl(row[column++]);
+		String companyName = row[column++];
+		String companyNumber = row[column++];
+		String externalFilingId = row[column++];
 		if (this.databaseManager.filingExists(registryCode.getCode(), externalFilingId)) {
 			LOG.debug("Skipping existing filing: {}", externalFilingId);
 			return;
 		}
-		String externalViewUrl = assertValidUrl(row.get(column++));
-		LocalDateTime filingDate = parseDate(row.get(column++));
-		LocalDateTime documentDate = parseDate(row.get(column++));
+		String externalViewUrl = assertValidUrl(row[column++]);
+		LocalDateTime filingDate = parseDate(row[column++]);
+		LocalDateTime documentDate = parseDate(row[column++]);
 		UUID filingId = this.databaseManager.createFiling(NewFilingRequest.builder()
 				.companyName(companyName)
 				.companyNumber(companyNumber)
@@ -154,25 +157,6 @@ public class UploadIndexerImpl implements UploadIndexer {
 				.build()
 		);
 		LOG.info("Indexed filing filing from CSV: ({}, {}) {}", registryCode, externalFilingId, filingId);
-	}
-
-	private List<String> parseCsvRow(String line) {
-		List<String> result = new ArrayList<>();
-		StringBuilder currentField = new StringBuilder();
-		boolean inQuotes = false;
-
-		for (char c : line.toCharArray()) {
-			if (c == '"') {
-				inQuotes = !inQuotes; // toggle state
-			} else if (c == ',' && !inQuotes) {
-				result.add(currentField.toString());
-				currentField.setLength(0); // reset the buffer
-			} else {
-				currentField.append(c);
-			}
-		}
-		result.add(currentField.toString()); // add the last field
-		return result;
 	}
 
 	private LocalDateTime parseDate(String date) {
@@ -193,16 +177,20 @@ public class UploadIndexerImpl implements UploadIndexer {
 				return;
 			}
 			LOG.info("Indexing uploaded index file: {}", uploadKey);
-			try(BufferedReader reader = getReader(uploadKey)) {
-				String line;
-				while ((line = reader.readLine()) != null) {
+			try (
+					BufferedReader reader = getReader(uploadKey);
+					CSVReader csvReader = new CSVReader(reader)
+			) {
+				String[] row;
+				while ((row = csvReader.readNext()) != null) {
 					if (!continueCallback.get()) {
 						return;
 					}
-					List<String> row = parseCsvRow(line);
 					indexCsvRow(row);
 					sessionFilingCount += 1;
 				}
+			} catch (CsvValidationException e) {
+				throw new RuntimeException(e);
 			}
 			LOG.info("Completed uploaded index file: {}", uploadKey);
 			sessionUploadCount += 1;
