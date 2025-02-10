@@ -3,16 +3,16 @@
     "govuk-frontend": "^5.8.0",
     "i18next": "^24.2.2",
     "i18next-browser-languagedetector": "^8.0.2",
-    "ixbrl-viewer": "^1.4.54"
+    "ixbrl-viewer": "^1.4.56"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.7",
-    "@babel/preset-env": "^7.26.7",
+    "@babel/core": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
     "@jest/globals": "^29.7.0",
     "babel-jest": "^29.7.0",
     "i18next-parser": "^9.1.0",
     "jest": "^29.7.0",
-    "puppeteer": "^24.1.1",
+    "puppeteer": "^24.2.0",
     "puppeteer-screen-recorder": "3.0.3"
   },
   "scripts": {
