@@ -121,7 +121,7 @@ public class UploadIndexerImpl implements UploadIndexer {
 		return true;
 	}
 
-	private void indexCsvRow(String[] row) {
+	private boolean indexCsvRow(String[] row) {
 		int column = 0;
 		RegistryCode registryCode;
 		if (row.length == 8) {
@@ -152,7 +152,7 @@ public class UploadIndexerImpl implements UploadIndexer {
 
 		if (this.databaseManager.filingExists(registryCode.getCode(), externalFilingId)) {
 			LOG.debug("Skipping existing filing: {}", externalFilingId);
-			return;
+			return false;
 		}
 		UUID filingId = this.databaseManager.createFiling(NewFilingRequest.builder()
 				.companyName(companyName)
@@ -165,7 +165,8 @@ public class UploadIndexerImpl implements UploadIndexer {
 				.registryCode(registryCode.getCode())
 				.build()
 		);
-		LOG.info("Indexed filing filing from CSV: ({}, {}) {}", registryCode, externalFilingId, filingId);
+		LOG.debug("Indexed filing filing from CSV: ({}, {}) {}", registryCode, externalFilingId, filingId);
+		return true;
 	}
 
 	private LocalDateTime parseDate(String date) {
@@ -195,8 +196,9 @@ public class UploadIndexerImpl implements UploadIndexer {
 					if (!continueCallback.get()) {
 						return;
 					}
-					indexCsvRow(row);
-					sessionFilingCount += 1;
+					if (indexCsvRow(row)) {
+						sessionFilingCount += 1;
+					}
 				}
 			} catch (CsvValidationException e) {
 				throw new RuntimeException(e);
