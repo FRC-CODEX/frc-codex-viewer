@@ -96,6 +96,16 @@ Resources:
       Tags:
       - Key: "Environment"
         Value: !Ref EnvironmentName
+  S3IndexerUploadsBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "${EnvironmentName}-codex-indexer-uploads"
+      AccessControl: "Private"
+      VersioningConfiguration:
+        Status: "Enabled"
+      Tags:
+        - Key: "Environment"
+          Value: !Ref EnvironmentName
   S3TaxonomyPackagesBucket:
     Type: "AWS::S3::Bucket"
     Properties:
@@ -106,6 +116,23 @@ Resources:
       Tags:
       - Key: "Environment"
         Value: !Ref EnvironmentName
+  IAMPolicyReadIndexerUploadsBucket:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      ManagedPolicyName: !Sub "${EnvironmentName}CodexReadIndexerUploadsBucket"
+      Path: "/"
+      Description: !Sub "Permission for read-only actions on the S3 bucket ${S3IndexerUploadsBucket}."
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Resource:
+              - !Sub "${S3IndexerUploadsBucket.Arn}"
+              - !Sub "${S3IndexerUploadsBucket.Arn}/*"
+            Action:
+              - "s3:Describe*"
+              - "s3:Get*"
+              - "s3:List*"
+            Effect: "Allow"
   IAMPolicyReadResultsBucket:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
@@ -329,6 +356,8 @@ Resources:
           Value: !Ref S3TaxonomyPackagesBucket
         - Name: "SQS_JOBS_QUEUE_NAME"
           Value: unused
+        - Name: "S3_INDEXER_UPLOADS_BUCKET_NAME"
+          Value: !Ref S3IndexerUploadsBucket
         - Name: "S3_RESULTS_BUCKET_NAME"
           Value: !Ref S3ResultsBucket
         - Name: "SQS_RESULTS_QUEUE_NAME"
