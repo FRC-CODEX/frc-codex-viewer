@@ -133,6 +133,21 @@ Resources:
               - "s3:Get*"
               - "s3:List*"
             Effect: "Allow"
+  IAMPolicyDeleteIndexerUploadsBucket:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      ManagedPolicyName: !Sub "${EnvironmentName}CodexDeleteIndexerUploadsBucket"
+      Path: "/"
+      Description: !Sub "Permission for delete object action on the S3 bucket ${S3IndexerUploadsBucket}."
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Resource:
+              - !Sub "${S3IndexerUploadsBucket.Arn}"
+              - !Sub "${S3IndexerUploadsBucket.Arn}/*"
+            Action:
+              - "s3:DeleteObject"
+            Effect: "Allow"
   IAMPolicyReadResultsBucket:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
@@ -254,6 +269,8 @@ Resources:
       Path: "/"
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
+      - Ref: IAMPolicyDeleteIndexerUploadsBucket
+      - Ref: IAMPolicyReadIndexerUploadsBucket
       - Ref: IAMPolicyReadResultsBucket
       MaxSessionDuration: 3600
       AssumeRolePolicyDocument:
