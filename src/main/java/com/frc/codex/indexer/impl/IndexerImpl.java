@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.frc.codex.indexer.UploadIndexer;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.database.DatabaseManager;
@@ -68,6 +69,7 @@ public class IndexerImpl implements Indexer {
 	private final LambdaManager lambdaManager;
 	private final FilingIndexProperties properties;
 	private final QueueManager queueManager;
+	private final UploadIndexer uploadIndexer;
 
 	private final Pattern companiesHouseFilenamePattern;
 	private Date fcaSessionLastStartedDate;
@@ -80,7 +82,8 @@ public class IndexerImpl implements Indexer {
 			DatabaseManager databaseManager,
 			FcaClient fcaClient,
 			LambdaManager lambdaManager,
-			QueueManager queueManager
+			QueueManager queueManager,
+			UploadIndexer uploadIndexer
 	) {
 		this.properties = properties;
 		this.companiesHouseCompaniesIndexer = new CompaniesHouseCompaniesIndexerImpl(companiesHouseClient, databaseManager); // TODO: Dependency injection?
@@ -91,12 +94,14 @@ public class IndexerImpl implements Indexer {
 		this.fcaClient = fcaClient;
 		this.lambdaManager = lambdaManager;
 		this.queueManager = queueManager;
+		this.uploadIndexer = uploadIndexer;
 		this.companiesHouseFilenamePattern = Pattern.compile(
 				"Prod\\d+_\\d+_([a-zA-Z0-9]+)_(\\d{8})\\..*"
 		);
 		this.jobs = List.of(
 				companiesHouseCompaniesIndexer,
-				companiesHouseStreamIndexer
+				companiesHouseStreamIndexer,
+				this.uploadIndexer
 		);
 	}
 
@@ -146,6 +151,17 @@ public class IndexerImpl implements Indexer {
 			return !databaseManager.checkRegistryLimit(RegistryCode.COMPANIES_HOUSE, properties.filingLimitCompaniesHouse());
 		};
 		companiesHouseCompaniesIndexer.run(continueCallback);
+	}
+
+	/*
+	 * Indexes filings from uploaded CSVs.
+	 */
+	@Scheduled(initialDelay = 60, fixedDelay = 60, timeUnit = TimeUnit.SECONDS)
+	public void indexFilingsFromUploads() throws IOException {
+		LOG.info("Starting indexing from uploads.");
+		Supplier<Boolean> continueCallback = () -> true; // CSV uploads circumvent the filing limit.
+		uploadIndexer.run(continueCallback);
+		LOG.info("Completed indexing from uploads.");
 	}
 
 	/*

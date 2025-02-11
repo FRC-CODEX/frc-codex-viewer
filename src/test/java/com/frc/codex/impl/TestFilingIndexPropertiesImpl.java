@@ -126,6 +126,10 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return "frc-codex-results";
 	}
 
+	public String s3IndexerUploadsBucketName() {
+		return "frc-codex-indexer-uploads";
+	}
+
 	public long searchPageSize() {
 		return 10;
 	}

@@ -28,6 +28,7 @@ services:
       FCA_DATA_API_BASE_URL: "https://data.fca.org.uk/artefacts/"
       FCA_SEARCH_API_URL: "https://api.data.fca.org.uk/search?index=fca-nsm-searchdata"
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,address=*:8180,suspend=n"
+      S3_INDEXER_UPLOADS_BUCKET_NAME: "frc-codex-indexer-uploads"
       S3_RESULTS_BUCKET_NAME: "frc-codex-results"
       SQS_JOBS_QUEUE_NAME: "frc_codex_jobs"
       SQS_RESULTS_QUEUE_NAME: "frc_codex_results"
@@ -121,6 +122,7 @@ services:
     environment:
       REGION_NAME: 'eu-west-2'
       S3_HTTP_CACHE_BUCKET_NAME: 'frc-codex-http-cache'
+      S3_INDEXER_UPLOADS_BUCKET_NAME: "frc-codex-indexer-uploads"
       S3_RESULTS_BUCKET_NAME: 'frc-codex-results'
       S3_TAXONOMY_PACKAGES_BUCKET_NAME: 'frc-codex-taxonomy-packages'
       SUPPORT_EMAIL: 'dev@localhost'
@@ -131,6 +133,7 @@ services:
         aliases:
           - localstack.localhost
     volumes:
+      - ./indexer_uploads:/tmp/indexer_uploads
       - ./localstack.sh:/etc/localstack/init/ready.d/script.sh
       - ./taxonomy_packages:/tmp/taxonomy_packages
   postgres:
