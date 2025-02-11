@@ -129,6 +129,7 @@ Resources:
               - !Sub "${S3IndexerUploadsBucket.Arn}"
               - !Sub "${S3IndexerUploadsBucket.Arn}/*"
             Action:
+              - "s3:DeleteObject"
               - "s3:Describe*"
               - "s3:Get*"
               - "s3:List*"
@@ -255,6 +256,7 @@ Resources:
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
       - Ref: IAMPolicyReadResultsBucket
+      - Ref: IAMPolicyReadIndexerUploadsBucket
       MaxSessionDuration: 3600
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
