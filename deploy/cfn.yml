@@ -116,12 +116,12 @@ Resources:
       Tags:
       - Key: "Environment"
         Value: !Ref EnvironmentName
-  IAMPolicyReadIndexerUploadsBucket:
+  IAMPolicyReadAndDeleteIndexerUploadsBucket:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
       ManagedPolicyName: !Sub "${EnvironmentName}CodexReadIndexerUploadsBucket"
       Path: "/"
-      Description: !Sub "Permission for read-only actions on the S3 bucket ${S3IndexerUploadsBucket}."
+      Description: !Sub "Permission for read and delete actions on the S3 bucket ${S3IndexerUploadsBucket}."
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
