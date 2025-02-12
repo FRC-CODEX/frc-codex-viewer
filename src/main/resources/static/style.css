@@ -22,6 +22,18 @@ html, body {
     }
 }
 
+.header-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.header-toolbar > a {
+    margin-left: 1em;
+    margin-right: 1em;
+    white-space: nowrap;
+}
+
 .loading-bar {
     padding:1em;
     font-size:1.5em;
