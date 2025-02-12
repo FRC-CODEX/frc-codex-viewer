@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-<head th:replace="fragments :: head (~{ :: title})">
+<head th:replace="~{fragments :: head (~{ :: title})}">
     <title data-i18n="survey:title">Survey - UK iXBRL Viewer</title>
 </head>
 <body class="govuk-template__body">
-<script th:replace="fragments :: script-govuk-frontend-supported"></script>
-<a th:replace="fragments :: link-skip-to-main"></a>
-<header th:replace="fragments :: header"></header>
+<script th:replace="~{fragments :: script-govuk-frontend-supported}"></script>
+<a th:replace="~{fragments :: link-skip-to-main}"></a>
+<header th:replace="~{fragments :: header}"></header>
 <div class="govuk-width-container">
-    <div th:replace="fragments :: banner-beta"></div>
+    <div th:replace="~{fragments :: banner-beta}"></div>
     <main class="govuk-main-wrapper">
         <h1 class="govuk-heading-l" id="main-content" data-i18n="survey:header">Customer Satisfaction Survey</h1>
         <div id="success-banner" class="govuk-notification-banner govuk-notification-banner--success"
@@ -86,8 +86,8 @@
         </form>
     </main>
 </div>
-<footer th:replace="fragments :: footer-main"></footer>
-<script th:replace="fragments :: script-govuk-frontend"></script>
+<footer th:replace="~{fragments :: footer-main}"></footer>
+<script th:replace="~{fragments :: script-govuk-frontend}"></script>
 <script th:if="${success == true}">
     localStorage.setItem("survey_submitted_date", new Date().toString());
 </script>

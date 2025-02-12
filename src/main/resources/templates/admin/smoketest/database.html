@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="fragments :: head (_)"></head>
+<head th:replace="~{fragments :: head (_)}"></head>
 <body>
-<header th:replace="fragments :: header"></header>
+<header th:replace="~{fragments :: header}"></header>
 <div class="admin-container">
     <h1><a href="/" data-i18n="admin:home">UK iXBRL Viewer</a></h1>
     <h3 data-i18n="admin:database.unprocessed">Unprocessed Filings</h3>
