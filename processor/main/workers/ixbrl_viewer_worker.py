@@ -121,7 +121,7 @@ class IxbrlViewerWorker(Worker):
                 'viewerURL': '/ixbrlviewer.js',
                 'viewer_feature_mandatory_facts': 'companies-house'
             },
-            plugins="ixbrl-viewer|saveLoadableOIM",
+            plugins="inlineXbrlDocumentSet|ixbrl-viewer|saveLoadableOIM",
         )
         with Session() as session:
             success = session.run(runtime_options)
