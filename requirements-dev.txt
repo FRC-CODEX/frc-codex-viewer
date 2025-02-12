@@ -1,4 +1,4 @@
-boto3-stubs==1.36.16
+boto3-stubs==1.36.18
 flake8==7.1.1
 lxml-stubs==0.5.1
 mypy==1.15.0
