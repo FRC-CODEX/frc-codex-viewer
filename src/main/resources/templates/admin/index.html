@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="fragments :: head (_)"></head>
+<head th:replace="~{fragments :: head (_)}"></head>
 <body>
-<header th:replace="fragments :: header"></header>
+<header th:replace="~{fragments :: header}"></header>
 <div class="admin-container">
     <h1><a href="/" data-i18n="admin:home">CODEx Admin</a></h1>
     <a href="/admin/logout" data-i18n="admin:index.logout">Log Out</a>

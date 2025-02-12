@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-<head th:replace="fragments :: head (~{ :: title})">
+<head th:replace="~{fragments :: head (~{ :: title})}">
     <title data-i18n="loading:title">Loading viewer...</title>
 </head>
 <body class="govuk-template__body">
-<script th:replace="fragments :: script-govuk-frontend-supported"></script>
-<a th:replace="fragments :: link-skip-to-main"></a>
-<header th:replace="fragments :: header"></header>
+<script th:replace="~{fragments :: script-govuk-frontend-supported}"></script>
+<a th:replace="~{fragments :: link-skip-to-main}"></a>
+<header th:replace="~{fragments :: header}"></header>
 <div class="loading-bar">
     <div>
         <img src="/icons/loading.svg" alt="Loading icon"/>

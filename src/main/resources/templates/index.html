@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
-<head th:replace="fragments :: head (_)"></head>
+<head th:replace="~{fragments :: head (_)}"></head>
 <body class="govuk-template__body">
-<script th:replace="fragments :: script-govuk-frontend-supported"></script>
-<a th:replace="fragments :: link-skip-to-main"></a>
-<header th:replace="fragments :: header"></header>
+<script th:replace="~{fragments :: script-govuk-frontend-supported}"></script>
+<a th:replace="~{fragments :: link-skip-to-main}"></a>
+<header th:replace="~{fragments :: header}"></header>
 <div class="govuk-width-container">
-    <div th:replace="fragments :: banner-beta"></div>
+    <div th:replace="~{fragments :: banner-beta}"></div>
     <main class="govuk-main-wrapper">
         <details class="govuk-details">
             <summary class="govuk-details__summary">
@@ -245,8 +245,8 @@ The UK iXBRL Viewer, funded by the UK's Regulators' Pioneer Fund (Department for
         </div>
     </main>
 </div>
-<footer th:replace="fragments :: footer-main"></footer>
-<script th:replace="fragments :: script-govuk-frontend"></script>
+<footer th:replace="~{fragments :: footer-main}"></footer>
+<script th:replace="~{fragments :: script-govuk-frontend}"></script>
 <script>
     sessionStorage.removeItem('ixbrl-viewer-home-link-query');
     let query = window.location.search;
