@@ -1,6 +1,5 @@
 {
   "features": {
-    "guide_link": "/FRC_Codex_User_Guide.pdf",
     "highlight_facts_on_startup": true,
     "home_link_label": "UK iXBRL Viewer",
     "home_link_url": "/",
