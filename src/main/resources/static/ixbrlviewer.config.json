@@ -1,5 +1,6 @@
 {
   "features": {
+    "hide_calculation_mode_option": true,
     "highlight_facts_on_startup": true,
     "home_link_label": "UK iXBRL Viewer",
     "home_link_url": "/",
