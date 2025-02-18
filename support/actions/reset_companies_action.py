@@ -20,7 +20,9 @@ class ResetCompaniesAction(BaseAction):
                 'completed_before' not in options and \
                 'discovered_after' not in options and \
                 'discovered_before' not in options:
-            return False, "Must provide at least one of 'company_number', 'completed_after', 'completed_before', 'discovered_after', or 'discovered_before'.", 0
+            return False, "Must provide at least one of 'company_number', " \
+                          "'completed_after', 'completed_before', 'discovered_after', " \
+                          "or 'discovered_before'.", 0
         if options.get('company_number'):
             conditions.append("company_number = %s")
             params.append(options['company_number'])

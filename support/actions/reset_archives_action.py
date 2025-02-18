@@ -11,7 +11,9 @@ class ResetArchivesAction(BaseAction):
                 'filename' not in options and \
                 'completed_after' not in options and \
                 'completed_before' not in options:
-            return False, "Must provide at least one of 'archive_type', 'filename', 'completed_after', or 'completed_before'.", 0
+            return False, "Must provide at least one of 'archive_type', " \
+                          "'filename', 'completed_after', or " \
+                          "'completed_before'.", 0
         if options.get('archive_type'):
             conditions.append("archive_type = %s")
             params.append(options['archive_type'])
