@@ -44,6 +44,14 @@ echo "Test support action: list_errors"
 curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
   --data '{"action":"list_errors"}'
 
+echo "Test support action: reset_archives"
+curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
+  --data '{"action":"reset_archives","archive_type":"daily"}'
+
+echo "Test support action: reset_companies"
+curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
+  --data '{"action":"reset_companies","company_number":"1234567890"}'
+
 echo "Test support action: reset_filings"
 curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
   --data '{"action":"reset_filings","company_number":"1234567890"}'
