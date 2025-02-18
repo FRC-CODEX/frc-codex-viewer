@@ -11,8 +11,12 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class CompaniesHouseStreamClient {
+	private final Logger LOG = LoggerFactory.getLogger(CompaniesHouseStreamClient.class);
 	private final String apiKey;
 	private final String baseUrl;
 
@@ -43,7 +47,20 @@ public class CompaniesHouseStreamClient {
 		if (timepoint == null) {
 			stream("/filings", callback);
 		} else {
-			stream("/filings?timepoint=" + timepoint, callback);
+			try {
+				stream("/filings?timepoint=" + timepoint, callback);
+			} catch (IOException e) {
+				if (e.getMessage().contains("HTTP response code: 416")) {
+					// 416 response code most likely indicates the timepoint is too far in the past.
+					// https://developer-specs.company-information.service.gov.uk/streaming-api/guides/overview#timepoints
+					// Retry without timepoint specified.
+					// This may lead to filings being missed but is preferable of falling behind indefinitely.
+					LOG.warn("Timepoint {} is too far in the past, retrying without timepoint.", timepoint);
+					stream("/filings", callback);
+				} else {
+					throw e;
+				}
+			}
 		}
 	}
 }
