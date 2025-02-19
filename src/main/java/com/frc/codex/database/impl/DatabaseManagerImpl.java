@@ -528,6 +528,22 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		}
 	}
 
+	public void resetCompany(String companyNumber) {
+		try (Connection connection = getInitializedConnection(false)) {
+			String sql = "UPDATE companies SET completed_date = NULL " +
+					"WHERE company_number = ?";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setObject(1, companyNumber);
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Resetting company failed, no rows affected.");
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public void resetFiling(UUID filingId) {
 		try (Connection connection = getInitializedConnection(false)) {
 			String sql = "UPDATE filings SET " +

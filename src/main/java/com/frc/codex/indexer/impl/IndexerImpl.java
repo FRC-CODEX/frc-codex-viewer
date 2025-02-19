@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import com.frc.codex.indexer.UploadIndexer;
 import com.frc.codex.model.ArchiveType;
+import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.database.DatabaseManager;
@@ -227,6 +228,28 @@ public class IndexerImpl implements Indexer {
 			}
 			String companyNumber = matcher.group(1);
 			if (existingCompanyNumbers.contains(companyNumber)) {
+				if (archiveType.isResetsCompany()) {
+					String documentDate = matcher.group(2);
+					Integer year = Integer.parseInt(documentDate.substring(0, 4));
+					Integer month = Integer.parseInt(documentDate.substring(4, 6));
+					Integer day = Integer.parseInt(documentDate.substring(6, 8));
+					SearchFilingsRequest search = new SearchFilingsRequest();
+					search.setSearchText(companyNumber);
+					search.setRegistryCode(RegistryCode.COMPANIES_HOUSE.getCode());
+					search.setMinDocumentDateYear(year);
+					search.setMinDocumentDateMonth(month);
+					search.setMinDocumentDateDay(day);
+					search.setMaxDocumentDateYear(year);
+					search.setMaxDocumentDateMonth(month);
+					search.setMaxDocumentDateDay(day);
+					List<Filing> existingFilings = databaseManager.searchFilings(search);
+					if (existingFilings.size() == 0) {
+						databaseManager.resetCompany(companyNumber);
+						LOG.info("Reset company {}.", companyNumber);
+						continue;
+					}
+					LOG.debug("Skipped reset, found filing matching company number {} and document date {}.", companyNumber, documentDate);
+				}
 				LOG.debug("Skipping existing company: {}", companyNumber);
 				continue;
 			}
