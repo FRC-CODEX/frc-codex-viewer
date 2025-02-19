@@ -1,4 +1,5 @@
 {
+  "companiesHouseSearchPage": "Chwilio Cofrestrfa'r Cwmnïau",
   "dateFiled": {
     "day": "Dydd",
     "error": "Gwall:",
@@ -10,6 +11,7 @@
   },
   "loadMore": "Llwytho mwy o ffeilio",
   "maxResults": "Uchafswm nifer y canlyniadau a ddychwelwyd. Mireiniwch eich chwiliad.",
+  "nationalStorageMechanism": "Mecanwaith Cynhesu Cenedlaethol",
   "registry": {
     "any": "Unrhyw",
     "header": "Cofrestrfa"
@@ -43,6 +45,8 @@
   "searchFilings": "Chwilio Ffeiliau",
   "searchPlaceholder": "Enw'r Cwmni, CRN (Rhif Cofrestru'r Cwmni), neu LEI (Dynodwr Endid Cyfreithiol)",
   "userGuide": "Canllaw Defnyddiwr",
-  "whatXbrlDetails": "Yn y DU, defnyddir iXBRL i dagio cyfrifon a gwybodaeth fusnes arall mewn adroddiadau blynyddol a'u cyflwyno fel adroddiadau XBRL (iXBRL) mewnol i Gofrestr Busnes y DU: Tŷ'r Cwmnïau; Rheoleiddiwr Gwarantau: Awdurdod Ymddygiad Ariannol; Awdurdod Treth: Cyllid a Thollau EM, Rheoleiddiwr Elusennau: Comisiwn Elusennau Cymru a Lloegr.\n\nMae Gwyliwr iXBRL y DU, a ariennir gan Gronfa Arloesi Rheoleiddwyr y DU (Yr Adran Gwyddoniaeth, Arloesedd a Thechnoleg), yn caniatáu i ddefnyddwyr gael mynediad at ddata strwythuredig y gellir ei ddarllen gan beiriant (ffeithiau XBRL) o adroddiadau iXBRL wedi’u tagio sydd ar gael yng Nghofrestrfa Tŷ’r Cwmnïau a’r National Storage Mecanwaith. I gael rhagor o wybodaeth am y UK iXBRL Viewer, gweler y",
+  "whatXbrlDetails": "XBRL (Iaith Adrodd Busnes eXtensible), yw'r safon ryngwladol ar gyfer cyfnewid data strwythuredig mewn fformat y gall peiriant ei ddarllen. Mae iXBRL, neu Inline XBRL, yn estyniad o XBRL sy'n galluogi un adroddiad i ddarparu data sy'n ddarllenadwy gan ddyn a pheiriant.\n\n Yn y DU, defnyddir iXBRL i dagio cyfrifon a gwybodaeth fusnes arall mewn adroddiadau blynyddol gan ddefnyddio Tacsonomeg a gyhoeddir gan Gosodwyr Safonol: Y Cyngor Adrodd Ariannol neu gyrff cymwys eraill a’u cyflwyno fel adroddiadau iXBRL i Gofrestr Busnes y DU: Tŷ’r Cwmnïau; Rheoleiddiwr Gwarantau: Awdurdod Ymddygiad Ariannol; Awdurdod Treth: Cyllid a Thollau EM, Rheoleiddiwr Elusennau: Comisiwn Elusennau Cymru a Lloegr.\n\n Gyda Gwyliwr iXBRL y DU, gallwch gael mynediad at ddata strwythuredig y gellir ei ddarllen gan beiriant (ffeithiau XBRL) o adroddiadau iXBRL wedi’u tagio sydd ar gael yng Nghofrestrfa Tŷ’r Cwmnïau a'r Mecanwaith Storio Cenedlaethol. I gael rhagor o wybodaeth am y UK iXBRL Viewer, gweler y",
+  "whatXbrlDetailsNote": "Sylwch fod y gwasanaeth hwn yn chwilio am adroddiadau blynyddol sydd ar ffurf iXBRL yn unig. Os na allwch ddod o hyd i'r adroddiad, ewch i'r",
+  "whatXbrlDetailsNoteOr": "neu",
   "whatXbrlSummary": "Mae iXBRL yn estyniad o XBRL (iaith adrodd busnes estynadwy), y safon ryngwladol ar gyfer rhannu gwybodaeth fusnes yn electronig."
 }
