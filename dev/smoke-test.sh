@@ -63,4 +63,3 @@ curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
 echo "Test support action: reset_stream_events"
 curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
   --data '{"action":"reset_stream_events","timepoint_before":0}'
-
