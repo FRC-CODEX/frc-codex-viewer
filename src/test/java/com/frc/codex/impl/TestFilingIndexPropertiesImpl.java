@@ -58,6 +58,10 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return "XXX";
 	}
 
+	public long companiesHouseStreamIndexerBatchSize() {
+		return 100;
+	}
+
 	public String dbSeedScriptPath() {
 		return null;
 	}

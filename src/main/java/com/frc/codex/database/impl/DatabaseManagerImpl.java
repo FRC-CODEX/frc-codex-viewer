@@ -30,6 +30,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
+import com.frc.codex.model.StreamEvent;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.database.DatabaseManager;
@@ -209,6 +210,48 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		return filingId;
 	}
 
+	public UUID createStreamEvent(long timepoint, String json) {
+		UUID streamEventId;
+		try (Connection connection = getInitializedConnection(false)) {
+			String sql = "INSERT INTO stream_events (timepoint, json) VALUES (?, ?);";
+			PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			int i = 0;
+			statement.setLong(++i, timepoint);
+			statement.setObject(++i, json);
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Creating stream event failed, no rows affected.");
+			}
+			connection.commit();
+			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					streamEventId = UUID.fromString(generatedKeys.getString("stream_event_id"));
+				} else {
+					throw new SQLException("Creating stream event failed, no ID obtained.");
+				}
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return streamEventId;
+	}
+
+	public void deleteStreamEvent(UUID streamEventId) {
+		try (Connection connection = getInitializedConnection(false)) {
+			String sql = "DELETE FROM stream_events WHERE stream_event_id = ?;";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setObject(1, streamEventId);
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Deleting stream event failed, no rows affected.");
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public boolean filingExists(String registryCode, String externalFilingId) {
 		try (Connection connection = getInitializedConnection(true)) {
 			String sql = "SELECT filing_id FROM filings " +
@@ -263,7 +306,7 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 	public Long getLatestStreamTimepoint(Long defaultTimepoint) {
 		try (Connection connection = getInitializedConnection(true)) {
 			PreparedStatement statement = connection.prepareStatement(
-					"SELECT MAX(stream_timepoint) FROM filings"
+					"SELECT MAX(timepoint) FROM stream_events"
 			);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
@@ -321,6 +364,18 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 			return resultSet.getLong(1);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public List<StreamEvent> getStreamEvents(long limit) {
+		try (Connection connection = getInitializedConnection(true)) {
+			String sql = "SELECT * FROM stream_events ORDER BY timepoint LIMIT ?;";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, limit);
+			ResultSet resultSet = statement.executeQuery();
+			return getStreamEvents(resultSet);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -476,7 +531,7 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		return new Timestamp(localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli());
 	}
 
-	public List<Filing> getFilings(ResultSet resultSet) throws SQLException {
+	private List<Filing> getFilings(ResultSet resultSet) throws SQLException {
 		ImmutableList.Builder<Filing> results = ImmutableList.builder();
 		while (resultSet.next()) {
 			results.add(Filing.builder()
@@ -500,6 +555,18 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 					.streamTimepoint(resultSet.getLong("stream_timepoint"))
 					.oimDirectory(resultSet.getString("oim_directory"))
 					.stubViewerUrl(resultSet.getString("stub_viewer_url"))
+					.build());
+		}
+		return results.build();
+	}
+
+	private List<StreamEvent> getStreamEvents(ResultSet resultSet) throws SQLException {
+		ImmutableList.Builder<StreamEvent> results = ImmutableList.builder();
+		while (resultSet.next()) {
+			results.add(StreamEvent.builder()
+					.streamEventId(resultSet.getString("stream_event_id"))
+					.createdDate(resultSet.getTimestamp("created_date"))
+					.json(resultSet.getString("json"))
 					.build());
 		}
 		return results.build();

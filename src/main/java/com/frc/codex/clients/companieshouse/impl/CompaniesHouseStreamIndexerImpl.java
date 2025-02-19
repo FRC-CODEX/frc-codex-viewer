@@ -1,51 +1,51 @@
 package com.frc.codex.clients.companieshouse.impl;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.frc.codex.model.RegistryCode;
-import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompany;
 import com.frc.codex.clients.companieshouse.CompaniesHouseFiling;
 import com.frc.codex.clients.companieshouse.RateLimitException;
+import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.indexer.IndexerJob;
 import com.frc.codex.model.NewFilingRequest;
+import com.frc.codex.model.RegistryCode;
+import com.frc.codex.model.StreamEvent;
+import com.frc.codex.properties.FilingIndexProperties;
 
 public class CompaniesHouseStreamIndexerImpl implements IndexerJob {
 	private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseStreamIndexerImpl.class);
 	private final CompaniesHouseClient companiesHouseClient;
+	private final long companiesHouseStreamIndexerBatchSize;
 	private final DatabaseManager databaseManager;
 	private int companiesHouseSessionFilingCount;
-	private Date companiesHouseStreamLastOpenedDate;
 	private Long companiesHouseSessionLatestTimepoint;
 	private Long companiesHouseSessionStartTimepoint;
 
 	public CompaniesHouseStreamIndexerImpl(
 			CompaniesHouseClient companiesHouseClient,
-			DatabaseManager databaseManager
+			DatabaseManager databaseManager,
+			FilingIndexProperties properties
 	) {
 		this.companiesHouseClient = companiesHouseClient;
+		this.companiesHouseStreamIndexerBatchSize = properties.companiesHouseStreamIndexerBatchSize();
 		this.databaseManager = databaseManager;
 	}
 
 	public String getStatus() {
 		return String.format("""
-						Companies House:
-						\tStream last opened: %s
+						Companies House Stream Indexer:
 						\tFilings discovered this session: %s
 						\tEarliest timepoint this session: %s
 						\tLatest timepoint this session: %s""",
-				companiesHouseStreamLastOpenedDate,
 				companiesHouseSessionFilingCount,
 				companiesHouseSessionStartTimepoint,
 				companiesHouseSessionLatestTimepoint
@@ -125,40 +125,41 @@ public class CompaniesHouseStreamIndexerImpl implements IndexerJob {
 	}
 
 	public boolean isHealthy() {
-		return companiesHouseStreamLastOpenedDate != null &&
-				companiesHouseSessionStartTimepoint != null;
+		return companiesHouseSessionStartTimepoint != null;
 	}
 
-	public void run(Supplier<Boolean> continueCallback) throws IOException {
+	public void run(Supplier<Boolean> continueCallback) {
 		if (!continueCallback.get()) {
 			return;
 		}
-		LOG.info("Starting Companies House indexing at {}", System.currentTimeMillis() / 1000);
-		Function<CompaniesHouseFiling, Boolean> callback = (CompaniesHouseFiling filing) -> {
+		LOG.info("Starting Companies House stream indexing at {}", System.currentTimeMillis() / 1000);
+		List<StreamEvent> streamEvents = this.databaseManager.getStreamEvents(companiesHouseStreamIndexerBatchSize);
+		for (StreamEvent streamEvent : streamEvents) {
+
+			CompaniesHouseFiling companiesHouseFiling;
+			try {
+				companiesHouseFiling = companiesHouseClient.parseStreamedFiling(streamEvent.getJson());
+			} catch (JsonProcessingException e) {
+				LOG.error("Failed to parse CH filing stream event.", e);
+				break;
+			}
+
 			long timepoint;
 			try {
-				timepoint = handleFilingStreamEvent(filing);
-			} catch (JsonProcessingException e) {
-				LOG.error("Failed to process filing event.", e);
-				return false; // Stop streaming
+				timepoint = handleFilingStreamEvent(companiesHouseFiling);
+				databaseManager.deleteStreamEvent(streamEvent.getStreamEventId());
+			} catch (RateLimitException e) {
+				LOG.warn("Rate limit exceeded while streaming CH filings. Resuming later.", e);
+				break;
+			} catch (Exception e) {
+				LOG.error("Failed to handle CH filing stream event.", e);
+				break;
 			}
-			if (!continueCallback.get()) {
-				return false;
-			}
+
 			if (companiesHouseSessionStartTimepoint == null) {
 				companiesHouseSessionStartTimepoint = timepoint;
 			}
 			companiesHouseSessionLatestTimepoint = timepoint;
-			return true; // Continue streaming
-		};
-		long startTimepoint = this.databaseManager.getLatestStreamTimepoint(null);
-		this.companiesHouseStreamLastOpenedDate = new Date();
-		try {
-			this.companiesHouseClient.streamFilings(startTimepoint, callback);
-		} catch (RateLimitException e) {
-			LOG.warn("Rate limit exceeded while streaming CH filings. Resuming later.", e);
-		} catch (IOException e) {
-			LOG.error("Companies House stream closed with an exception.", e);
 		}
 	}
 }

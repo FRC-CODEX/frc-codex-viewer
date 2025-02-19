@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.frc.codex.clients.companieshouse.impl.CompaniesHouseStreamListenerImpl;
 import com.frc.codex.indexer.UploadIndexer;
 import com.frc.codex.model.ArchiveType;
 import com.frc.codex.model.SearchFilingsRequest;
@@ -65,6 +66,7 @@ public class IndexerImpl implements Indexer {
 	private final CompaniesHouseClient companiesHouseClient;
 	private final CompaniesHouseHistoryClient companiesHouseHistoryClient;
 	private final CompaniesHouseStreamIndexerImpl companiesHouseStreamIndexer;
+	private final CompaniesHouseStreamListenerImpl companiesHouseStreamListener;
 	private final DatabaseManager databaseManager;
 	private final FcaClient fcaClient;
 	private final List<IndexerJob> jobs;
@@ -91,7 +93,8 @@ public class IndexerImpl implements Indexer {
 		this.companiesHouseCompaniesIndexer = new CompaniesHouseCompaniesIndexerImpl(companiesHouseClient, databaseManager); // TODO: Dependency injection?
 		this.companiesHouseClient = companiesHouseClient;
 		this.companiesHouseHistoryClient = companiesHouseHistoryClient;
-		this.companiesHouseStreamIndexer = new CompaniesHouseStreamIndexerImpl(companiesHouseClient, databaseManager); // TODO: Dependency injection?
+		this.companiesHouseStreamIndexer = new CompaniesHouseStreamIndexerImpl(companiesHouseClient, databaseManager, properties); // TODO: Dependency injection?
+		this.companiesHouseStreamListener = new CompaniesHouseStreamListenerImpl(companiesHouseClient, databaseManager); // TODO: Dependency injection?
 		this.databaseManager = databaseManager;
 		this.fcaClient = fcaClient;
 		this.lambdaManager = lambdaManager;
@@ -103,6 +106,7 @@ public class IndexerImpl implements Indexer {
 		this.jobs = List.of(
 				companiesHouseCompaniesIndexer,
 				companiesHouseStreamIndexer,
+				companiesHouseStreamListener,
 				this.uploadIndexer
 		);
 	}
@@ -123,13 +127,11 @@ public class IndexerImpl implements Indexer {
 	}
 
 	/*
-	 * Indexes Companies House filings from stream.
-	 * Runs continuously as long as HTTP connection remains open.
-	 * If the connection closes, resumes after one minute.
-	 * One scheduler thread is effectively dedicated to this task.
+	 * Indexes Companies House filings from captured filing stream events.
+	 * Processes in batches to allow for other tasks to run.
 	 */
-	@Scheduled(initialDelay = 1, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
-	public void indexCompaniesHouseFilings() throws IOException {
+	@Scheduled(initialDelay = 30, fixedDelay = 30, timeUnit = TimeUnit.SECONDS)
+	public void indexCompaniesHouseFilings() {
 		Supplier<Boolean> continueCallback = () -> {
 			if (!companiesHouseClient.isEnabled()) {
 				LOG.info("Cannot index from Companies House stream. Companies House client is disabled.");
@@ -138,6 +140,24 @@ public class IndexerImpl implements Indexer {
 			return !databaseManager.checkRegistryLimit(RegistryCode.COMPANIES_HOUSE, properties.filingLimitCompaniesHouse());
 		};
 		companiesHouseStreamIndexer.run(continueCallback);
+	}
+
+	/*
+	 * Captures Companies House filing stream events for later processing.
+	 * Runs continuously as long as HTTP connection remains open.
+	 * If the connection closes, resumes after one minute.
+	 * One scheduler thread is effectively dedicated to this task.
+	 */
+	@Scheduled(initialDelay = 1, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+	public void listenToCompaniesHouseFilingsStream() {
+		Supplier<Boolean> continueCallback = () -> {
+			if (!companiesHouseClient.isEnabled()) {
+				LOG.info("Cannot listen to Companies House stream. Companies House client is disabled.");
+				return false;
+			}
+			return true;
+		};
+		companiesHouseStreamListener.run(continueCallback);
 	}
 
 	/*

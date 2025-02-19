@@ -16,6 +16,7 @@ import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.SearchFilingsRequest;
+import com.frc.codex.model.StreamEvent;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 
 @Component
@@ -49,6 +50,14 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 		return null;
 	}
 
+	public UUID createStreamEvent(long timepoint, String json) {
+		return null;
+	}
+
+	public void deleteStreamEvent(UUID streamEventId) {
+
+	}
+
 	public boolean filingExists(String registryCode, String externalFilingId) {
 		return false;
 	}
@@ -79,17 +88,15 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 
 	public void resetCompany(String companyNumber) { }
 
+	public List<StreamEvent> getStreamEvents(long limit) {
+		return null;
+	}
+
 	public void resetFiling(UUID filingId) { }
 
 	public List<Filing> searchFilings(SearchFilingsRequest searchFilingsRequest) {
 		return List.of();
 	}
-
-	private Filing.Builder copyFiling(UUID filingId) {
-		return Filing.builder();
-	}
-
-	private void updateFiling(Filing filing) {}
 
 	public void updateFilingStatus(UUID filingId, String status) { }
 
