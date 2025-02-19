@@ -31,30 +31,30 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.frc.codex.clients.companieshouse.impl.CompaniesHouseStreamListenerImpl;
-import com.frc.codex.indexer.UploadIndexer;
-import com.frc.codex.model.ArchiveType;
-import com.frc.codex.model.SearchFilingsRequest;
-import com.frc.codex.properties.FilingIndexProperties;
-import com.frc.codex.model.RegistryCode;
-import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
+import com.frc.codex.clients.companieshouse.CompaniesHouseCompaniesIndexer;
 import com.frc.codex.clients.companieshouse.CompaniesHouseHistoryClient;
-import com.frc.codex.clients.companieshouse.impl.CompaniesHouseCompaniesIndexerImpl;
-import com.frc.codex.clients.companieshouse.impl.CompaniesHouseStreamIndexerImpl;
+import com.frc.codex.clients.companieshouse.CompaniesHouseStreamIndexer;
+import com.frc.codex.clients.companieshouse.CompaniesHouseStreamListener;
 import com.frc.codex.clients.fca.FcaClient;
 import com.frc.codex.clients.fca.FcaFiling;
+import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.indexer.Indexer;
 import com.frc.codex.indexer.IndexerJob;
 import com.frc.codex.indexer.LambdaManager;
 import com.frc.codex.indexer.QueueManager;
+import com.frc.codex.indexer.UploadIndexer;
+import com.frc.codex.model.ArchiveType;
 import com.frc.codex.model.Company;
 import com.frc.codex.model.Filing;
 import com.frc.codex.model.FilingPayload;
 import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.NewFilingRequest;
+import com.frc.codex.model.RegistryCode;
+import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
+import com.frc.codex.properties.FilingIndexProperties;
 
 import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 
@@ -62,11 +62,11 @@ import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 @Profile("application")
 public class IndexerImpl implements Indexer {
 	private static final Logger LOG = LoggerFactory.getLogger(IndexerImpl.class);
-	private final CompaniesHouseCompaniesIndexerImpl companiesHouseCompaniesIndexer;
+	private final CompaniesHouseCompaniesIndexer companiesHouseCompaniesIndexer;
 	private final CompaniesHouseClient companiesHouseClient;
 	private final CompaniesHouseHistoryClient companiesHouseHistoryClient;
-	private final CompaniesHouseStreamIndexerImpl companiesHouseStreamIndexer;
-	private final CompaniesHouseStreamListenerImpl companiesHouseStreamListener;
+	private final CompaniesHouseStreamIndexer companiesHouseStreamIndexer;
+	private final CompaniesHouseStreamListener companiesHouseStreamListener;
 	private final DatabaseManager databaseManager;
 	private final FcaClient fcaClient;
 	private final List<IndexerJob> jobs;
@@ -80,24 +80,28 @@ public class IndexerImpl implements Indexer {
 	private Date fcaSessionLastEndedDate;
 
 	public IndexerImpl(
-			FilingIndexProperties properties,
 			CompaniesHouseClient companiesHouseClient,
+			CompaniesHouseCompaniesIndexer companiesHouseCompaniesIndexer,
 			CompaniesHouseHistoryClient companiesHouseHistoryClient,
+			CompaniesHouseStreamIndexer companiesHouseStreamIndexer,
+			CompaniesHouseStreamListener companiesHouseStreamListener,
 			DatabaseManager databaseManager,
 			FcaClient fcaClient,
+			FilingIndexProperties properties,
 			LambdaManager lambdaManager,
 			QueueManager queueManager,
 			UploadIndexer uploadIndexer
+
 	) {
-		this.properties = properties;
-		this.companiesHouseCompaniesIndexer = new CompaniesHouseCompaniesIndexerImpl(companiesHouseClient, databaseManager); // TODO: Dependency injection?
 		this.companiesHouseClient = companiesHouseClient;
+		this.companiesHouseCompaniesIndexer = companiesHouseCompaniesIndexer;
 		this.companiesHouseHistoryClient = companiesHouseHistoryClient;
-		this.companiesHouseStreamIndexer = new CompaniesHouseStreamIndexerImpl(companiesHouseClient, databaseManager, properties); // TODO: Dependency injection?
-		this.companiesHouseStreamListener = new CompaniesHouseStreamListenerImpl(companiesHouseClient, databaseManager); // TODO: Dependency injection?
+		this.companiesHouseStreamIndexer = companiesHouseStreamIndexer;
+		this.companiesHouseStreamListener = companiesHouseStreamListener;
 		this.databaseManager = databaseManager;
 		this.fcaClient = fcaClient;
 		this.lambdaManager = lambdaManager;
+		this.properties = properties;
 		this.queueManager = queueManager;
 		this.uploadIndexer = uploadIndexer;
 		this.companiesHouseFilenamePattern = Pattern.compile(
@@ -131,7 +135,7 @@ public class IndexerImpl implements Indexer {
 	 * Processes in batches to allow for other tasks to run.
 	 */
 	@Scheduled(initialDelay = 30, fixedDelay = 30, timeUnit = TimeUnit.SECONDS)
-	public void indexCompaniesHouseFilings() {
+	public void indexCompaniesHouseFilings() throws IOException {
 		Supplier<Boolean> continueCallback = () -> {
 			if (!companiesHouseClient.isEnabled()) {
 				LOG.info("Cannot index from Companies House stream. Companies House client is disabled.");
@@ -149,7 +153,7 @@ public class IndexerImpl implements Indexer {
 	 * One scheduler thread is effectively dedicated to this task.
 	 */
 	@Scheduled(initialDelay = 1, fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
-	public void listenToCompaniesHouseFilingsStream() {
+	public void listenToCompaniesHouseFilingsStream() throws IOException {
 		Supplier<Boolean> continueCallback = () -> {
 			if (!companiesHouseClient.isEnabled()) {
 				LOG.info("Cannot listen to Companies House stream. Companies House client is disabled.");

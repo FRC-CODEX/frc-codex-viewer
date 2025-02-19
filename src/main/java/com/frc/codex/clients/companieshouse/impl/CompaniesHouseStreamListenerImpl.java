@@ -9,13 +9,15 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
+import com.frc.codex.clients.companieshouse.CompaniesHouseStreamListener;
 import com.frc.codex.clients.companieshouse.RateLimitException;
 import com.frc.codex.database.DatabaseManager;
-import com.frc.codex.indexer.IndexerJob;
 
-public class CompaniesHouseStreamListenerImpl implements IndexerJob {
+@Component
+public class CompaniesHouseStreamListenerImpl implements CompaniesHouseStreamListener {
 	private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseStreamListenerImpl.class);
 	private final CompaniesHouseClient companiesHouseClient;
 	private final DatabaseManager databaseManager;

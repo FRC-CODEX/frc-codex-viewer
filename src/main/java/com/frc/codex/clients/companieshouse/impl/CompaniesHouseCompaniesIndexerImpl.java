@@ -8,16 +8,18 @@ import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import com.frc.codex.clients.companieshouse.CompaniesHouseCompaniesIndexer;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompany;
 import com.frc.codex.clients.companieshouse.RateLimitException;
-import com.frc.codex.indexer.IndexerJob;
 import com.frc.codex.model.Company;
 import com.frc.codex.model.NewFilingRequest;
 
-public class CompaniesHouseCompaniesIndexerImpl implements IndexerJob {
+@Component
+public class CompaniesHouseCompaniesIndexerImpl implements CompaniesHouseCompaniesIndexer {
 	private static final int COMPANIES_BATCH_SIZE = 100;
 	private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseCompaniesIndexerImpl.class);
 	private final CompaniesHouseClient companiesHouseClient;

@@ -8,20 +8,22 @@ import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompany;
 import com.frc.codex.clients.companieshouse.CompaniesHouseFiling;
+import com.frc.codex.clients.companieshouse.CompaniesHouseStreamIndexer;
 import com.frc.codex.clients.companieshouse.RateLimitException;
 import com.frc.codex.database.DatabaseManager;
-import com.frc.codex.indexer.IndexerJob;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.model.StreamEvent;
 import com.frc.codex.properties.FilingIndexProperties;
 
-public class CompaniesHouseStreamIndexerImpl implements IndexerJob {
+@Component
+public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamIndexer {
 	private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseStreamIndexerImpl.class);
 	private final CompaniesHouseClient companiesHouseClient;
 	private final long companiesHouseStreamIndexerBatchSize;
