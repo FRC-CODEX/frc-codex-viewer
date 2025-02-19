@@ -32,6 +32,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.frc.codex.indexer.UploadIndexer;
+import com.frc.codex.model.ArchiveType;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.database.DatabaseManager;
@@ -169,7 +170,7 @@ public class IndexerImpl implements Indexer {
 	 * extracting company numbers from the contained filenames.
 	 * Returns true if the archive was processed successfully or doesn't need processing.
 	 */
-	private boolean processCompaniesHouseArchive(URI uri, String archiveType, Set<String> existingCompanyNumbers) {
+	private boolean processCompaniesHouseArchive(URI uri, ArchiveType archiveType, Set<String> existingCompanyNumbers) {
 		if (databaseManager.checkCompaniesLimit(properties.unprocessedCompaniesLimit())) {
 			return false;
 		}
@@ -193,7 +194,7 @@ public class IndexerImpl implements Indexer {
 		}
 	}
 
-	private boolean processCompaniesHouseArchiveUsingTempFile(URI uri, String archiveType, String filename, Path tempFile, Set<String> existingCompanyNumbers) {
+	private boolean processCompaniesHouseArchiveUsingTempFile(URI uri, ArchiveType archiveType, String filename, Path tempFile, Set<String> existingCompanyNumbers) {
 		boolean completed = true;
 		LOG.info("Downloading archive: {}", uri);
 		try {
@@ -240,7 +241,7 @@ public class IndexerImpl implements Indexer {
 			CompaniesHouseArchive archive = CompaniesHouseArchive.builder()
 					.filename(filename)
 					.uri(uri)
-					.archiveType(archiveType)
+					.archiveType(archiveType.getCode())
 					.build();
 			databaseManager.createCompaniesHouseArchive(archive);
 			LOG.info("Completed archive: {}", filename);
@@ -259,19 +260,19 @@ public class IndexerImpl implements Indexer {
 		List<URI> downloadLinks;
 		downloadLinks = companiesHouseHistoryClient.getDailyDownloadLinks();
 		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, "daily", existingCompanyNumbers)) {
+			if (!processCompaniesHouseArchive(uri, ArchiveType.DAILY, existingCompanyNumbers)) {
 				return;
 			}
 		}
 		downloadLinks = companiesHouseHistoryClient.getMonthlyDownloadLinks();
 		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, "monthly", existingCompanyNumbers)) {
+			if (!processCompaniesHouseArchive(uri, ArchiveType.MONTHLY, existingCompanyNumbers)) {
 				return;
 			}
 		}
 		downloadLinks = companiesHouseHistoryClient.getArchiveDownloadLinks();
 		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, "archive", existingCompanyNumbers)) {
+			if (!processCompaniesHouseArchive(uri, ArchiveType.ARCHIVE, existingCompanyNumbers)) {
 				return;
 			}
 		}
