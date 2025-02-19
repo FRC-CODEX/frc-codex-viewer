@@ -312,6 +312,13 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			if (resultSet.next()) {
 				return resultSet.getLong(1);
 			}
+			statement = connection.prepareStatement(
+					"SELECT MAX(stream_timepoint) FROM filings"
+			);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getLong(1);
+			}
 			return defaultTimepoint;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
