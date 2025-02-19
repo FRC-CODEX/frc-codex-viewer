@@ -27,3 +27,12 @@ class BaseAction(ABC):
                 cursor.close()
         finally:
             connection.close()
+
+    @staticmethod
+    def collect_stats(cursor):
+        column_names = [desc[0] for desc in cursor.description]
+        first_row = cursor.fetchone()
+        stats = dict(zip(column_names, first_row))
+        return {
+            k: str(v) for k, v in stats.items()
+        }
