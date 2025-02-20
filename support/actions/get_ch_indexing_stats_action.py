@@ -14,11 +14,6 @@ class GetChIndexingStatsAction(BaseAction):
             "(SELECT COUNT(*) FROM companies) AS total_companies, " \
             "(SELECT MAX(completed_date) FROM companies) AS latest_company_completed "
         cursor.execute(query)
-        column_names = [desc[0] for desc in cursor.description]
-        first_row = cursor.fetchone()
-        stats = dict(zip(column_names, first_row))
-        stats = {
-            k: str(v) for k, v in stats.items()
-        }
+        stats = BaseAction.collect_stats(cursor)
         message = "Companies House indexing statistics retrieved."
         return True, message, stats

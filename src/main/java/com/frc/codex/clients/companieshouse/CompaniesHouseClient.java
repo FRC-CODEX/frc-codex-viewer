@@ -15,5 +15,6 @@ public interface CompaniesHouseClient {
 	List<NewFilingRequest> getCompanyFilings(String companyNumber, String companyName) throws JsonProcessingException;
 	Set<String> getCompanyFilingUrls(String companyNumber, String filingId) throws JsonProcessingException;
 	boolean isEnabled();
-	void streamFilings(Long timepoint, Function<CompaniesHouseFiling, Boolean> callback) throws IOException;
+	CompaniesHouseFiling parseStreamedFiling(String json) throws JsonProcessingException;
+	void streamFilings(Long timepoint, Function<String, Boolean> callback) throws IOException, InterruptedException;
 }

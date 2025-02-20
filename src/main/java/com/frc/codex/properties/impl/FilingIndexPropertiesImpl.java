@@ -28,6 +28,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String COMPANIES_HOUSE_REST_API_KEY = "COMPANIES_HOUSE_REST_API_KEY";
 	private static final String COMPANIES_HOUSE_STREAM_API_BASE_URL = "COMPANIES_HOUSE_STREAM_API_BASE_URL";
 	private static final String COMPANIES_HOUSE_STREAM_API_KEY = "COMPANIES_HOUSE_STREAM_API_KEY";
+	private static final String COMPANIES_HOUSE_STREAM_INDEXER_BATCH_SIZE = "COMPANIES_HOUSE_STREAM_INDEXER_BATCH_SIZE";
 	private static final String HTTP_USERNAME = "HTTP_USERNAME";
 	private static final String HTTP_PASSWORD = "HTTP_PASSWORD";
 	private static final String DB_URL = "DB_URL";
@@ -62,6 +63,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final String companiesHouseRestApiKey;
 	private final String companiesHouseStreamApiBaseUrl;
 	private final String companiesHouseStreamApiKey;
+	private final long companiesHouseStreamIndexerBatchSize;
 	private final String dbUrl;
 	private final String dbUsername;
 	private final String dbPassword;
@@ -104,6 +106,8 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		// Default rapid rate limit is 20 requests per 10 seconds (600 requests / 5 minutes)
 		companiesHouseRapidRateLimit = Integer.parseInt(requireNonNull(getEnv(COMPANIES_HOUSE_RAPID_RATE_LIMIT, "20")));
 		companiesHouseRapidRateWindow = Integer.parseInt(requireNonNull(getEnv(COMPANIES_HOUSE_RAPID_RATE_WINDOW, "10000")));
+
+		companiesHouseStreamIndexerBatchSize = Long.parseLong(requireNonNull(getEnv(COMPANIES_HOUSE_STREAM_INDEXER_BATCH_SIZE, "100")));
 
 		dbUrl = requireNonNull(getEnv(DB_URL));
 		dbUsername = requireNonNull(getEnv(DB_USERNAME));
@@ -239,6 +243,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public String companiesHouseStreamApiKey() {
 		return companiesHouseStreamApiKey;
+	}
+
+	public long companiesHouseStreamIndexerBatchSize() {
+		return companiesHouseStreamIndexerBatchSize;
 	}
 
 	public String dbSeedScriptPath() {

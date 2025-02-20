@@ -12,6 +12,7 @@ import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.SearchFilingsRequest;
+import com.frc.codex.model.StreamEvent;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 
 public interface DatabaseManager {
@@ -22,6 +23,8 @@ public interface DatabaseManager {
 	boolean companyNumberExists(String companyNumber);
 	String createCompaniesHouseArchive(CompaniesHouseArchive archive);
 	UUID createFiling(NewFilingRequest newFilingRequest);
+	UUID createStreamEvent(long timepoint, String json);
+	void deleteStreamEvent(UUID streamEventId);
 	boolean filingExists(String registryCode, String externalFilingId);
 	Filing getFiling(UUID filingId);
 	List<Filing> getFilingsByStatus(FilingStatus status);
@@ -30,6 +33,7 @@ public interface DatabaseManager {
 	Long getLatestStreamTimepoint(Long defaultTimepoint);
 	long getRegistryCount(RegistryCode registryCode);
 	void resetCompany(String companyNumber);
+	List<StreamEvent> getStreamEvents(long limit);
 	void resetFiling(UUID filingId);
 	List<Filing> searchFilings(SearchFilingsRequest searchFilingsRequest);
 	void updateFilingStatus(UUID filingId, String status);

@@ -292,19 +292,13 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		return enabled;
 	}
 
-	public void streamFilings(Long timepoint, Function<CompaniesHouseFiling, Boolean> callback) throws IOException {
+	public void streamFilings(Long timepoint, Function<String, Boolean> callback) throws IOException {
 		Function<String, Boolean> parseCallback = json -> {
 			if (json == null || json.length() <= 1) {
 				// The stream emits blank "heartbeat" lines.
 				return true;
 			}
-			CompaniesHouseFiling filing;
-			try {
-				filing = parseStreamedFiling(json);
-			} catch (JsonProcessingException e) {
-				throw new RuntimeException(e);
-			}
-			return callback.apply(filing);
+			return callback.apply(json);
 		};
 		throwExceptionIfDisabled();
 		stream.streamFilings(timepoint, parseCallback);
