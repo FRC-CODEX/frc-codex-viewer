@@ -77,6 +77,8 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 		return 0;
 	}
 
+	public void resetCompany(String companyNumber) { }
+
 	public void resetFiling(UUID filingId) { }
 
 	public List<Filing> searchFilings(SearchFilingsRequest searchFilingsRequest) {
