@@ -5,3 +5,4 @@ CREATE TABLE IF NOT EXISTS stream_events (
     json TEXT NOT NULL,
     PRIMARY KEY (stream_event_id)
 );
+CREATE INDEX stream_events_timepoint_idx ON stream_events (timepoint);
