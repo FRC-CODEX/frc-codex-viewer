@@ -1,4 +1,5 @@
 {
+  "companiesHouseSearchPage": "Companies House Search page",
   "dateFiled": {
     "day": "Day",
     "error": "Error:",
@@ -10,6 +11,7 @@
   },
   "loadMore": "Load more filings",
   "maxResults": "Maximum number of results returned. Please refine your search.",
+  "nationalStorageMechanism": "National Storage Mechanism",
   "registry": {
     "any": "Any",
     "header": "Registry"
@@ -43,6 +45,8 @@
   "searchFilings": "Search Filings",
   "searchPlaceholder": "Company Name, CRN (Company Registration Number), or LEI (Legal Entity Identifier)",
   "userGuide": "User Guide",
-  "whatXbrlDetails": "In the UK, iXBRL is used to tag accounts and other business information in annual reports and submit them as inline XBRL (iXBRL) reports to the UK Business Register: Companies House; Securities Regulator: Financial Conduct Authority; Tax Authority: HM Revenue & Customs, Charities Regulator: Charity Commission for England and Wales.\n\nThe UK iXBRL Viewer, funded by the UK's Regulators' Pioneer Fund (Department for Science, Innovation and Technology), allows users to access machine-readable structured data (XBRL facts) from tagged iXBRL reports available in the Companies House Registry and the National Storage Mechanism. For more information on the UK iXBRL Viewer, please see the",
+  "whatXbrlDetails": "XBRL (eXtensible Business Reporting Language), is the international standard for exchanging structured data in machine-readable format. iXBRL, or Inline XBRL, is an extension of XBRL that enables a single report to provide both human-readable and machine-readable data.\n\nIn the UK, iXBRL is used to tag accounts and other business information in annual reports using Taxonomy published by Standard Setters: Financial Reporting Council or other applicable bodies and submit them as iXBRL reports to the UK Business Register: Companies House; Securities Regulator: Financial Conduct Authority; Tax Authority: HM Revenue & Customs, Charities Regulator: Charity Commission for England and Wales.\n\nWith UK iXBRL Viewer, you can access machine-readable structured data (XBRL facts) from tagged iXBRL reports available in the Companies House Registry and the National Storage Mechanism. For more information on the UK iXBRL Viewer, please see the",
+  "whatXbrlDetailsNote": "Please note that this service only searches for annual reports that are in iXBRL format. If you are unable to find the report, please go to the",
+  "whatXbrlDetailsNoteOr": "or",
   "whatXbrlSummary": "iXBRL is an extension of XBRL (eXtensible Business Reporting Language), the international standard for sharing business information electronically."
 }
