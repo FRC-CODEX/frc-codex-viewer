@@ -1,18 +1,17 @@
 package com.frc.codex.indexer.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.indexer.QueueManager;
@@ -30,7 +29,8 @@ import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 @Component
 public class QueueManagerImpl implements QueueManager {
 	private static final Logger LOG = LoggerFactory.getLogger(IndexerImpl.class);
-	private static final DateTimeFormatter MESSAGE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
 	private final FilingIndexProperties properties;
 
 	public QueueManagerImpl(FilingIndexProperties properties) {
@@ -136,41 +136,25 @@ public class QueueManagerImpl implements QueueManager {
 					.build();
 			List<Message> messages = sqsClient.receiveMessage(receiveMessageRequest).messages();
 			LOG.info("Received results messages: {}", messages.size());
+
 			for(Message message : messages) {
-				boolean success = Objects.equals(getMessageAttribute(message, "Success"), "true");
-				String error = null;
-				String filename = null;
-				String oimDirectory = null;
-				String viewerEntrypoint = null;
-				if (!success) {
-					error = getMessageAttribute(message, "Error");
-				} else {
-					filename = getMessageAttribute(message, "Filename");
-					oimDirectory = getMessageAttribute(message, "OimDirectory");
-					viewerEntrypoint = getMessageAttribute(message, "ViewerEntrypoint");
+				JsonNode root;
+				try {
+					root = OBJECT_MAPPER.readTree(message.body());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
-				String companyName = getMessageAttribute(message, "CompanyName");
-				companyName = companyName == null ? null : companyName.toUpperCase();
-				String companyNumber = getMessageAttribute(message, "CompanyNumber");
-				String documentDateStr = getMessageAttribute(message, "DocumentDate");
-				LocalDateTime documentDate = null;
-				if (documentDateStr != null) {
-					documentDate = LocalDate.parse(documentDateStr, MESSAGE_DATE_FORMAT).atStartOfDay();
-				}
-				UUID filingId = UUID.fromString(Objects.requireNonNull(getMessageAttribute(message, "FilingId")));
-				String logs = message.body();
-				FilingResultRequest filingResultRequest = FilingResultRequest.builder()
-						.companyName(companyName)
-						.companyNumber(companyNumber)
-						.documentDate(documentDate)
-						.error(error)
-						.filingId(filingId)
-						.logs(logs)
-						.filename(filename)
-						.oimDirectory(oimDirectory)
-						.stubViewerUrl(viewerEntrypoint)
-						.success(success)
+
+				FilingResultRequest filingResultRequest;
+				try {
+					filingResultRequest = FilingResultRequest.builder()
+						.json(root)
 						.build();
+				} catch (Exception e) {
+					LOG.error("Failed to parse result: {}", message.body(), e);
+					throw new RuntimeException(e);
+				}
+
 				if (callback.apply(filingResultRequest)) {
 					sqsClient.deleteMessage(builder -> builder
 							.queueUrl(queueUrl)

@@ -65,79 +65,30 @@ class MainQueueManager(QueueManager):
             raise error
 
     def publish_result(self, worker_result: WorkerResult) -> None:
-        message_attributes = {
-            'FilingId': {
-                'StringValue': worker_result.filing_id,
-                'DataType': 'String'
-            },
-            'Success': {
-                'StringValue': 'true' if worker_result.success else 'false',
-                'DataType': 'String'
-            },
+        message_body = {
+            'ArelleVersion': self._arelle_version,
+            'ArelleViewerVersion': self._ixbrl_viewer_version,
+            'ServiceVersion': self._service_version,
+            'CompanyName': worker_result.company_name,
+            'CompanyNumber': worker_result.company_number,
+            'Error': worker_result.error,
+            'FilingId': worker_result.filing_id,
+            'Logs': worker_result.logs,
+            'Success': worker_result.success,
+            "Filename": worker_result.filename,
+            'ViewerEntrypoint': worker_result.viewer_entrypoint,
+            'OimDirectory': worker_result.oim_directory,
+            # Analytics
+            'DownloadTime': worker_result.download_time,
+            'TotalProcessingTime': worker_result.total_processing_time,
+            'TotalUploadedBytes': worker_result.total_uploaded_bytes,
+            'UploadTime': worker_result.upload_time,
+            'WorkerTime': worker_result.worker_time,
         }
-        if self._arelle_version:
-            message_attributes['ArelleVersion'] = {
-                'StringValue': self._arelle_version,
-                'DataType': 'String'
-            }
-        if self._ixbrl_viewer_version:
-            message_attributes['ArelleViewerVersion'] = {
-                'StringValue': self._ixbrl_viewer_version,
-                'DataType': 'String'
-            }
-        if self._service_version:
-            message_attributes['ServiceVersion'] = {
-                'StringValue': self._service_version,
-                'DataType': 'String'
-            }
-        if worker_result.company_name:
-            message_attributes['CompanyName'] = {
-                'StringValue': worker_result.company_name,
-                'DataType': 'String'
-            }
-        if worker_result.company_number:
-            message_attributes['CompanyNumber'] = {
-                'StringValue': worker_result.company_number,
-                'DataType': 'String'
-            }
-        if worker_result.document_date:
-            message_attributes['DocumentDate'] = {
-                'StringValue': worker_result.document_date.strftime('%Y-%m-%d'),
-                'DataType': 'String'
-            }
-        if worker_result.error:
-            message_attributes['Error'] = {
-                'StringValue': worker_result.error,
-                'DataType': 'String'
-            }
-        message_attributes['Analytics'] = {
-            'StringValue': json.dumps({
-                'download_time': worker_result.download_time,
-                'total_processing_time': worker_result.total_processing_time,
-                'total_uploaded_bytes': worker_result.total_uploaded_bytes,
-                'upload_time': worker_result.upload_time,
-                'worker_time': worker_result.worker_time,
-            }),
-            'DataType': 'String'
-        }
-        if worker_result.filename:
-            message_attributes['Filename'] = {
-                'StringValue': worker_result.filename,
-                'DataType': 'String'
-            }
-        if worker_result.viewer_entrypoint:
-            message_attributes['ViewerEntrypoint'] = {
-                'StringValue': worker_result.viewer_entrypoint,
-                'DataType': 'String'
-            }
-        if worker_result.oim_directory:
-            message_attributes['OimDirectory'] = {
-                'StringValue': worker_result.oim_directory,
-                'DataType': 'String'
-            }
+        if worker_result.document_date is not None:
+            message_body['DocumentDate'] = worker_result.document_date.strftime('%Y-%m-%d')
         self._results_queue.send_message(
-            MessageBody=worker_result.logs,
-            MessageAttributes=message_attributes
+            MessageBody=json.dumps(message_body),
         )
 
     @staticmethod
