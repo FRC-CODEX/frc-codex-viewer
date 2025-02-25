@@ -76,7 +76,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 				"mortgage",
 				"officers",
 				"other",
-				"persons-with-significant-controlxR",
+				"persons-with-significant-control",
 				"resolution"
 		));
 		this.companiesHouseIncludeCategories = new HashSet<>(List.of(
