@@ -162,7 +162,7 @@ The UK iXBRL Viewer, funded by the UK's Regulators' Pioneer Fund (Department for
                         <h3 class="govuk-heading-m" style="display:inline" th:text="${filing.companyName}"></h3>
 
                         <div style="display:flex;flex-wrap: wrap;justify-content: space-between;">
-                            <dl style="flex-basis: 40%;">
+                            <dl style="flex-basis: 34%;">
                                 <dt th:switch="${filing.registryCode}" style="text-align: left">
                                     <span th:each="registryCode:${T(com.frc.codex.model.RegistryCode).values()}"
                                           th:case="${registryCode.code}"
@@ -171,7 +171,7 @@ The UK iXBRL Viewer, funded by the UK's Regulators' Pioneer Fund (Department for
                                 </dt>
                                 <dd th:text="${filing.getCompanyNumber()}"></dd>
                             </dl>
-                            <dl style="flex-basis: 25%;">
+                            <dl style="flex-basis: 21%;">
                                 <dt data-i18n="index:results.registry">Registry: </dt>
                                 <dd th:switch="${filing.registryCode}">
                                     <span th:each="registryCode:${T(com.frc.codex.model.RegistryCode).values()}"
@@ -179,12 +179,26 @@ The UK iXBRL Viewer, funded by the UK's Regulators' Pioneer Fund (Department for
                                           th:text="${registryCode.shortName}"></span>
                                 </dd>
                             </dl>
-                            <dl style="flex-basis: 20%;">
-                                <dt data-i18n="index:results.documentDate">Document Date: </dt>
+                            <dl style="flex-basis: 28%;">
+                                <dt><span data-i18n="index:results.documentDate">Document Date:</span>
+                                    <span class="index-link">
+                                        <img src="/icons/info.svg" alt="Info icon" height="16" width="16">
+                                        <span class="index-tooltip">
+                                            <span class="original-text" data-i18n="index:results.documentDateTooltip">This is the date associated with the document. Please note that this date may not be displayed on this page for some files that are not yet being processed by the UK iXBRL Viewer.</span>
+                                        </span>
+                                    </span>
+                                </dt>
                                 <dd th:text="${filing.displayDocumentDate()}"></dd>
                             </dl>
-                            <dl style="flex-basis: 15%;">
-                                <dt data-i18n="index:results.dateFiled">Date Filed: </dt>
+                            <dl style="flex-basis: 17%;">
+                                <dt><span data-i18n="index:results.dateFiled">Date Filed:</span>
+                                    <span class="index-link">
+                                    <img src="/icons/info.svg" alt="Info icon" height="16" width="16">
+                                    <span class="index-tooltip">
+                                            <span class="original-text" data-i18n="index:results.dateFiledTooltip">The date on which the report was filed with Companies House Registry or FCA.</span>
+                                        </span>
+                                    </span>
+                                </dt>
                                 <dd th:text="${filing.displayFilingDate()}"></dd>
                             </dl>
                         </div>
@@ -200,35 +214,35 @@ The UK iXBRL Viewer, funded by the UK's Regulators' Pioneer Fund (Department for
                             <b data-i18n="index:results.downloads.header">Downloads:</b>
                         </div>
                         <span th:if="${!(filing.isCompleted() && filing.getOimDirectory() == null)}">
-                            <span class="download-link">
+                            <span class="index-link">
                                 <a th:href="${filing.getXbrlCsvUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.csv.header">
                                     xBRL-CSV
                                 </a>
                                 <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
-                                <span class="download-tooltip">
+                                <span class="index-tooltip">
                                     <span data-i18n="index:results.downloads.csv.description">XBRL facts as CSV files in a zip report package.</span><br/>
                                     <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-csv-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
                                 </span>
                             </span>
                             |
-                            <span class="download-link">
+                            <span class="index-link">
                                 <a th:href="${filing.getXbrlJsonUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.json.header">
                                     xBRL-JSON
                                 </a>
                                 <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
-                                <span class="download-tooltip">
+                                <span class="index-tooltip">
                                     <span data-i18n="index:results.downloads.json.description">XBRL facts as JSON files in a zip report package.</span><br/>
                                     <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-json-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
                                 </span>
                             </span>
                             |
                         </span>
-                        <span class="download-link">
+                        <span class="index-link">
                             <a th:href="${filing.getDownloadUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.ixbrl.header">
                                 Filing
                             </a>
                             <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
-                            <span class="download-tooltip">
+                            <span class="index-tooltip">
                                 <span data-i18n="index:results.downloads.ixbrl.description">The original inline XBRL filing.</span><br/>
                                 <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#ixbrl-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
                             </span>
