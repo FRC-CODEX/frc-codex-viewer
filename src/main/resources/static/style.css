@@ -75,12 +75,12 @@ html, body {
     padding: 6px 0;
 }
 
-.search-result .download-link {
+.search-result .index-link {
     position: relative;
     white-space: nowrap;
 }
 
-.search-result .download-link .download-tooltip {
+.search-result .index-link .index-tooltip {
     display: none;
     white-space: normal;
     position:absolute;
@@ -94,11 +94,11 @@ html, body {
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
 }
 
-.search-result .download-link:hover .download-tooltip {
+.search-result .index-link:hover .index-tooltip {
     display: block;
 }
 
-.search-result .download-link img {
+.search-result .index-link img {
     margin-bottom: -3px;
 }
 
@@ -121,6 +121,10 @@ html, body {
 
 .admin-container td {
     font-family: monospace;
+}
+
+.original-text {
+    text-transform: none;
 }
 
 .pre-line {
