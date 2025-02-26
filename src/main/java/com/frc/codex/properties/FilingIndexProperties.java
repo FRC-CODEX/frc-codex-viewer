@@ -29,10 +29,10 @@ public interface FilingIndexProperties {
 	boolean isAws();
 	boolean isDbMigrateAsync();
 	int lambdaPreprocessingConcurrency();
-	long maximumSearchResults();
 	String s3IndexerUploadsBucketName();
 	String s3ResultsBucketName();
-	long searchPageSize();
+	int searchMaximumPages();
+	int searchPageSize();
 	String sqsJobsQueueName();
 	String sqsResultsQueueName();
 	String supportEmail();

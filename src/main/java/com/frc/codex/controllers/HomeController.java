@@ -3,6 +3,7 @@ package com.frc.codex.controllers;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.frc.codex.model.SearchFilingsResult;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.model.Filing;
@@ -29,8 +31,8 @@ import jakarta.servlet.http.HttpServletRequest;
 public class HomeController {
 	private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
 	private final DatabaseManager databaseManager;
-	private final long maximumSearchResults;
-	private final long searchPageSize;
+	private final int searchMaximumPages;
+	private final int searchPageSize;
 	private final SupportManager supportManager;
 
 	public HomeController(
@@ -39,7 +41,7 @@ public class HomeController {
 			SupportManager supportManager
 	) {
 		this.databaseManager = databaseManager;
-		this.maximumSearchResults = properties.maximumSearchResults();
+		this.searchMaximumPages = properties.searchMaximumPages();
 		this.searchPageSize = properties.searchPageSize();
 		this.supportManager = supportManager;
 	}
@@ -61,6 +63,45 @@ public class HomeController {
 		}
 	}
 
+	private List<Map.Entry<Integer,String>> buildPageLinks(SearchFilingsResult searchFilingsResult) {
+		int currentPageNumber = searchFilingsResult.getPageNumber();
+		int previousPageNumber = currentPageNumber - 1;
+		int nextPageNumber = currentPageNumber + 1;
+		int lastPageNumber = searchFilingsResult.getLastPageNumber();
+
+		String ellipsesClass = "govuk-pagination__item--ellipses";
+		String currentClass = "govuk-pagination__item--current";
+
+		List<Map.Entry<Integer,String>> pageLinks = new java.util.ArrayList<>();
+		// First Page
+		if (previousPageNumber > 1) {
+			pageLinks.add(new java.util.AbstractMap.SimpleEntry<>(1, null));
+		}
+		// Previous Ellipsis
+		if (previousPageNumber > 2) {
+			pageLinks.add(new java.util.AbstractMap.SimpleEntry<>(null, ellipsesClass));
+		}
+		// Previous Page
+		if (previousPageNumber >= 1) {
+			pageLinks.add(new java.util.AbstractMap.SimpleEntry<>(previousPageNumber, null));
+		}
+		// Current Page
+		pageLinks.add(new java.util.AbstractMap.SimpleEntry<>(currentPageNumber, currentClass));
+		// Next Page
+		if (nextPageNumber <= lastPageNumber) {
+			pageLinks.add(new java.util.AbstractMap.SimpleEntry<>(nextPageNumber, null));
+		}
+		// Next Ellipsis
+		if (nextPageNumber < lastPageNumber - 1) {
+			pageLinks.add(new java.util.AbstractMap.SimpleEntry<>(null, ellipsesClass));
+		}
+		// Last Page
+		if (nextPageNumber < lastPageNumber) {
+			pageLinks.add(new java.util.AbstractMap.SimpleEntry<>(lastPageNumber, null));
+		}
+		return pageLinks;
+	}
+
 	@GetMapping("/")
 	public ModelAndView indexPage(@ModelAttribute SearchFilingsRequest searchFilingsRequest) throws Exception {
 		ModelAndView model = new ModelAndView("index");
@@ -69,24 +110,23 @@ public class HomeController {
 		model.addObject("maxDocumentDateError", getDateValidation(searchFilingsRequest::getMaxDocumentDate));
 		model.addObject("maxFilingDateError", getDateValidation(searchFilingsRequest::getMaxFilingDate));
 		searchFilingsRequest.setStatus(null);
+		searchFilingsRequest.setPageSize(this.searchPageSize);
+		searchFilingsRequest.setPageNumber(
+				Math.max(1, Math.min(searchFilingsRequest.getPageNumber(), this.searchMaximumPages))
+		);
 		List<Filing> filings;
+		long filingsCount = 0;
 		String message = null;
-		boolean maximumResultsReturned = false;
-		String moreResultsLink = null;
 		if (searchFilingsRequest.isEmpty()) {
 			LOG.info("[ANALYTICS] HOME_PAGE");
 			filings = null;
 		} else {
 			LOG.info("[ANALYTICS] SEARCH");
-			searchFilingsRequest.setLimit(
-					Math.max(
-							this.searchPageSize,
-							Math.min(searchFilingsRequest.getLimit(), this.maximumSearchResults)
-					)
-			);
 			try {
+				filingsCount = databaseManager.getFilingsCount(searchFilingsRequest);
 				filings = databaseManager.searchFilings(searchFilingsRequest);
 			} catch (DateTimeException e) {
+				filingsCount = 0;
 				filings = List.of();
 				message = e.getMessage();
 			}
@@ -94,19 +134,23 @@ public class HomeController {
 				if (message == null) {
 					message = "No filings matched your search criteria.";
 				}
-			} else {
-				if (filings.size() >= this.maximumSearchResults) {
-					maximumResultsReturned = true;
-				} else if (filings.size() >= searchFilingsRequest.getLimit()) {
-					moreResultsLink = searchFilingsRequest.getLoadMoreLink(this.searchPageSize, filings.size() - 1);
-				}
 			}
 		}
-		model.addObject("filings", filings);
+		SearchFilingsResult searchFilingsResult = SearchFilingsResult.builder()
+				.filings(filings)
+				.maximumPageNumber(this.searchMaximumPages)
+				.pageNumber(searchFilingsRequest.getPageNumber())
+				.pageSize(this.searchPageSize)
+				.totalFilings(filingsCount)
+				.build();
+
+		List<Map.Entry<Integer,String>> pageLinks = buildPageLinks(searchFilingsResult);
+
+		model.addObject("filingsCount", String.format("%,d", searchFilingsResult.getTotalFilings()));
 		model.addObject("message", message);
+		model.addObject("pageLinks", pageLinks);
 		model.addObject("searchFilingsRequest", searchFilingsRequest);
-		model.addObject("maximumResultsReturned", maximumResultsReturned);
-		model.addObject("moreResultsLink", moreResultsLink);
+		model.addObject("searchFilingsResult", searchFilingsResult);
 		return model;
 	}
 
