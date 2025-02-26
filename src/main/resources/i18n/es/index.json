@@ -38,7 +38,10 @@
       "openViewer": "Visor Abierto"
     },
     "header": "Resultados",
-    "registry": "Registro: "
+    "previous": "Previo",
+    "next": "Próximo",
+    "registry": "Registro: ",
+    "totalFilingsMatched": "presentaciones totales coincidentes."
   },
   "searchButton": "Buscar",
   "searchByNameOrNumber": "Búsqueda por Nombre o Número de Empresa",

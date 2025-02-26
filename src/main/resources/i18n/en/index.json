@@ -38,7 +38,10 @@
       "openViewer": "Open Viewer"
     },
     "header": "Results",
-    "registry": "Registry: "
+    "previous": "Previous",
+    "next": "Next",
+    "registry": "Registry: ",
+    "totalFilingsMatched": "total filings matched."
   },
   "searchButton": "Search",
   "searchByNameOrNumber": "Search by Company Name or Number",

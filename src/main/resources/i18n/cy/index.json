@@ -38,7 +38,10 @@
       "openViewer": "Gwyliwr Agored"
     },
     "header": "Canlyniadau",
-    "registry": "Cofrestrfa: "
+    "previous": "Blaenorol",
+    "next": "Nesaf",
+    "registry": "Cofrestrfa: ",
+    "totalFilingsMatched": "o ffeilio wedi cyfateb."
   },
   "searchButton": "Chwiliwch",
   "searchByNameOrNumber": "Chwilio yn ôl Enw neu Rif Cwmni",
