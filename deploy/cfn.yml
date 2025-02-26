@@ -731,7 +731,7 @@ Resources:
           S3_TAXONOMY_PACKAGES_BUCKET_NAME: !Ref S3TaxonomyPackagesBucket
           SERVICE_VERSION: !Ref Version
       EphemeralStorage:
-        Size: 512
+        Size: 1024
       LoggingConfig:
         LogFormat: "Text"
         LogGroup: !Sub "/aws/lambda/${EnvironmentName}-processor"
