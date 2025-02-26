@@ -122,10 +122,6 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return 1;
 	}
 
-	public long maximumSearchResults() {
-		return 100;
-	}
-
 	public String s3ResultsBucketName() {
 		return "frc-codex-results";
 	}
@@ -134,7 +130,11 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return "frc-codex-indexer-uploads";
 	}
 
-	public long searchPageSize() {
+	public int searchMaximumPages() {
+		return 10;
+	}
+
+	public int searchPageSize() {
 		return 10;
 	}
 

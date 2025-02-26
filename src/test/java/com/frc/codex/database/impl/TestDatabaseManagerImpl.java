@@ -82,6 +82,10 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 		return List.of();
 	}
 
+	public long getFilingsCount(SearchFilingsRequest searchFilingsRequest) {
+		return 0;
+	}
+
 	public long getRegistryCount(RegistryCode registryCode) {
 		return 0;
 	}

@@ -697,87 +697,111 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		return false;
 	}
 
-	public List<Filing> searchFilings(SearchFilingsRequest searchFilingsRequest) {
-		try (Connection connection = getInitializedConnection(true)) {
-			String searchText = searchFilingsRequest.getSearchText();
-			String companyName = null;
-			String companyNumber = null;
-			if (companyNumberExists(searchText)) {
-				companyNumber = searchText;
-			} else {
-				companyName = searchText;
-			}
+	private PreparedStatement buildFilingsSearchQuery(Connection connection, SearchFilingsRequest searchFilingsRequest, boolean count) throws SQLException {
+		String searchText = searchFilingsRequest.getSearchText();
+		String companyName = null;
+		String companyNumber = null;
+		if (companyNumberExists(searchText)) {
+			companyNumber = searchText;
+		} else {
+			companyName = searchText;
+		}
 
-			List<String> selects = new ArrayList<>();
-			List<String> queries = new ArrayList<>();
-			List<String> conditions = new ArrayList<>();
-			List<Object> parameters = new ArrayList<>();
-			List<String> orderBys = new ArrayList<>() {
-				{
-					add("filing_date DESC");
-					add("filing_id");
-				}
-			};
-			if (!StringUtils.isEmpty(companyName)) {
-				selects.add("ts_rank(to_tsvector('english', company_name), query) as rank");
-				queries.add("websearch_to_tsquery('english', ?) query");
-				conditions.add("to_tsvector('english', company_name) @@ query");
-				parameters.add(companyName);
-				orderBys.add(0, "rank DESC");
+		List<String> selects = new ArrayList<>();
+		List<String> queries = new ArrayList<>();
+		List<String> conditions = new ArrayList<>();
+		List<Object> parameters = new ArrayList<>();
+		List<String> orderBys = new ArrayList<>() {
+			{
+				add("filing_date DESC");
+				add("filing_id");
 			}
-			if (!StringUtils.isEmpty(companyNumber)) {
-				conditions.add("company_number = ?");
-				parameters.add(companyNumber);
+		};
+		if (!StringUtils.isEmpty(companyName)) {
+			for (String part : companyName.split("\\s+")) {
+				conditions.add("UPPER(company_name) LIKE UPPER(?)");
+				parameters.add("%" + part.trim() + "%");
 			}
-			if (searchFilingsRequest.getMinDocumentDate() != null) {
-				conditions.add("document_date >= ?");
-				parameters.add(searchFilingsRequest.getMinDocumentDate());
-			}
-			if (searchFilingsRequest.getMinFilingDate() != null) {
-				conditions.add("filing_date >= ?");
-				parameters.add(searchFilingsRequest.getMinFilingDate());
-			}
-			if (searchFilingsRequest.getMaxDocumentDate() != null) {
-				conditions.add("document_date <= ?");
-				parameters.add(searchFilingsRequest.getMaxDocumentDate());
-			}
-			if (searchFilingsRequest.getMaxFilingDate() != null) {
-				conditions.add("filing_date <= ?");
-				parameters.add(searchFilingsRequest.getMaxFilingDate());
-			}
-			if (!StringUtils.isEmpty(searchFilingsRequest.getStatus())) {
-				conditions.add("status = ?");
-				parameters.add(searchFilingsRequest.getStatus());
-			}
-			if (!StringUtils.isEmpty(searchFilingsRequest.getRegistryCode())) {
-				conditions.add("registry_code = ?");
-				parameters.add(searchFilingsRequest.getRegistryCode());
-			}
-			StringBuilder sqlBuilder = new StringBuilder("SELECT * ");
-			if (selects.size() > 0) {
-				sqlBuilder.append(", ");
-				sqlBuilder.append(String.join(", ", selects));
-			}
-			sqlBuilder.append(" FROM filings ");
-			if (queries.size() > 0) {
-				sqlBuilder.append(", ");
-				sqlBuilder.append(String.join(", ", queries));
-			}
-			if (conditions.size() > 0) {
-				sqlBuilder.append(" WHERE ");
-				sqlBuilder.append(String.join(" AND ", conditions));
-			}
+		}
+		if (!StringUtils.isEmpty(companyNumber)) {
+			conditions.add("company_number = ?");
+			parameters.add(companyNumber);
+		}
+		if (searchFilingsRequest.getMinDocumentDate() != null) {
+			conditions.add("document_date >= ?");
+			parameters.add(searchFilingsRequest.getMinDocumentDate());
+		}
+		if (searchFilingsRequest.getMinFilingDate() != null) {
+			conditions.add("filing_date >= ?");
+			parameters.add(searchFilingsRequest.getMinFilingDate());
+		}
+		if (searchFilingsRequest.getMaxDocumentDate() != null) {
+			conditions.add("document_date <= ?");
+			parameters.add(searchFilingsRequest.getMaxDocumentDate());
+		}
+		if (searchFilingsRequest.getMaxFilingDate() != null) {
+			conditions.add("filing_date <= ?");
+			parameters.add(searchFilingsRequest.getMaxFilingDate());
+		}
+		if (!StringUtils.isEmpty(searchFilingsRequest.getStatus())) {
+			conditions.add("status = ?");
+			parameters.add(searchFilingsRequest.getStatus());
+		}
+		if (!StringUtils.isEmpty(searchFilingsRequest.getRegistryCode())) {
+			conditions.add("registry_code = ?");
+			parameters.add(searchFilingsRequest.getRegistryCode());
+		}
+		StringBuilder sqlBuilder = new StringBuilder();
+		if (count) {
+			sqlBuilder.append("SELECT COUNT(*) ");
+		} else {
+			sqlBuilder.append("SELECT * ");
+		}
+		if (selects.size() > 0) {
+			sqlBuilder.append(", ");
+			sqlBuilder.append(String.join(", ", selects));
+		}
+		sqlBuilder.append(" FROM filings ");
+		if (queries.size() > 0) {
+			sqlBuilder.append(", ");
+			sqlBuilder.append(String.join(", ", queries));
+		}
+		if (conditions.size() > 0) {
+			sqlBuilder.append(" WHERE ");
+			sqlBuilder.append(String.join(" AND ", conditions));
+		}
+		if (!count) {
 			sqlBuilder.append(" ORDER BY ");
 			sqlBuilder.append(String.join(", ", orderBys));
+			sqlBuilder.append(" OFFSET ?");
+			parameters.add(Math.max(0, searchFilingsRequest.getOffset()));
 			sqlBuilder.append(" LIMIT ?;");
 			parameters.add(Math.max(1, searchFilingsRequest.getLimit()));
-			String sql = sqlBuilder.toString();
-			PreparedStatement statement = connection.prepareStatement(sql);
-			for (int i = 0; i < parameters.size(); i++) {
-				statement.setObject(i + 1, parameters.get(i));
-			}
+		}
+		String sql = sqlBuilder.toString();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		for (int i = 0; i < parameters.size(); i++) {
+			statement.setObject(i + 1, parameters.get(i));
+		}
+		return statement;
+	}
+
+	public List<Filing> searchFilings(SearchFilingsRequest searchFilingsRequest) {
+		try (Connection connection = getInitializedConnection(true)) {
+			PreparedStatement statement = buildFilingsSearchQuery(connection, searchFilingsRequest, false);
 			ResultSet resultSet = statement.executeQuery();
 			return getFilings(resultSet);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public long getFilingsCount(SearchFilingsRequest searchFilingsRequest) {
+		try (Connection connection = getInitializedConnection(true)) {
+			PreparedStatement statement = buildFilingsSearchQuery(connection, searchFilingsRequest, true);
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			return resultSet.getLong(1);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

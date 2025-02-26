@@ -44,9 +44,9 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String FILING_LIMIT_COMPANIES_HOUSE = "FILING_LIMIT_COMPANIES_HOUSE";
 	private static final String FILING_LIMIT_FCA = "FILING_LIMIT_FCA";
 	private static final String LAMBDA_PREPROCESSING_CONCURRENCY = "LAMBDA_PREPROCESSING_CONCURRENCY";
-	private static final String MAXIMUM_SEARCH_RESULTS = "MAXIMUM_SEARCH_RESULTS";
 	private static final String S3_INDEXER_UPLOADS_BUCKET_NAME = "S3_INDEXER_UPLOADS_BUCKET_NAME";
 	private static final String S3_RESULTS_BUCKET_NAME = "S3_RESULTS_BUCKET_NAME";
+	private static final String SEARCH_MAXIMUM_PAGES = "SEARCH_MAXIMUM_PAGES";
 	private static final String SEARCH_PAGE_SIZE = "SEARCH_PAGE_SIZE";
 	private static final String SECRETS_FILEPATH = "/run/secrets/frc-codex-server.secrets";
 	private static final String SQS_JOBS_QUEUE_NAME = "SQS_JOBS_QUEUE_NAME";
@@ -79,10 +79,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final String awsLambdaFunctionName;
 	private final long awsLambdaTimeoutSeconds;
 	private final int lambdaPreprocessingConcurrency;
-	private final long maximumSearchResults;
 	private final String s3IndexerUploadsBucketName;
 	private final String s3ResultsBucketName;
-	private final long searchPageSize;
+	private final int searchMaximumPages;
+	private final int searchPageSize;
 	private final String sqsJobsQueueName;
 	private final String sqsResultsQueueName;
 	private final String supportEmail;
@@ -129,8 +129,8 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 		lambdaPreprocessingConcurrency = Integer.parseInt(requireNonNull(getEnv(LAMBDA_PREPROCESSING_CONCURRENCY, "1")));
 
-		maximumSearchResults = Long.parseLong(requireNonNull(getEnv(MAXIMUM_SEARCH_RESULTS, "100")));
-		searchPageSize = Long.parseLong(requireNonNull(getEnv(SEARCH_PAGE_SIZE, "10")));
+		searchMaximumPages = Integer.parseInt(requireNonNull(getEnv(SEARCH_MAXIMUM_PAGES, "10")));
+		searchPageSize = Integer.parseInt(requireNonNull(getEnv(SEARCH_PAGE_SIZE, "10")));
 
 		s3IndexerUploadsBucketName = requireNonNull(getEnv(S3_INDEXER_UPLOADS_BUCKET_NAME));
 		s3ResultsBucketName = requireNonNull(getEnv(S3_RESULTS_BUCKET_NAME));
@@ -310,10 +310,6 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		return lambdaPreprocessingConcurrency;
 	}
 
-	public long maximumSearchResults() {
-		return maximumSearchResults;
-	}
-
 	public String s3IndexerUploadsBucketName() {
 		return s3IndexerUploadsBucketName;
 	}
@@ -322,7 +318,11 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		return s3ResultsBucketName;
 	}
 
-	public long searchPageSize() {
+	public int searchMaximumPages() {
+		return searchMaximumPages;
+	}
+
+	public int searchPageSize() {
 		return searchPageSize;
 	}
 

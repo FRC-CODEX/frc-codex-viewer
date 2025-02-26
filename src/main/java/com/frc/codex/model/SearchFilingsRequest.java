@@ -9,7 +9,6 @@ import org.thymeleaf.util.StringUtils;
 public class SearchFilingsRequest {
 	private Boolean admin;
 	private String searchText;
-	private long limit;
 	private Integer minDocumentDateDay;
 	private Integer minDocumentDateMonth;
 	private Integer minDocumentDateYear;
@@ -22,6 +21,8 @@ public class SearchFilingsRequest {
 	private Integer maxFilingDateDay;
 	private Integer maxFilingDateMonth;
 	private Integer maxFilingDateYear;
+	private int pageNumber;
+	private int pageSize;
 	private String registryCode;
 	private String status;
 
@@ -46,12 +47,12 @@ public class SearchFilingsRequest {
 	}
 
 	public long getLimit() {
-		return limit;
+		return pageSize;
 	}
 
-	public String getLoadMoreLink(long pageSize, int lastResultIndex) {
+	public String getLink(int pageNumber) {
 		String query = buildQuery("searchText", getSearchText()) +
-				buildQuery("limit", getLimit() + pageSize) +
+				buildQuery("pageNumber", pageNumber) +
 				buildQuery("minDocumentDateDay", getMinDocumentDateDay()) +
 				buildQuery("minDocumentDateMonth", getMinDocumentDateMonth()) +
 				buildQuery("minDocumentDateYear", getMinDocumentDateYear()) +
@@ -66,7 +67,11 @@ public class SearchFilingsRequest {
 				buildQuery("maxFilingDateYear", getMaxFilingDateYear()) +
 				buildQuery("registryCode", getRegistryCode()) +
 				buildQuery("admin", getAdmin());
-		return ("/?" + query + "#result-" + lastResultIndex);
+		return ("/?" + query);
+	}
+
+	public long getOffset() {
+		return (long) (pageNumber - 1) * pageSize;
 	}
 
 	private String buildQuery(String paramName, Object paramValue) {
@@ -143,6 +148,11 @@ public class SearchFilingsRequest {
 	public Integer getMaxFilingDateYear() {
 		return maxFilingDateYear;
 	}
+
+	public int getPageNumber() {
+		return pageNumber;
+	}
+
 	public String getRegistryCode() {
 		return registryCode;
 	}
@@ -163,9 +173,12 @@ public class SearchFilingsRequest {
 		this.searchText = searchText;
 	}
 
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
+	}
 
-	public void setLimit(long limit) {
-		this.limit = limit;
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 
 	public void setMinDocumentDateDay(Integer day) {

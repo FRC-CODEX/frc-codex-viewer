@@ -29,6 +29,7 @@ public interface DatabaseManager {
 	Filing getFiling(UUID filingId);
 	List<Filing> getFilingsByStatus(FilingStatus status);
 	List<Filing> getFilingsByStatus(FilingStatus status, RegistryCode registryCode);
+	long getFilingsCount(SearchFilingsRequest searchFilingsRequest);
 	LocalDateTime getLatestFcaFilingDate(LocalDateTime defaultDate);
 	Long getLatestStreamTimepoint(Long defaultTimepoint);
 	long getRegistryCount(RegistryCode registryCode);
