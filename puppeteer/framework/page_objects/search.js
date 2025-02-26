@@ -136,7 +136,7 @@ export class SearchResultCard {
         this.registry = new Link(this.#codexPage,
             `${this.#locator}//dt[contains(text(), 'Registry:')]/following-sibling::dd`, 'Registry');
         this.documentDate = new Text(this.#codexPage,
-            `${this.#locator}//dt[contains(text(), 'Document Date:')]/following-sibling::dd`,
+            `${this.#locator}//dt[span[contains(text(), 'Document Date:')]]/following-sibling::dd`,
             'Document Date');
         this.filingButton = new Button(this.#codexPage,
             `${this.#locator}//a[normalize-space(text())="Filing"]`,
@@ -148,7 +148,7 @@ export class SearchResultCard {
             `${this.#locator}//a[normalize-space(text())="xBRL-JSON"]`,
             'xBRL-JSON Button');
         this.filingDate = new Text(this.#codexPage,
-            `${this.#locator}//dt[contains(text(), 'Date Filed:')]/following-sibling::dd`,
+            `${this.#locator}//dt[span[contains(text(), 'Date Filed:')]]/following-sibling::dd`,
             'Date Filed');
         this.viewerButton = new Button(this.#codexPage,
             `${this.#locator}//a[normalize-space(text())="Open Viewer"]`, 'Viewer Button');
