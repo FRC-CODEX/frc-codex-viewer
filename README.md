@@ -1,4 +1,4 @@
-# FRC CODEx
+# UK iXBRL Viewer
 
 ## Applications
 
@@ -49,7 +49,7 @@ Lambda function.
 
 
 ## Docker
-The preferred method to run any part of the FRC CODEx is using Docker Compose.
+The preferred method to run any part of the UK iXBRL Viewer is using Docker Compose.
 
 ### Setup
 
