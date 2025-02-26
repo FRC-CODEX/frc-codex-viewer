@@ -55,6 +55,7 @@ public class CompaniesHouseRateLimiterImpl extends RateLimiter implements Compan
 		}
 		if (updated == null || reset == null) {
 			LOG.info("Rate limit status unknown, assuming healthy.");
+			registerTimestamp();
 			return true;
 		};
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -64,19 +65,19 @@ public class CompaniesHouseRateLimiterImpl extends RateLimiter implements Compan
 				lastRejection = null;
 			}
 			// The limits should have been reset since last update, so we should be healthy.
-			return true;
 		}
-		if (lastRejection != null && lastRejection.before(reset)) {
+		else if (lastRejection != null && lastRejection.before(reset)) {
 			// We have been rejected in the current window, so we should be unhealthy.
 			LOG.info("Rate limit rejection at {} in current window until {}, unhealthy.", lastRejection, reset);
 			return false;
 		}
-		if (remaining <= REMAINING_FLOOR) {
+		else if (remaining <= REMAINING_FLOOR) {
 			// We have no remaining requests, so we should be unhealthy.
 			LOG.info("Rate limit exhausted, unhealthy.");
 			return false;
 		}
 		// We have remaining requests, so we should be healthy.
+		registerTimestamp();
 		return true;
 	}
 
@@ -95,7 +96,6 @@ public class CompaniesHouseRateLimiterImpl extends RateLimiter implements Compan
 	}
 
 	public void updateLimits(ResponseEntity<?> response, String url) {
-		registerTimestamp();
 		HttpHeaders headers = response.getHeaders();
 		String limit = headers.getFirst(HEADER_RATE_LIMIT);
 		if (limit != null) {
