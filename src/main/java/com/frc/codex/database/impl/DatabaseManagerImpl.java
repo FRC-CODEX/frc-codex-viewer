@@ -718,10 +718,13 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			}
 		};
 		if (!StringUtils.isEmpty(companyName)) {
-			for (String part : companyName.split("\\s+")) {
-				conditions.add("UPPER(company_name) LIKE UPPER(?)");
-				parameters.add("%" + part.trim() + "%");
+			if (!count) {
+				selects.add("ts_rank(to_tsvector('english', company_name), query) as rank");
+				orderBys.add(0, "rank DESC");
 			}
+			queries.add("websearch_to_tsquery('english', ?) query");
+			conditions.add("to_tsvector('english', company_name) @@ query");
+			parameters.add(companyName);
 		}
 		if (!StringUtils.isEmpty(companyNumber)) {
 			conditions.add("company_number = ?");
