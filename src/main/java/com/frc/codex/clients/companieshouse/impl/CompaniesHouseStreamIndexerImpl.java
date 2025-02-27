@@ -148,7 +148,7 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 				// progress will slow as each batch fills in with events that can't be parsed.
 				// If this ends up being problematic, we can make a change here to delete
 				// these stream events.
-				LOG.error("Failed to parse CH filing stream event.", e);
+				LOG.error("Failed to parse CH filing stream event: {}", streamEvent.getStreamEventId(), e);
 				continue;
 			}
 
