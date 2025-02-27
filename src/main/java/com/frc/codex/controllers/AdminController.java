@@ -138,7 +138,7 @@ public class AdminController extends BaseController {
 		String filingUrls = filings.stream()
 				.map(NewFilingRequest::getDownloadUrl)
 				.collect(Collectors.joining("\n"));
-		model.addAttribute("filings", filingUrls);
+		model.addAttribute("filingUrls", filingUrls);
 		return "admin/smoketest/companieshouse/company";
 	}
 

@@ -19,7 +19,7 @@ echo "Test homepage"
 curl $CURL_OPTS http://localhost:8080/
 
 echo "Test CH API client"
-curl $CURL_OPTS http://localhost:8080/admin/smoketest/companieshouse/company/00324341
+curl $CURL_OPTS http://localhost:8080/admin/smoketest/companieshouse/company/10178367
 
 echo "Test CH archive client"
 curl $CURL_OPTS http://localhost:8080/admin/smoketest/companieshouse/history
