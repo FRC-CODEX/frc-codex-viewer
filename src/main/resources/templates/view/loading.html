@@ -7,21 +7,25 @@
 <script th:replace="~{fragments :: script-govuk-frontend-supported}"></script>
 <a th:replace="~{fragments :: link-skip-to-main}"></a>
 <header th:replace="~{fragments :: header}"></header>
-<div class="loading-bar">
-    <div>
-        <img src="/icons/loading.svg" alt="Loading icon"/>
+<div class="loading-window">
+    <div class="preview-container">
+        <iframe
+                th:src="${iframeSrc}"
+                frameBorder="0">
+        </iframe>
     </div>
-    <div style="max-width:50%;">
-        <h2 class="govuk-heading-m" style="margin:0;" data-i18n="loading:status">Loading...</h2>
-        <p class="govuk-body" style="margin:0;" data-i18n="loading:pleaseWait">
-            This viewer is currently being generated. Please wait a moment...
-        </p>
+    <div class="loading-container">
+        <div>
+            <h2 class="govuk-heading-m" style="margin:0;" data-i18n="loading:status">Loading...</h2>
+            <p class="govuk-body" style="margin:0;" data-i18n="loading:pleaseWait">
+                This viewer is currently being generated. Please wait a moment...
+            </p>
+        </div>
+        <div>
+            <img src="/icons/loading.svg" alt="Loading icon"/>
+        </div>
     </div>
 </div>
-<iframe
-        th:src="${iframeSrc}"
-        style="position:absolute;width:100%;height:100%;background:white;">
-</iframe>
 <script type="module">
     // Redirect to the wait page
     window.location.href = 'wait';

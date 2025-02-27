@@ -34,42 +34,34 @@ html, body {
     white-space: nowrap;
 }
 
-.loading-bar {
-    padding:1em;
-    font-size:1.5em;
-    background:white;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-}
-
 @keyframes spin {
-     0% { transform: rotate(0deg); }
-     100% {  transform: rotate(359deg); }
-}
-
-.loading-bar img {
-    animation: spin 2s linear infinite;
-    width: 1em;
-    padding: 1em;
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
 }
 
 .search-result dt, .search-result dd {
     text-align: left;
     margin-right: 20px;
 }
+
 .search-result dl {
-    flex-grow:10;
+    flex-grow: 10;
     margin-block-start: 0.5em;
     margin-block-end: 0.5em;
     font-size: 1.1em;
 }
+
 .search-result dt {
-    font-weight:bold;
-    font-size:0.8em;
+    font-weight: bold;
+    font-size: 0.8em;
     text-transform: uppercase;
     color: #666;
 }
+
 .search-result dd {
     margin-inline-start: 0;
     padding: 6px 0;
@@ -83,13 +75,13 @@ html, body {
 .search-result .index-link .index-tooltip {
     display: none;
     white-space: normal;
-    position:absolute;
-    right:0;
-    top:100%;
+    position: absolute;
+    right: 0;
+    top: 100%;
     width: 200px;
-    background:white;
-    border:1px solid black;
-    padding:10px;
+    background: white;
+    border: 1px solid black;
+    padding: 10px;
     z-index: 1;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
 }
@@ -108,8 +100,8 @@ html, body {
 
 .admin-container {
     font-family: sans-serif;
-    margin:1em;
-    padding:1em;
+    margin: 1em;
+    padding: 1em;
     border-left: 1px solid black;
     border-radius: 1em;
     box-shadow: 0 0 6px 0 lightgrey
@@ -129,4 +121,86 @@ html, body {
 
 .pre-line {
     white-space: pre-line;
+}
+
+header {
+    font-size: 1.4rem;
+    height: 35px;
+    border-bottom: solid 1px #ccc;
+    background: #000000;
+    color: #bcbcbc;
+}
+
+header > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto;
+    max-width: 1200px;
+    height: 100%;
+}
+
+header a {
+    font-weight: bold;
+    text-decoration: none;
+    color: #72bafd !important;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+.header-toolbar a {
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.header-toolbar .govuk-select {
+    height: unset;
+    height: 2rem;
+    font-size: 14px;
+}
+
+.govuk-header__container {
+    margin-top: 0;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.loading-window {
+    display: flex;
+    align-items: stretch;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 36px;
+}
+
+.loading-window .preview-container {
+    flex-grow: 10;
+    position: relative;
+}
+
+.loading-window .preview-container iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+}
+
+.loading-window .loading-container {
+    flex-basis: 25%;
+    font-size: 1.5em;
+    background: white;
+    position: relative;
+    border-left: solid 0.1rem #cbcbcb;
+    text-align: center;
+}
+
+.loading-window .loading-container img {
+    animation: spin 2s linear infinite;
+    width: 1em;
+    padding: 1em;
 }

@@ -92,17 +92,17 @@
     Skip to main content
   </a>
 
-  <header th:fragment="header-main" class="govuk-header" data-module="govuk-header">
-    <div class="govuk-header__container govuk-width-container">
-      <div class="govuk-header__content">
-        <a href="/" class="govuk-header__link govuk-header__service-name" data-i18n="fragments:title">UK iXBRL Viewer</a>
+  <header th:fragment="header-main" data-module="govuk-header">
+    <div>
+      <div>
+        <a href="/" data-i18n="fragments:title">UK iXBRL Viewer</a>
       </div>
       <div class="header-toolbar">
-        <a class="govuk-header__link" href="/User_Guide.pdf" data-i18n="fragments:userGuide">
+        <a href="/User_Guide.pdf" data-i18n="fragments:userGuide">
           User Guide
         </a>
         <div>
-          <label class="govuk-label govuk-visually-hidden" for="language" data-i18n="fragments:selectLanguage">
+          <label class="govuk-visually-hidden" for="language" data-i18n="fragments:selectLanguage">
             Select language
           </label>
           <select class="govuk-select" id="language" name="language">
