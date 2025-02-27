@@ -256,25 +256,32 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 
 	public CompaniesHouseFiling parseStreamedFiling(String json) throws JsonProcessingException {
 		JsonNode filing = OBJECT_MAPPER.readTree(json);
-		JsonNode data = filing.get("data");
+
 		JsonNode event = filing.get("event");
+		String eventType = event.get("type").asText();
+		long timepoint = event.get("timepoint").asLong();
+
+		String resourceId = filing.get("resource_id").asText();
+		String resourceKind = filing.get("resource_kind").asText();
 		String resourceUri = filing.get("resource_uri").asText();
 		String[] resourceUriSplit = resourceUri.split("/");
-
-		// Note: `action_date` is not a documented field but appears to consistently represent
-		// the document date for the filing.
-		LocalDateTime actionDate = parseDate(data.get("action_date"));
-		String category = null;
-		if (data.has("category")) {
-			category = data.get("category").asText();
-		}
 		String companyNumber = resourceUriSplit[2];
-		LocalDateTime date = parseDate(data.get("date"));
-		String eventType = event.get("type").asText();
-		String resourceKind = filing.get("resource_kind").asText();
-		String resourceId = filing.get("resource_id").asText();
-		long timepoint = event.get("timepoint").asLong();
-		String transactionId = data.get("transaction_id").asText();
+
+		LocalDateTime actionDate = null;
+		String category = null;
+		LocalDateTime date = null;
+		String transactionId = null;
+		if (filing.has("data")) {
+			JsonNode data = filing.get("data");
+			// Note: `action_date` is not a documented field but appears to consistently represent
+			// the document date for the filing.
+			actionDate = parseDate(data.get("action_date"));
+			if (data.has("category")) {
+				category = data.get("category").asText();
+			}
+			date = parseDate(data.get("date"));
+			transactionId = data.get("transaction_id").asText();
+		}
 		return new CompaniesHouseFiling(
 				actionDate,
 				category,
