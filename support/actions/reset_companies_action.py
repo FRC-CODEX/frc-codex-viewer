@@ -23,23 +23,23 @@ class ResetCompaniesAction(BaseAction):
             return False, "Must provide at least one of 'company_number', " \
                           "'completed_after', 'completed_before', 'discovered_after', " \
                           "or 'discovered_before'.", 0
-        if options.get('company_number'):
+        if options.get('company_number') is not None:
             conditions.append("company_number = %s")
             params.append(options['company_number'])
             notes.append(f"Company number is {options['company_number']}.")
-        if options.get('completed_after'):
+        if options.get('completed_after') is not None:
             conditions.append("completed_date >= %s")
             params.append(options['completed_after'])
             notes.append(f"Completion date is after {options['completed_after']}.")
-        if options.get('completed_before'):
+        if options.get('completed_before') is not None:
             conditions.append("completed_date < %s")
             params.append(options['completed_before'])
             notes.append(f"Completion date is before {options['completed_before']}.")
-        if options.get('discovered_after'):
+        if options.get('discovered_after') is not None:
             conditions.append("discovered_date >= %s")
             params.append(options['discovered_after'])
             notes.append(f"Discovery date is after {options['discovered_after']}.")
-        if options.get('discovered_before'):
+        if options.get('discovered_before') is not None:
             conditions.append("discovered_date < %s")
             params.append(options['discovered_before'])
             notes.append(f"Discovery date is before {options['discovered_before']}.")
