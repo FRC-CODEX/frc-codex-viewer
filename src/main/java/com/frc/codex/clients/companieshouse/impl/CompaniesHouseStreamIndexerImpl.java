@@ -141,9 +141,15 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 			CompaniesHouseFiling companiesHouseFiling;
 			try {
 				companiesHouseFiling = companiesHouseClient.parseStreamedFiling(streamEvent.getJson());
-			} catch (JsonProcessingException e) {
-				LOG.error("Failed to parse CH filing stream event.", e);
-				break;
+			} catch (Exception e) {
+				// Parsing failed, skip this event.
+				// Note that this event will attempt processing again in the next batch, so
+				// the underlying issue should be addressed promptly, otherwise indexing
+				// progress will slow as each batch fills in with events that can't be parsed.
+				// If this ends up being problematic, we can make a change here to delete
+				// these stream events.
+				LOG.error("Failed to parse CH filing stream event: {}", streamEvent.getStreamEventId(), e);
+				continue;
 			}
 
 			long timepoint;
