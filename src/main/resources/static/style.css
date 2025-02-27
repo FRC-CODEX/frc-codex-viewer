@@ -34,15 +34,6 @@ html, body {
     white-space: nowrap;
 }
 
-.loading-bar {
-    flex-basis: 25%;
-    font-size: 1.5em;
-    background: white;
-    position: relative;
-    border-left: solid 0.1rem #cbcbcb;
-    text-align: center;
-}
-
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -50,12 +41,6 @@ html, body {
     100% {
         transform: rotate(359deg);
     }
-}
-
-.loading-bar img {
-    animation: spin 2s linear infinite;
-    width: 1em;
-    padding: 1em;
 }
 
 .search-result dt, .search-result dd {
@@ -181,4 +166,41 @@ header a:hover {
     margin-bottom: 0;
     display: flex;
     align-items: center;
+}
+
+.loading-window {
+    display: flex;
+    align-items: stretch;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 36px;
+}
+
+.loading-window .preview-container {
+    flex-grow: 10;
+    position: relative;
+}
+
+.loading-window .preview-container iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+}
+
+.loading-window .loading-container {
+    flex-basis: 25%;
+    font-size: 1.5em;
+    background: white;
+    position: relative;
+    border-left: solid 0.1rem #cbcbcb;
+    text-align: center;
+}
+
+.loading-window .loading-container img {
+    animation: spin 2s linear infinite;
+    width: 1em;
+    padding: 1em;
 }
