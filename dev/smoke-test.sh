@@ -46,7 +46,7 @@ curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
 
 echo "Test support action: get_filing_details"
 curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \
-  --data '{"action":"get_filing_details","filing_id":"abcdefg"}'
+  --data '{"action":"get_filing_details","filing_id":"cfc59bc3-1899-40ae-87f3-bd199bee8171"}'
 
 echo "Test support action: list_errors"
 curl $CURL_OPTS 'localhost:8082/2015-03-31/functions/function/invocations' \

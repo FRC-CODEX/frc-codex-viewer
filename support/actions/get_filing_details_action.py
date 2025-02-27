@@ -1,3 +1,4 @@
+import uuid
 from typing import Any
 
 from support.actions.base_action import BaseAction
@@ -9,6 +10,10 @@ class GetFilingDetailsAction(BaseAction):
         if 'filing_id' not in options:
             return False, "Must provide 'filing_id'.", 0
         filing_id = options['filing_id']
+        try:
+            uuid.UUID(filing_id)
+        except ValueError:
+            return False, f"filing_id must be a valid UUID: {filing_id}", 0
         query = "SELECT * FROM filings WHERE filing_id = %s LIMIT 1;"
         cursor.execute(query, (filing_id,))
         results = BaseAction.collect_results(cursor)

@@ -1,3 +1,5 @@
+import uuid
+
 from support.actions.base_action import BaseAction
 
 
@@ -13,7 +15,11 @@ class ResetFilingsAction(BaseAction):
             conditions.append("company_number = %s")
             params.append(options['company_number'])
             notes.append(f"Company number is {options['company_number']}.")
-        if options.get('filing_id'):
+        if options.get('filing_id') is not None:
+            try:
+                uuid.UUID(options['filing_id'])
+            except ValueError:
+                return False, f"filing_id must be a valid UUID: {options['filing_id']}", 0
             conditions.append("filing_id = %s")
             params.append(options['filing_id'])
             notes.append(f"Filing ID is {options['filing_id']}.")
