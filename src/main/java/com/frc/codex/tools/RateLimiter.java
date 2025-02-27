@@ -33,18 +33,21 @@ public class RateLimiter
 		waitUntilMs = System.currentTimeMillis() + rapidRateWindow;
 	}
 
-	public double getRequestsPerSecond() {
-		Long oldest = monitorTimestamps.peek();
-		if (oldest == null) {
-			return 0.0;
-		}
-		return (double) monitorTimestamps.size() / (System.currentTimeMillis() - oldest) * 1000.0;
-	}
-
 	public synchronized void waitForRapidRateLimit() throws InterruptedException {
 		long waitTime = waitUntilMs - System.currentTimeMillis();
+		Long oldest = monitorTimestamps.peek();
+		int requests = monitorTimestamps.size();
+		double seconds = 0;
+		double approximateRate = 0;
+		if (oldest != null) {
+			seconds = (System.currentTimeMillis() - oldest) / 1000.0;
+			approximateRate = (((double) requests / seconds) + (((double) requests - 1) / seconds)) * 0.5;
+		}
 		if (waitTime > 0) {
-			LOG.info("Waiting for rapid rate limit: {} ms (requestsPerSecond={})", waitTime, String.format("%.2f", getRequestsPerSecond()));
+			LOG.info(
+					"Waiting for rapid rate limit: {} ms (requests={},seconds={},requestsPerSecond={})",
+					waitTime, requests, String.format("%.2f", seconds), String.format("%.2f", approximateRate)
+			);
 			Thread.sleep(waitTime);
 		}
 	}
