@@ -11,19 +11,20 @@ class ResetFilingsAction(BaseAction):
         notes = []
         if 'company_number' not in options and 'filing_id' not in options:
             return False, "Must provide 'company_number', 'filing_id', or both.", 0
-        if options.get('company_number'):
+        if options.get('company_number') is not None:
             conditions.append("company_number = %s")
             params.append(options['company_number'])
             notes.append(f"Company number is {options['company_number']}.")
         if options.get('filing_id') is not None:
+            filing_id = options['filing_id']
             try:
-                uuid.UUID(options['filing_id'])
+                uuid.UUID(filing_id)
             except ValueError:
-                return False, f"filing_id must be a valid UUID: {options['filing_id']}", 0
+                return False, f"filing_id must be a valid UUID: {filing_id}", 0
             conditions.append("filing_id = %s")
-            params.append(options['filing_id'])
+            params.append(filing_id)
             notes.append(f"Filing ID is {options['filing_id']}.")
-        if options.get('status'):
+        if options.get('status') is not None:
             conditions.append("status = %s")
             params.append(options['status'])
             notes.append(f"Status is {options['status']}.")
