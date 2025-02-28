@@ -509,6 +509,16 @@ Resources:
       AliasTarget:
         DNSName: !GetAtt LoadBalancer.DNSName
         HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
+  DNSRecordDocs:
+    Type: "AWS::Route53::RecordSet"
+    Condition: IsProduction
+    Properties:
+      HostedZoneId: !Ref HostedZoneID
+      Name: "docs.ukixbrlviewer.org.uk"
+      Type: "CNAME"
+      TTL: "300"
+      ResourceRecords:
+        - "arelle-ixbrl-viewer.readthedocs.io"
   DNSRecord:
     Type: "AWS::Route53::RecordSet"
     Condition: IsProduction
