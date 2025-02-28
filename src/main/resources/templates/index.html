@@ -159,47 +159,6 @@
         <div th:if="${searchFilingsResult.getFilings() != null && searchFilingsResult.getFilings().size() > 0}" class="search-result">
             <h3 class="govuk-heading-m" data-i18n="index:results.header">Results</h3>
             <h5 class="govuk-heading-s"> <span th:text="${filingsCount}"></span> <span data-i18n="index:results.totalFilingsMatched">total filings matched.</span></h5>
-            <div style="display: flex;justify-content: center;">
-                <nav class="govuk-pagination" aria-label="Pagination">
-                    <div th:if="${!searchFilingsResult.isFirstPage()}" class="govuk-pagination__prev">
-                        <a class="govuk-link govuk-pagination__link"
-                           th:href="${searchFilingsRequest.getLink(searchFilingsResult.getPageNumber() - 1)}"
-                           rel="prev">
-                            <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
-                                <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
-                            </svg>
-                            <span class="govuk-pagination__link-title" data-i18n="index:results.previous">
-                                Previous
-                            </span>
-                        </a>
-                    </div>
-                    <ul class="govuk-pagination__list">
-                        <li th:each="pageLink, iter : ${pageLinks}"
-                            class="govuk-pagination__item"
-                            th:classappend="${pageLink.getValue()}">
-                            <a class="govuk-link govuk-pagination__link"
-                                th:if="${pageLink.getKey() != null}"
-                                th:text="${pageLink.getKey()} ?: '&ctdot;'"
-                                th:href="${searchFilingsRequest.getLink(pageLink.getKey())}">
-                                &ctdot;
-                            </a>
-                            <span th:if="${pageLink.getKey() == null}">&ctdot;</span>
-                        </li>
-                    </ul>
-                    <div th:if="${!searchFilingsResult.isLastPage()}" class="govuk-pagination__next">
-                        <a class="govuk-link govuk-pagination__link"
-                           th:href="${searchFilingsRequest.getLink(searchFilingsResult.getPageNumber() + 1)}"
-                           rel="next">
-                            <span class="govuk-pagination__link-title" data-i18n="index:results.next">
-                                Next
-                            </span>
-                            <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
-                                <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </nav>
-            </div>
             <div th:each="filing, iter : ${searchFilingsResult.getFilings()}" th:id="|result-${iter.index}|">
                 <hr/>
                 <div class="govuk-grid-row">
