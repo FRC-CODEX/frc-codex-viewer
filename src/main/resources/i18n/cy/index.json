@@ -9,7 +9,6 @@
     "to": "I",
     "year": "Blwyddyn"
   },
-  "loadMore": "Llwytho mwy o ffeilio",
   "maxResults": "Uchafswm nifer y canlyniadau a ddychwelwyd. Mireiniwch eich chwiliad.",
   "nationalStorageMechanism": "Mecanwaith Cynhesu Cenedlaethol",
   "registry": {
@@ -40,8 +39,8 @@
       "openViewer": "Gwyliwr Agored"
     },
     "header": "Canlyniadau",
-    "previous": "Blaenorol",
     "next": "Nesaf",
+    "previous": "Blaenorol",
     "registry": "Cofrestrfa: ",
     "totalFilingsMatched": "o ffeilio wedi cyfateb."
   },
