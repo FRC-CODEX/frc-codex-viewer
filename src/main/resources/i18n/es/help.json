@@ -1,6 +1,7 @@
 {
   "contactUs": "Contacta con nosotros",
-  "emailInstructions": "Utilice esta dirección de correo electrónico para ponerse en contacto con nuestro personal si tiene alguna pregunta, problema o comentario sobre el visor iXBRL del Reino Unido.<br>Algunos detalles útiles pueden incluir el nombre de la empresa, el número de la empresa o la URL asociada con un visor o archivo específico.",
+  "emailInstructionsDetails": "Algunos detalles útiles pueden incluir el nombre de la empresa, el número de la empresa o la URL asociada con un visor o archivo específico.",
+  "emailInstructionsFeedback": "Utilice esta dirección de correo electrónico para ponerse en contacto con nuestro personal si tiene alguna pregunta, problema o comentario sobre el visor iXBRL del Reino Unido.",
   "noEmail": "Servicio implementado sin dirección de correo electrónico de soporte (variable de entorno: SUPPORT_EMAIL).",
   "respond": "Un miembro de nuestro personal responderá a su solicitud lo antes posible.",
   "respondId": "Solicitar ID",

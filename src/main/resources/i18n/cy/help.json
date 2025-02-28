@@ -1,6 +1,7 @@
 {
   "contactUs": "Cysylltwch â Ni",
-  "emailInstructions": "Defnyddiwch y cyfeiriad e-bost hwn i gysylltu â'n staff gydag unrhyw gwestiynau, problemau neu adborth sydd gennych am y Gwyliwr iXBRL y DU.<br> Gall rhai manylion defnyddiol gynnwys enw'r cwmni, rhif cwmni, neu URL sy'n gysylltiedig â gwyliwr neu ffeil benodol.",
+  "emailInstructionsDetails": "Gall rhai manylion defnyddiol gynnwys enw'r cwmni, rhif cwmni, neu URL sy'n gysylltiedig â gwyliwr neu ffeil benodol.",
+  "emailInstructionsFeedback": "Defnyddiwch y cyfeiriad e-bost hwn i gysylltu â'n staff gydag unrhyw gwestiynau, problemau neu adborth sydd gennych am y Gwyliwr iXBRL y DU.",
   "noEmail": "Gwasanaeth wedi'i ddefnyddio heb gyfeiriad e-bost cymorth (newidyn amgylchedd: SUPPORT_EMAIL).",
   "respond": "Bydd aelod o’n staff yn ymateb i’ch cais cyn gynted â phosibl.",
   "respondId": "Cais ID",
