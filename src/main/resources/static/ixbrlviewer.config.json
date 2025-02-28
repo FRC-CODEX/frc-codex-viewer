@@ -1,5 +1,6 @@
 {
   "features": {
+    "guide_link": "https://docs.ukixbrlviewer.org.uk/en/latest/",
     "hide_calculation_mode_option": true,
     "highlight_facts_on_startup": true,
     "home_link_label": "UK iXBRL Viewer",
