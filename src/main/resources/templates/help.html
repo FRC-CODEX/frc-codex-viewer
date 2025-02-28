@@ -39,11 +39,11 @@
                 </div>
             </div>
         </div>
-        <p class="govuk-body" data-i18n="help:emailInstructions">
-            Use this email address to contact our staff with any questions, issues,
-            or feedback you have about the UK iXBRL Viewer.<br>
-            Some helpful details may include the company name, company number,
-            or URL associated with a specific viewer or filing.
+        <p class="govuk-body">
+            <span data-i18n="help:emailInstructionsFeedback">Use this email address to contact our staff with any questions, issues,
+            or feedback you have about the UK iXBRL Viewer.</span><br>
+            <span data-i18n="help:emailInstructionsDetails">Some helpful details may include the company name, company number,
+            or URL associated with a specific viewer or filing.</span>
         </p>
         <p class="govuk-body">
             <span th:if="${supportEmail == null}" data-i18n="help:noEmail">Service deployed without support email address (environment variable: SUPPORT_EMAIL).</span>

@@ -9,7 +9,6 @@
     "to": "A",
     "year": "Año"
   },
-  "loadMore": "Cargar más presentaciones",
   "maxResults": "Número máximo de resultados devueltos. Por favor, refine su búsqueda.",
   "nationalStorageMechanism": "Mecanismo de Almacenamiento Nacional",
   "registry": {
@@ -40,8 +39,8 @@
       "openViewer": "Visor Abierto"
     },
     "header": "Resultados",
-    "previous": "Previo",
     "next": "Próximo",
+    "previous": "Previo",
     "registry": "Registro: ",
     "totalFilingsMatched": "presentaciones totales coincidentes."
   },

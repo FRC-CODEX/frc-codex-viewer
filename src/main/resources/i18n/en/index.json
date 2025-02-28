@@ -9,7 +9,6 @@
     "to": "To",
     "year": "Year"
   },
-  "loadMore": "Load more filings",
   "maxResults": "Maximum number of results returned. Please refine your search.",
   "nationalStorageMechanism": "National Storage Mechanism",
   "registry": {
@@ -40,8 +39,8 @@
       "openViewer": "Open Viewer"
     },
     "header": "Results",
-    "previous": "Previous",
     "next": "Next",
+    "previous": "Previous",
     "registry": "Registry: ",
     "totalFilingsMatched": "total filings matched."
   },
