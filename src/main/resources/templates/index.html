@@ -42,8 +42,13 @@
                     <div class="govuk-form-group" th:classappend="${minFilingDateError != null} ? govuk-form-group--error : govuk-form-group--valid">
                         <fieldset class="govuk-fieldset" role="group" aria-describedby="min-filing-date-hint">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-fieldset__legend" data-i18n="index:dateFiled.header">
-                                    Date Filed
+                                <h1 class="govuk-fieldset__legend"> <span data-i18n="index:dateFiled.header"> Date Filed </span>
+                                    <span class="index-link">
+                                            <img src="/icons/info.svg" alt="Info icon" height="16" width="16">
+                                            <span class="index-tooltip index-tooltip-left">
+                                                <span class="original-text" data-i18n="index:results.dateFiledTooltip">The date on which the report was filed with Companies House Registry or FCA.</span>
+                                            </span>
+                                    </span>
                                 </h1>
                             </legend>
                             <div id="min-filing-date-hint" class="govuk-hint" data-i18n="index:dateFiled.from">
