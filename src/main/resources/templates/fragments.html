@@ -11,6 +11,24 @@
   <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c">
   <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png">
   <link rel="manifest" href="/assets/manifest.json">
+  <script type="module" th:inline="javascript">
+    const htmlElement = document.getElementsByTagName('html')[0];
+    const storageKey = "ixbrl-viewer-theme";
+    const currentTheme = localStorage.getItem(storageKey);
+    let enableDarkMode = false;
+    if (!currentTheme) {
+      if (window.matchMedia(`(prefers-color-scheme: dark)`).matches)  {
+        // Dark mode is enabled due to the user's system settings
+        enableDarkMode = true;
+      }
+    } else if (currentTheme === "dark" ) {
+      // Dark mode is enabled due to the user's preference for the UK iXBRL Viewer
+      enableDarkMode = true;
+    }
+    if (enableDarkMode) {
+      htmlElement.classList.add('dark-mode');
+    }
+  </script>
   <link rel="stylesheet" href="/govuk-frontend.min.css">
   <link rel="stylesheet" href="/style.css">
   <script type="module" src="/i18next.min.js"></script>
