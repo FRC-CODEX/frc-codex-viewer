@@ -71,6 +71,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 				"change-of-name",
 				"confirmation-statement",
 				"dissolution",
+				"gazette",
 				"incorporation",
 				"insolvency",
 				"mortgage",
