@@ -67,33 +67,6 @@ html, body {
     padding: 6px 0;
 }
 
-.search-result .index-link {
-    position: relative;
-    white-space: nowrap;
-}
-
-.search-result .index-link .index-tooltip {
-    display: none;
-    white-space: normal;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    width: 200px;
-    background: white;
-    border: 1px solid black;
-    padding: 10px;
-    z-index: 1;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
-}
-
-.search-result .index-link:hover .index-tooltip {
-    display: block;
-}
-
-.search-result .index-link img {
-    margin-bottom: -3px;
-}
-
 .search-result hr {
     margin: 20px 0;
 }
@@ -159,6 +132,39 @@ header a:hover {
     height: unset;
     height: 2rem;
     font-size: 14px;
+}
+
+.index-link {
+    position: relative;
+    white-space: nowrap;
+}
+
+.index-link .index-tooltip {
+    display: none;
+    white-space: normal;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 200px;
+    background: white;
+    border: 1px solid black;
+    padding: 10px;
+    z-index: 1;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.index-link .index-tooltip.index-tooltip-left {
+    right: auto;
+    left: 0;
+}
+
+.index-link:hover .index-tooltip {
+    display: block;
+}
+
+.index-link img {
+    margin-bottom: -3px;
 }
 
 .govuk-header__container {
