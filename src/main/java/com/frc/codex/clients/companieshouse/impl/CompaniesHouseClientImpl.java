@@ -71,12 +71,13 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 				"change-of-name",
 				"confirmation-statement",
 				"dissolution",
+				"gazette",
 				"incorporation",
 				"insolvency",
 				"mortgage",
 				"officers",
 				"other",
-				"persons-with-significant-controlxR",
+				"persons-with-significant-control",
 				"resolution"
 		));
 		this.companiesHouseIncludeCategories = new HashSet<>(List.of(

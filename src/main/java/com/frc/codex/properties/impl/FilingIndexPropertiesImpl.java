@@ -107,7 +107,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		companiesHouseRapidRateLimit = Integer.parseInt(requireNonNull(getEnv(COMPANIES_HOUSE_RAPID_RATE_LIMIT, "20")));
 		companiesHouseRapidRateWindow = Integer.parseInt(requireNonNull(getEnv(COMPANIES_HOUSE_RAPID_RATE_WINDOW, "10000")));
 
-		companiesHouseStreamIndexerBatchSize = Long.parseLong(requireNonNull(getEnv(COMPANIES_HOUSE_STREAM_INDEXER_BATCH_SIZE, "100")));
+		companiesHouseStreamIndexerBatchSize = Long.parseLong(requireNonNull(getEnv(COMPANIES_HOUSE_STREAM_INDEXER_BATCH_SIZE, "1000")));
 
 		dbUrl = requireNonNull(getEnv(DB_URL));
 		dbUsername = requireNonNull(getEnv(DB_USERNAME));

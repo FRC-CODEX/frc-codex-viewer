@@ -10,12 +10,16 @@ Parameters:
     Description: "The number of requests allowed in the rate limit window."
   CompaniesHouseRapidRateWindow:
     Type: Number
-    Default: 2000
+    Default: 200
     Description: "The duration of the rate limit window in milliseconds."
   CompaniesHouseRESTAPIKey:
     Type: String
   CompaniesHouseStreamAPIKey:
     Type: String
+  CompaniesHouseStreamIndexerBatchSize:
+    Type: Number
+    Default: 1000
+    Description: "The number of stream events to process during each run of the stream indexer."
   DBInstanceClass:
     Type: String
     Default: db.t4g.micro
@@ -347,6 +351,8 @@ Resources:
           Value: "https://stream.companieshouse.gov.uk"
         - Name: "COMPANIES_HOUSE_STREAM_API_KEY"
           Value: !Ref CompaniesHouseStreamAPIKey
+        - Name: "COMPANIES_HOUSE_STREAM_INDEXER_BATCH_SIZE"
+          Value: !Ref CompaniesHouseStreamIndexerBatchSize
         - Name: "DB_PASSWORD"
           Value: !Ref DBPassword
         - Name: "DB_URL"
