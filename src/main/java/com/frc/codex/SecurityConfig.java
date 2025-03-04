@@ -2,6 +2,7 @@ package com.frc.codex;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -26,7 +27,8 @@ public class SecurityConfig {
     private static final String ROLE_USER = "USER";
 
     private boolean isAnonymousAccess(FilingIndexProperties properties) {
-        return properties.httpUsername() == null || properties.httpPassword() == null;
+        return !StringUtils.hasText(properties.httpUsername()) || 
+               !StringUtils.hasText(properties.httpPassword());
     }
 
     @Bean
