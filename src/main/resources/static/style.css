@@ -241,7 +241,7 @@ html.dark-mode {
     color: #76ade8
 }
 
-.dark-mode .icon {
+.dark-mode .icon, .icon.icon-invert {
     filter: invert(98%)
 }
 
