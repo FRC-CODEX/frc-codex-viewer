@@ -10,7 +10,7 @@ Parameters:
     Description: "The number of requests allowed in the rate limit window."
   CompaniesHouseRapidRateWindow:
     Type: Number
-    Default: 2000
+    Default: 200
     Description: "The duration of the rate limit window in milliseconds."
   CompaniesHouseRESTAPIKey:
     Type: String
