@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -52,7 +54,6 @@ import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.RegistryCode;
-import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 import com.frc.codex.properties.FilingIndexProperties;
 
@@ -253,21 +254,11 @@ public class IndexerImpl implements Indexer {
 			String companyNumber = matcher.group(1);
 			if (existingCompanyNumbers.contains(companyNumber)) {
 				if (archiveType.isResetsCompany()) {
-					String documentDate = matcher.group(2);
-					Integer year = Integer.parseInt(documentDate.substring(0, 4));
-					Integer month = Integer.parseInt(documentDate.substring(4, 6));
-					Integer day = Integer.parseInt(documentDate.substring(6, 8));
-					SearchFilingsRequest search = new SearchFilingsRequest();
-					search.setSearchText(companyNumber);
-					search.setRegistryCode(RegistryCode.COMPANIES_HOUSE.getCode());
-					search.setMinDocumentDateYear(year);
-					search.setMinDocumentDateMonth(month);
-					search.setMinDocumentDateDay(day);
-					search.setMaxDocumentDateYear(year);
-					search.setMaxDocumentDateMonth(month);
-					search.setMaxDocumentDateDay(day);
-					List<Filing> existingFilings = databaseManager.searchFilings(search);
-					if (existingFilings.size() == 0) {
+					String documentDateStr = matcher.group(2);
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+					LocalDate documentDate = LocalDate.parse(documentDateStr, formatter);
+					Filing existingFiling = databaseManager.getFiling(companyNumber, documentDate);
+					if (existingFiling == null) {
 						databaseManager.resetCompany(companyNumber);
 						LOG.info("Reset company {}.", companyNumber);
 						continue;
