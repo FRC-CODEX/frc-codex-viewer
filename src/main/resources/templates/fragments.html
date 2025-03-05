@@ -13,6 +13,38 @@
   <link rel="manifest" href="/assets/manifest.json">
   <link rel="stylesheet" href="/govuk-frontend.min.css">
   <link rel="stylesheet" href="/style.css">
+  <script type="module" th:inline="javascript">
+    const htmlElement = document.getElementsByTagName('html')[0];
+    const storageKey = "ixbrl-viewer-theme";
+    const darkModeClass = "dark-mode";
+    const darkTheme = "dark";
+    const lightTheme = "light";
+    const currentTheme = localStorage.getItem(storageKey);
+    let enableDarkMode = false;
+    if (!currentTheme) {
+      if (window.matchMedia(`(prefers-color-scheme: dark)`).matches)  {
+        // Dark mode is enabled due to the user's system settings
+        enableDarkMode = true;
+      }
+    } else if (currentTheme === darkTheme) {
+      // Dark mode is enabled due to the user's preference for the UK iXBRL Viewer
+      enableDarkMode = true;
+    }
+    if (enableDarkMode) {
+      htmlElement.classList.add(darkModeClass);
+    }
+
+    const darkModeButton = document.getElementById(darkModeClass);
+    darkModeButton.addEventListener('click', () => {
+      if (htmlElement.classList.contains(darkModeClass)) {
+        htmlElement.classList.remove(darkModeClass);
+        localStorage.setItem(storageKey, lightTheme);
+      } else {
+        htmlElement.classList.add(darkModeClass);
+        localStorage.setItem(storageKey, darkTheme);
+      }
+    });
+  </script>
   <script type="module" src="/i18next.min.js"></script>
   <script type="module" src="/i18nextBrowserLanguageDetector.min.js"></script>
   <script type="module" th:inline="javascript">
@@ -108,6 +140,9 @@
           <select class="govuk-select" id="language" name="language">
           </select>
         </div>
+        <a id="dark-mode">
+          <img class="icon icon-invert" src="/icons/dark-mode.svg" alt="Info icon" height="16" width="16">
+        </a>
       </div>
     </div>
   </header>

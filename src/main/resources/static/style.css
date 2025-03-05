@@ -203,10 +203,74 @@ header a:hover {
     position: relative;
     border-left: solid 0.1rem #cbcbcb;
     text-align: center;
+    padding-top: 1em;
 }
 
 .loading-window .loading-container img {
     animation: spin 2s linear infinite;
     width: 1em;
     padding: 1em;
+}
+
+html.dark-mode {
+    background: #323232
+}
+
+.dark-mode .govuk-template__body {
+    background: #1e2021;
+    color: #efefef
+}
+
+.dark-mode .govuk-hint,
+.dark-mode .search-result dt,
+.dark-mode .govuk-details {
+    color: #ababab
+}
+
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+    background-color: #1e2021;
+    color: #efefef;
+    border-color: #efefef
+}
+
+.dark-mode .govuk-link,
+.dark-mode a,
+.dark-mode .govuk-details__summary {
+    color: #76ade8
+}
+
+.dark-mode .icon, .icon.icon-invert {
+    filter: invert(98%)
+}
+
+.dark-mode .govuk-details__summary:focus {
+    background-color: #554a00;
+    box-shadow: 0 -2px #554a00, 0 4px #0b0c0c
+}
+
+.dark-mode .govuk-body,
+.dark-mode .govuk-body-s,
+.dark-mode .govuk-heading-l,
+.dark-mode .govuk-heading-m,
+.dark-mode .govuk-heading-s,
+.dark-mode .govuk-fieldset__legend,
+.dark-mode .govuk-label,
+.dark-mode .govuk-phase-banner__content,
+.dark-mode .govuk-footer__link {
+    color: #efefef
+}
+
+.dark-mode .govuk-footer,
+.dark-mode .govuk-notification-banner__content {
+    background: #323232;
+    color: #efefef
+}
+
+.dark-mode .index-link .index-tooltip,
+.dark-mode .loading-window .loading-container {
+    background: #323232;
+    color: #efefef;
+    border-color: #efefef
 }

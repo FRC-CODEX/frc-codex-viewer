@@ -44,7 +44,7 @@
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-fieldset__legend"> <span data-i18n="index:dateFiled.header"> Date Filed </span>
                                     <span class="index-link">
-                                            <img src="/icons/info.svg" alt="Info icon" height="16" width="16">
+                                            <img class="icon" src="/icons/info.svg" alt="Info icon" height="16" width="16">
                                             <span class="index-tooltip index-tooltip-left">
                                                 <span class="original-text" data-i18n="index:results.dateFiledTooltip">The date on which the report was filed with Companies House Registry or FCA.</span>
                                             </span>
@@ -191,7 +191,7 @@
                             <dl style="flex-basis: 28%;">
                                 <dt><span data-i18n="index:results.documentDate">Document Date:</span>
                                     <span class="index-link">
-                                        <img src="/icons/info.svg" alt="Info icon" height="16" width="16">
+                                        <img class="icon" src="/icons/info.svg" alt="Info icon" height="16" width="16">
                                         <span class="index-tooltip">
                                             <span class="original-text" data-i18n="index:results.documentDateTooltip">This is the date associated with the document. Please note that this date may not be displayed on this page for some files that are not yet being processed by the UK iXBRL Viewer.</span>
                                         </span>
@@ -202,7 +202,7 @@
                             <dl style="flex-basis: 17%;">
                                 <dt><span data-i18n="index:results.dateFiled">Date Filed:</span>
                                     <span class="index-link">
-                                    <img src="/icons/info.svg" alt="Info icon" height="16" width="16">
+                                    <img class="icon" src="/icons/info.svg" alt="Info icon" height="16" width="16">
                                     <span class="index-tooltip">
                                             <span class="original-text" data-i18n="index:results.dateFiledTooltip">The date on which the report was filed with Companies House Registry or FCA.</span>
                                         </span>
@@ -219,7 +219,7 @@
                             </a>
                         </div>
                         <div>
-                            <img src="/icons/download.svg" alt="Download icon" height="16" width="16">
+                            <img class="icon" src="/icons/download.svg" alt="Download icon" height="16" width="16">
                             <b data-i18n="index:results.downloads.header">Downloads:</b>
                         </div>
                         <span th:if="${!(filing.isCompleted() && filing.getOimDirectory() == null)}">
@@ -227,7 +227,7 @@
                                 <a th:href="${filing.getXbrlCsvUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.csv.header">
                                     xBRL-CSV
                                 </a>
-                                <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
+                                <img class="icon" src="/icons/info.svg" alt="Download icon" height="16" width="16">
                                 <span class="index-tooltip">
                                     <span data-i18n="index:results.downloads.csv.description">XBRL facts as CSV files in a zip report package.</span><br/>
                                     <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-csv-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
@@ -238,7 +238,7 @@
                                 <a th:href="${filing.getXbrlJsonUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.json.header">
                                     xBRL-JSON
                                 </a>
-                                <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
+                                <img class="icon" src="/icons/info.svg" alt="Download icon" height="16" width="16">
                                 <span class="index-tooltip">
                                     <span data-i18n="index:results.downloads.json.description">XBRL facts as JSON files in a zip report package.</span><br/>
                                     <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#xbrl-json-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
@@ -250,7 +250,7 @@
                             <a th:href="${filing.getDownloadUrl()}" class="govuk-link govuk-link--no-underline" data-i18n="index:results.downloads.ixbrl.header">
                                 Filing
                             </a>
-                            <img src="/icons/info.svg" alt="Download icon" height="16" width="16">
+                            <img class="icon" src="/icons/info.svg" alt="Download icon" height="16" width="16">
                             <span class="index-tooltip">
                                 <span data-i18n="index:results.downloads.ixbrl.description">The original inline XBRL filing.</span><br/>
                                 <a target="_blank" href="https://www.xbrl.org/guidance/xbrl-glossary/#ixbrl-report" data-i18n="index:results.downloads.learnMore">Learn more.</a>
