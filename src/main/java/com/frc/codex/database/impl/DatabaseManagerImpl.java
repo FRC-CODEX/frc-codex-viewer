@@ -8,9 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -30,9 +30,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
-import com.frc.codex.model.StreamEvent;
-import com.frc.codex.properties.FilingIndexProperties;
-import com.frc.codex.model.RegistryCode;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.model.Company;
 import com.frc.codex.model.Filing;
@@ -40,8 +37,11 @@ import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.GenerationVersioning;
 import com.frc.codex.model.NewFilingRequest;
+import com.frc.codex.model.RegistryCode;
 import com.frc.codex.model.SearchFilingsRequest;
+import com.frc.codex.model.StreamEvent;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
+import com.frc.codex.properties.FilingIndexProperties;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.zaxxer.hikari.HikariDataSource;
@@ -287,6 +287,28 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			String sql = "SELECT * FROM filings WHERE filing_id = ?";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setObject(1, filingId);
+			ResultSet resultSet = statement.executeQuery();
+			List<Filing> filings = getFilings(resultSet);
+			if (filings.isEmpty()) {
+				return null;
+			}
+			return filings.get(0);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Filing getFiling(String companyNumber, LocalDate filingDate) {
+		try (Connection connection = getInitializedConnection(true)) {
+			String sql = "SELECT * FROM filings " +
+					"WHERE company_number = ? " +
+					"AND document_date = ? " +
+					"ORDER BY filing_date DESC " +
+					"LIMIT 1";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			int i = 0;
+			statement.setObject(++i, companyNumber);
+			statement.setObject(++i, filingDate);
 			ResultSet resultSet = statement.executeQuery();
 			List<Filing> filings = getFilings(resultSet);
 			if (filings.isEmpty()) {

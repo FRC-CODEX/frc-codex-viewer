@@ -1,5 +1,6 @@
 package com.frc.codex.database.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -63,6 +64,10 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 	}
 
 	public Filing getFiling(UUID filingId) {
+		return null;
+	}
+
+	public Filing getFiling(String companyNumber, LocalDate documentDate) {
 		return null;
 	}
 

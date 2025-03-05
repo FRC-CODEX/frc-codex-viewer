@@ -1,5 +1,6 @@
 package com.frc.codex.database;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ public interface DatabaseManager {
 	void deleteStreamEvent(UUID streamEventId);
 	boolean filingExists(String registryCode, String externalFilingId);
 	Filing getFiling(UUID filingId);
+	Filing getFiling(String companyNumber, LocalDate documentDate);
 	List<Filing> getFilingsByStatus(FilingStatus status);
 	List<Filing> getFilingsByStatus(FilingStatus status, RegistryCode registryCode);
 	long getFilingsCount(SearchFilingsRequest searchFilingsRequest);
