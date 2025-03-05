@@ -15,9 +15,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -51,6 +50,7 @@ import jakarta.annotation.PostConstruct;
 @Component
 @Profile("application")
 public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
+	private static final int COMPANY_NUMBER_CACHE_SIZE = 1_000;
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseManagerImpl.class);
 	private static final int MIN_COMPANY_NUMBER_LENGTH = 8; // CRN is 8 characters, LEI is 20 characters
 	public static final Calendar TIMEZONE_UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -58,14 +58,13 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 	private final FilingIndexProperties properties;
 	private final DataSource readDataSource;
 	private final DataSource writeDataSource;
-	private final Set<String> companyNumberCache;
-	private boolean companyNumberCacheInitialized = false;
+	private final LinkedHashSet<String> companyNumberCache;
 
 	public DatabaseManagerImpl(FilingIndexProperties properties) {
 		this.properties = properties;
 		this.readDataSource = new HikariDataSource(properties.getDatabaseConfig("read"));
 		this.writeDataSource = new HikariDataSource(properties.getDatabaseConfig("write"));
-		companyNumberCache = new HashSet<>();
+		companyNumberCache = new LinkedHashSet<>();
 	}
 
 	public void applyFilingResult(FilingResultRequest filingResultRequest) {
@@ -477,21 +476,6 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		}
 	}
 
-	private ImmutableSet<String> getFilingsCompanyNumbers() {
-		try (Connection connection = getInitializedConnection(true)) {
-			String sql = "SELECT company_number FROM filings";
-			PreparedStatement statement = connection.prepareStatement(sql);
-			ResultSet resultSet = statement.executeQuery();
-			ImmutableSet.Builder<String> results = ImmutableSet.builder();
-			while (resultSet.next()) {
-				results.add(resultSet.getString("company_number"));
-			}
-			return results.build();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	public void createCompany(Company company) {
 		try (Connection connection = getInitializedConnection(false)) {
 			String sql = "INSERT INTO companies " +
@@ -688,11 +672,6 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			// Contains a space or does not contain a numeric digit
 			return false;
 		}
-		if (!companyNumberCacheInitialized) {
-			// No cached set of known company numbers, populate it
-			companyNumberCache.addAll(getFilingsCompanyNumbers());
-			companyNumberCacheInitialized = true;
-		}
 		if (companyNumberCache.contains(companyNumber)) {
 			// Cached set of known company numbers contains the company number
 			return true;
@@ -706,6 +685,9 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 				try (ResultSet resultSet = statement.executeQuery()) {
 					if (resultSet.next()) {
 						if (resultSet.getBoolean(1)) {
+							while (companyNumberCache.size() >= COMPANY_NUMBER_CACHE_SIZE) {
+								companyNumberCache.removeFirst();
+							}
 							companyNumberCache.add(companyNumber);
 							return true;
 						}
