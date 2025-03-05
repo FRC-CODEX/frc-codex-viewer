@@ -29,6 +29,7 @@ public interface DatabaseManager {
 	boolean filingExists(String registryCode, String externalFilingId);
 	Filing getFiling(UUID filingId);
 	Filing getFiling(String companyNumber, LocalDate documentDate);
+	UUID getFilingId(String registryCode, String externalFilingId);
 	List<Filing> getFilingsByStatus(FilingStatus status);
 	List<Filing> getFilingsByStatus(FilingStatus status, RegistryCode registryCode);
 	long getFilingsCount(SearchFilingsRequest searchFilingsRequest);

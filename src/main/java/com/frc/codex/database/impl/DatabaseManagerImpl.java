@@ -265,6 +265,10 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 	}
 
 	public boolean filingExists(String registryCode, String externalFilingId) {
+		return getFilingId(registryCode, externalFilingId) != null;
+	}
+
+	public UUID getFilingId(String registryCode, String externalFilingId) {
 		try (Connection connection = getInitializedConnection(true)) {
 			String sql = "SELECT filing_id FROM filings " +
 					"WHERE registry_code = ? " +
@@ -275,7 +279,11 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			statement.setObject(++i, registryCode);
 			statement.setObject(++i, externalFilingId);
 			ResultSet resultSet = statement.executeQuery();
-			return resultSet.next();
+			UUID filingId = null;
+			if (resultSet.next()) {
+				filingId = UUID.fromString(resultSet.getString(1));
+			}
+			return filingId;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
