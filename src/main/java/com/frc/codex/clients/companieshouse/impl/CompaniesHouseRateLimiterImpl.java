@@ -16,7 +16,8 @@ import com.frc.codex.tools.RateLimiter;
 public class CompaniesHouseRateLimiterImpl extends RateLimiter implements CompaniesHouseRateLimiter
 {
 	private static final String HEADER_RATE_LIMIT = "X-Ratelimit-Limit";
-	private static final String HEADER_RATE_REMAINING = "X-Ratelimit-Remain";
+	private static final String HEADER_RATE_REMAIN = "X-Ratelimit-Remain";
+	private static final String HEADER_RATE_REMAINING = "X-Ratelimit-Remaining";
 	private static final String HEADER_RATE_RESET = "X-Ratelimit-Reset";
 	private static final Logger LOG = LoggerFactory.getLogger(CompaniesHouseRateLimiterImpl.class);
 	private static final int REMAINING_FLOOR = 25;
@@ -102,15 +103,21 @@ public class CompaniesHouseRateLimiterImpl extends RateLimiter implements Compan
 			this.limit = Long.parseLong(limit);
 		}
 		String remaining = headers.getFirst(HEADER_RATE_REMAINING);
+		if (remaining == null) {
+			// Company information API provides the remaining requests under a different header.
+			remaining = headers.getFirst(HEADER_RATE_REMAIN);
+		}
 		String reset = headers.getFirst(HEADER_RATE_RESET);
 		if (remaining != null && reset != null) {
 			this.remaining = Long.parseLong(remaining);
 			this.reset = new Timestamp(Long.parseLong(reset) * 1000);
 			this.updated = new Timestamp(headers.getDate());
+			LOG.info(
+					"Updated CH rate limit details: url={}, limit={}, remaining={}, reset={}, updated={}",
+					url, this.limit, this.remaining, this.reset, this.updated
+			);
+		} else {
+			LOG.warn("Failed to update CH rate limit details: url={}, remaining={}, reset={}", url, remaining, reset);
 		}
-		LOG.info(
-				"Updated CH rate limit details: url={}, limit={}, remaining={}, reset={}, updated={}",
-				url, this.limit, this.remaining, this.reset, this.updated
-		);
 	}
 }
