@@ -28,6 +28,22 @@ Parameters:
   EnvironmentName:
     Type: String
     Description: "The name of the environment.  Use \"prod\" without quotes for the production environment."
+  GeneralRateLimit:
+    Type: Number
+    Default: 500
+    Description: "The number of requests allowed per IP for all requests in the general rate limit window."
+  GeneralRateLimitWindow:
+    Type: Number
+    Default: 60
+    Description: "The duration of the rate limit window for all requests in seconds."
+  GenerationRateLimit:
+    Type: Number
+    Default: 20
+    Description: "The number of requests allowed per IP for generation requests in the generation rate limit window."
+  GenerationRateLimitWindow:
+    Type: Number
+    Default: 60
+    Description: "The duration of the rate limit window for generation requests in seconds."
   HostedZoneID:
     Type: AWS::Route53::HostedZone::Id
     Default: Z02063853KTXA6TSBLX05
@@ -798,3 +814,77 @@ Resources:
       Tags:
       - Key: "Environment"
         Value: !Ref EnvironmentName
+  WebACL:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      Name: !Sub "${EnvironmentName}-codex-waf"
+      Description: "WAF rules to rate limit API requests"
+      Scope: "REGIONAL"
+      DefaultAction:
+        Allow: {}
+      VisibilityConfig:
+        SampledRequestsEnabled: true
+        CloudWatchMetricsEnabled: true
+        MetricName: !Sub "${EnvironmentName}-codex-waf-metrics"
+      Rules:
+        - Name: "GenerationEndpointsRateLimit"
+          Priority: 0
+          Statement:
+            RateBasedStatement:
+              Limit: !Ref GenerationRateLimit
+              AggregateKeyType: "IP"
+              EvaluationWindowSec: !Ref GenerationRateLimitWindow
+              ScopeDownStatement:
+                RegexPatternSetReferenceStatement:
+                  Arn: !GetAtt GenerationEndpointsRegexPatternSet.Arn
+                  FieldToMatch:
+                    UriPath: {}
+                  TextTransformations:
+                    - Priority: 0
+                      Type: "NONE"
+          Action:
+            Block:
+              CustomResponse:
+                ResponseCode: 429
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub "${EnvironmentName}-codex-waf-generation-rate-metrics"
+        - Name: "GeneralRateLimit"
+          Priority: 1
+          Statement:
+            RateBasedStatement:
+              Limit: !Ref GeneralRateLimit
+              AggregateKeyType: "IP"
+              EvaluationWindowSec: !Ref GeneralRateLimitWindow
+          Action:
+            Block:
+              CustomResponse:
+                ResponseCode: 429
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub "${EnvironmentName}-codex-waf-general-rate-metrics"
+      Tags:
+        - Key: "Environment"
+          Value: !Ref EnvironmentName
+  GenerationEndpointsRegexPatternSet:
+    Type: AWS::WAFv2::RegexPatternSet
+    Properties:
+      Name: !Sub "${EnvironmentName}-generation-endpoints"
+      Scope: "REGIONAL"
+      RegularExpressionList:
+        - "^/download/[^/]+/csv$"
+        - "^/download/[^/]+/json$"
+        - "^/view/[^/]+/loading$"
+        - "^/view/[^/]+/viewer$"
+        - "^/view/[^/]+/wait$"
+      Description: "Pattern set for generation API endpoints with stricter rate limiting"
+      Tags:
+        - Key: "Environment"
+          Value: !Ref EnvironmentName
+  WebACLAssociation:
+    Type: AWS::WAFv2::WebACLAssociation
+    Properties:
+      WebACLArn: !GetAtt WebACL.Arn
+      ResourceArn: !GetAtt LoadBalancer.LoadBalancerArn
