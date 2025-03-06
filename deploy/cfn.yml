@@ -28,6 +28,9 @@ Parameters:
   EnvironmentName:
     Type: String
     Description: "The name of the environment.  Use \"prod\" without quotes for the production environment."
+  ErrorAlarmTopicArn:
+    Type: String
+    Default: arn:aws:sns:eu-west-2:390403885523:error-alarm
   GeneralRateLimit:
     Type: Number
     Default: 500
@@ -50,9 +53,25 @@ Parameters:
   Region:
     Type: String
     Default: eu-west-2
+  ProcessorAlarmPeriod:
+    Type: Number
+    Default: 300
+    Description: "Length of processor alarm period in seconds."
+  ProcessorAlarmThreshold:
+    Type: Number
+    Default: 1
+    Description: "The number of processor errors to exceed before triggering alarm."
   ProcessorImage:
     Type: String
     Default: 390403885523.dkr.ecr.eu-west-2.amazonaws.com/frc-codex/processor-lambda
+  ServerAlarmPeriod:
+    Type: Number
+    Default: 300
+    Description: "Length of server alarm period in seconds."
+  ServerAlarmThreshold:
+    Type: Number
+    Default: 1
+    Description: "The number of server errors to exceed before triggering alarm."
   ServerImage:
     Type: String
     Default: 390403885523.dkr.ecr.eu-west-2.amazonaws.com/frc-codex/server
@@ -889,3 +908,61 @@ Resources:
     Properties:
       WebACLArn: !GetAtt WebACL.Arn
       ResourceArn: !GetAtt LoadBalancer.LoadBalancerArn
+  ServerErrorMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      ApplyOnTransformedLogs: false
+      FilterName: !Sub "${EnvironmentName}-server-error-metric-filter"
+      FilterPattern: "%ERROR%"
+      LogGroupName: !Sub "/ecs/${EnvironmentName}/server"
+      MetricTransformations:
+        - DefaultValue: 0
+          MetricValue: "1"
+          MetricNamespace: !Sub "${EnvironmentName}-server"
+          MetricName: !Sub "${EnvironmentName}-server-error-metric"
+  ServerErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: false
+      AlarmActions:
+        - !Ref ErrorAlarmTopicArn
+      AlarmDescription: !Sub "Alarm whenever more than ${ServerAlarmThreshold} 'ERROR' log(s) occurs on the server in a ${ServerAlarmPeriod} second span."
+      AlarmName: !Sub "${EnvironmentName}-server-error-alarm"
+      ComparisonOperator: GreaterThanThreshold
+      DatapointsToAlarm: 1
+      EvaluationPeriods: 1
+      MetricName: !Sub "${EnvironmentName}-server-error-metric"
+      Namespace: !Sub "${EnvironmentName}-server"
+      Period: !Ref ServerAlarmPeriod
+      Statistic: Sum
+      Threshold: !Ref ServerAlarmThreshold
+      TreatMissingData: missing
+  ProcessorErrorMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      ApplyOnTransformedLogs: false
+      FilterName: !Sub "${EnvironmentName}-processor-error-metric-filter"
+      FilterPattern: "%[ERROR]%"
+      LogGroupName: !Sub "/aws/lambda/${EnvironmentName}-processor"
+      MetricTransformations:
+        - DefaultValue: 0
+          MetricValue: "1"
+          MetricNamespace: !Sub "${EnvironmentName}-processor"
+          MetricName: !Sub "${EnvironmentName}-processor-error-metric"
+  ProcessorErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: false
+      AlarmActions:
+        - !Ref ErrorAlarmTopicArn
+      AlarmDescription: !Sub "Alarm whenever more than ${ProcessorAlarmThreshold} 'ERROR' log(s) occurs in a processor lambda in a ${ProcessorAlarmPeriod} second span."
+      AlarmName: !Sub "${EnvironmentName}-processor-error-alarm"
+      ComparisonOperator: GreaterThanThreshold
+      DatapointsToAlarm: 1
+      EvaluationPeriods: 1
+      MetricName: !Sub "${EnvironmentName}-processor-error-metric"
+      Namespace: !Sub "${EnvironmentName}-processor"
+      Period: !Ref ProcessorAlarmPeriod
+      Statistic: Sum
+      Threshold: !Ref ProcessorAlarmThreshold
+      TreatMissingData: missing
