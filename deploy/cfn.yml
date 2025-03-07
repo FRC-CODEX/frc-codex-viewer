@@ -876,6 +876,7 @@ Resources:
       RegularExpressionList:
         - "^/download/[^/]+/csv$"
         - "^/download/[^/]+/json$"
+        - "^/view/[^/]+/[^/]+/viewer$"
         - "^/view/[^/]+/loading$"
         - "^/view/[^/]+/viewer$"
         - "^/view/[^/]+/wait$"
