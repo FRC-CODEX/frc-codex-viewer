@@ -71,6 +71,10 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 		return null;
 	}
 
+	public UUID getFilingId(String registryCode, String externalFilingId) {
+		return null;
+	}
+
 	public LocalDateTime getLatestFcaFilingDate(LocalDateTime defaultDate) {
 		return null;
 	}

@@ -1,6 +1,8 @@
 package com.frc.codex.controllers;
 
 import static java.util.Objects.requireNonNull;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,9 +24,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.indexer.LambdaManager;
 import com.frc.codex.model.Filing;
@@ -33,6 +35,7 @@ import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.OimFormat;
 import com.frc.codex.oim.ReportPackageProvider;
+import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.tools.RateLimiter;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -200,6 +203,21 @@ public class ViewController {
 		// Register another timestamp for rate limiting, so long-running requests
 		// aren't ignored.
 		publicPageRateLimiter.registerTimestamp();
+	}
+
+	/**
+	 * This endpoint is an alternative entry point for the viewer, using the external filing ID.
+	 */
+	@RequestMapping("/view/{registryCode}/{externalFilingId}/viewer")
+	public ModelAndView viewerPageByExternalFilingId(
+			@PathVariable("registryCode") String registryCode,
+			@PathVariable("externalFilingId") String externalFilingId
+	) {
+		UUID filingId = databaseManager.getFilingId(registryCode, externalFilingId);
+		if (filingId == null) {
+			throw new ResponseStatusException(NOT_FOUND, "Unable to find filing.");
+		}
+		return viewerPage(filingId.toString());
 	}
 
 	/**
