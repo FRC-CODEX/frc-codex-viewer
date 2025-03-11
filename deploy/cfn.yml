@@ -923,7 +923,7 @@ Resources:
   ServerErrorAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      ActionsEnabled: false
+      ActionsEnabled: true
       AlarmActions:
         - !Ref ErrorAlarmTopicArn
       AlarmDescription: !Sub "Alarm whenever more than ${ServerAlarmThreshold} 'ERROR' log(s) occurs on the server in a ${ServerAlarmPeriod} second span."
@@ -952,7 +952,7 @@ Resources:
   ProcessorErrorAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      ActionsEnabled: false
+      ActionsEnabled: true
       AlarmActions:
         - !Ref ErrorAlarmTopicArn
       AlarmDescription: !Sub "Alarm whenever more than ${ProcessorAlarmThreshold} 'ERROR' log(s) occurs in a processor lambda in a ${ProcessorAlarmPeriod} second span."
