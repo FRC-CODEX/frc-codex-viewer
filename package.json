@@ -3,10 +3,10 @@
     "govuk-frontend": "^5.9.0",
     "i18next": "^24.2.2",
     "i18next-browser-languagedetector": "^8.0.4",
-    "ixbrl-viewer": "^1.4.61"
+    "ixbrl-viewer": "^1.4.62"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.9",
+    "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
     "@jest/globals": "^29.7.0",
     "babel-jest": "^29.7.0",
