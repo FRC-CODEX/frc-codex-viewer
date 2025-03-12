@@ -28,9 +28,6 @@ Parameters:
   EnvironmentName:
     Type: String
     Description: "The name of the environment.  Use \"prod\" without quotes for the production environment."
-  ErrorAlarmTopicArn:
-    Type: String
-    Default: arn:aws:sns:eu-west-2:390403885523:error-alarm
   GeneralRateLimit:
     Type: Number
     Default: 500
@@ -96,6 +93,9 @@ Parameters:
   SupportEmail:
     Type: String
     Description: "The email address to display on the contact us page."
+  AlertEmail:
+    Type: String
+    Description: "The email address to send alerts to."
 
   CompaniesHouseFilingLimit:
     Type: Number
@@ -908,6 +908,14 @@ Resources:
     Properties:
       WebACLArn: !GetAtt WebACL.Arn
       ResourceArn: !GetAtt LoadBalancer.LoadBalancerArn
+  ErrorAlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Sub "Error Alarm (${EnvironmentName})"
+      Subscription:
+        - Protocol: "email"
+          Endpoint: !Ref AlertEmail
+      TopicName: !Sub "${EnvironmentName}-error-alarm-topic"
   ServerErrorMetricFilter:
     Type: AWS::Logs::MetricFilter
     Properties:
@@ -925,7 +933,7 @@ Resources:
     Properties:
       ActionsEnabled: true
       AlarmActions:
-        - !Ref ErrorAlarmTopicArn
+        - !GetAtt ErrorAlarmTopic.TopicArn
       AlarmDescription: !Sub "Alarm whenever more than ${ServerAlarmThreshold} 'ERROR' log(s) occurs on the server in a ${ServerAlarmPeriod} second span."
       AlarmName: !Sub "${EnvironmentName}-server-error-alarm"
       ComparisonOperator: GreaterThanThreshold
@@ -954,7 +962,7 @@ Resources:
     Properties:
       ActionsEnabled: true
       AlarmActions:
-        - !Ref ErrorAlarmTopicArn
+        - !GetAtt ErrorAlarmTopic.TopicArn
       AlarmDescription: !Sub "Alarm whenever more than ${ProcessorAlarmThreshold} 'ERROR' log(s) occurs in a processor lambda in a ${ProcessorAlarmPeriod} second span."
       AlarmName: !Sub "${EnvironmentName}-processor-error-alarm"
       ComparisonOperator: GreaterThanThreshold
