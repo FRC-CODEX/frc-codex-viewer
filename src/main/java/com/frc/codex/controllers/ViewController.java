@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -91,6 +92,9 @@ public class ViewController {
 
 	private void processFiling(Filing filing) {
 		UUID filingId = filing.getFilingId();
+		if (!FilingStatus.isProcessingAllowed(filing.getStatus())) {
+			throw new ResponseStatusException(NOT_FOUND, "Filing has been deleted.");
+		}
 		try {
 			LOG.info("Processing filing on demand: {}", filingId);
 			CompletableFuture<InvokeResponse> invokeResponse = lambdaManager.invokeAsync(new FilingPayload(
@@ -145,7 +149,11 @@ public class ViewController {
 				filing = databaseManager.getFiling(filingUuid);
 			}
 		}
-		if (filing.getStatus().equals(FilingStatus.FAILED.toString()) || filing.getFilename() == null || filing.getOimDirectory() == null) {
+		if (
+				FilingStatus.isViewerUnavailable(filing.getStatus()) ||
+				filing.getFilename() == null ||
+				filing.getOimDirectory() == null
+		) {
 			internalError = true;
 		}
 		if (internalError) {
@@ -234,7 +242,7 @@ public class ViewController {
 			// Already completed, redirect directly to viewer.
 			return viewerResult(filing.getFilingId(), filing.getStubViewerUrl());
 		}
-		if (filing.getStatus().equals(FilingStatus.FAILED.toString())) {
+		if (FilingStatus.isViewerUnavailable(filing.getStatus())) {
 			// Generation failed, show error message.
 			return unavailableResult("Sorry, this viewer is currently unavailable.");
 		}
