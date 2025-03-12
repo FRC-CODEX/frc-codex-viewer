@@ -1,6 +1,7 @@
 import json
 import logging
 
+from support.actions.delete_filing_action import DeleteFilingAction
 from support.actions.get_ch_indexing_stats_action import GetChIndexingStatsAction
 from support.actions.get_ch_streaming_stats_action import GetChStreamingStatsAction
 from support.actions.get_filing_details_action import GetFilingDetailsAction
@@ -13,6 +14,7 @@ from support.actions.reset_stream_events_action import ResetStreamEventsAction
 logger = logging.getLogger(__name__)
 
 ACTIONS_MAP = {
+    'delete_filing': DeleteFilingAction,
     'get_ch_indexing_stats': GetChIndexingStatsAction,
     'get_ch_streaming_stats': GetChStreamingStatsAction,
     'get_filing_details': GetFilingDetailsAction,
