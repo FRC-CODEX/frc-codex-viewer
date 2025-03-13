@@ -43,8 +43,8 @@ class DeleteFilingAction(BaseAction):
         }
 
     def delete_subfolder(self, subfolder_key: str, test_mode: bool) -> list[tuple[str, str]]:
-        region_name = os.getenv('S3_REGION_NAME')
-        bucket_name = os.getenv('S3_RESULTS_BUCKET_NAME')
+        region_name = str(os.getenv('S3_REGION_NAME'))
+        bucket_name = str(os.getenv('S3_RESULTS_BUCKET_NAME'))
         s3_client = boto3.client(
             's3',
             region_name=region_name,
@@ -57,7 +57,7 @@ class DeleteFilingAction(BaseAction):
         # Delete each object in the subfolder
         if 'Contents' in response:
             for obj in response['Contents']:
-                key = obj['Key']
+                key = str(obj['Key'])
                 if not test_mode:
                     s3_client.delete_object(Bucket=bucket_name, Key=key)
                 deleted_items.append((bucket_name, key))
