@@ -285,27 +285,41 @@ public class IndexerImpl implements Indexer {
 
 	@Scheduled(initialDelay = 5, fixedDelay = 30, timeUnit = TimeUnit.MINUTES)
 	public void indexCompaniesFromCompaniesHouseArchives() {
+		if (!properties.enableIndexingDailyArchives() &&
+				!properties.enableIndexingMonthlyArchives() &&
+				!properties.enableIndexingArchiveArchives()
+		) {
+			return;
+		}
+
 		if (databaseManager.checkCompaniesLimit(properties.unprocessedCompaniesLimit())) {
 			return;
 		}
+
 		var existingCompanyNumbers = new HashSet<String>(databaseManager.getCompaniesCompanyNumbers());
 		List<URI> downloadLinks;
-		downloadLinks = companiesHouseHistoryClient.getDailyDownloadLinks();
-		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, ArchiveType.DAILY, existingCompanyNumbers)) {
-				return;
+		if (properties.enableIndexingDailyArchives()) {
+			downloadLinks = companiesHouseHistoryClient.getDailyDownloadLinks();
+			for (URI uri : downloadLinks) {
+				if (!processCompaniesHouseArchive(uri, ArchiveType.DAILY, existingCompanyNumbers)) {
+					return;
+				}
 			}
 		}
-		downloadLinks = companiesHouseHistoryClient.getMonthlyDownloadLinks();
-		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, ArchiveType.MONTHLY, existingCompanyNumbers)) {
-				return;
+		if (properties.enableIndexingMonthlyArchives()) {
+			downloadLinks = companiesHouseHistoryClient.getMonthlyDownloadLinks();
+			for (URI uri : downloadLinks) {
+				if (!processCompaniesHouseArchive(uri, ArchiveType.MONTHLY, existingCompanyNumbers)) {
+					return;
+				}
 			}
 		}
-		downloadLinks = companiesHouseHistoryClient.getArchiveDownloadLinks();
-		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, ArchiveType.ARCHIVE, existingCompanyNumbers)) {
-				return;
+		if (properties.enableIndexingArchiveArchives()) {
+			downloadLinks = companiesHouseHistoryClient.getArchiveDownloadLinks();
+			for (URI uri : downloadLinks) {
+				if (!processCompaniesHouseArchive(uri, ArchiveType.ARCHIVE, existingCompanyNumbers)) {
+					return;
+				}
 			}
 		}
 	}

@@ -66,6 +66,18 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return null;
 	}
 
+	public boolean enableIndexingArchiveArchives() {
+		return false;
+	}
+
+	public boolean enableIndexingDailyArchives() {
+		return false;
+	}
+
+	public boolean enableIndexingMonthlyArchives() {
+		return false;
+	}
+
 	public boolean enablePreprocessing() {
 		return false;
 	}

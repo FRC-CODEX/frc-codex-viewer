@@ -17,6 +17,9 @@ public interface FilingIndexProperties {
 	String companiesHouseStreamApiKey();
 	long companiesHouseStreamIndexerBatchSize();
 	String dbSeedScriptPath();
+	boolean enableIndexingArchiveArchives();
+	boolean enableIndexingDailyArchives();
+	boolean enableIndexingMonthlyArchives();
 	String fcaDataApiBaseUrl();
 	int fcaPastDays();
 	String fcaSearchApiUrl();
