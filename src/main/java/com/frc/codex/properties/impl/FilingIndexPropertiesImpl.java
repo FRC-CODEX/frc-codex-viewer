@@ -37,6 +37,9 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String DB_MAX_LIFETIME = "DB_MAX_LIFETIME";
 	private static final String DB_SEED_SCRIPT_PATH = "DB_SEED_SCRIPT_PATH";
 	private static final String DB_HEALTH_CHECK_TIMEOUT = "DB_HEALTH_CHECK_TIMEOUT";
+	private static final String ENABLE_INDEXING_ARCHIVE_ARCHIVES = "ENABLE_INDEXING_ARCHIVE_ARCHIVES";
+	private static final String ENABLE_INDEXING_DAILY_ARCHIVES = "ENABLE_INDEXING_DAILY_ARCHIVES";
+	private static final String ENABLE_INDEXING_MONTHLY_ARCHIVES = "ENABLE_INDEXING_MONTHLY_ARCHIVES";
 	private static final String ENABLE_PREPROCESSING = "ENABLE_PREPROCESSING";
 	private static final String FCA_DATA_API_BASE_URL = "FCA_DATA_API_BASE_URL";
 	private static final String FCA_PAST_DAYS = "FCA_PAST_DAYS";
@@ -69,6 +72,9 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final String dbPassword;
 	private final long dbMaxLifetime;
 	private final String dbSeedScriptPath;
+	private final boolean enableIndexingArchiveArchives;
+	private final boolean enableIndexingDailyArchives;
+	private final boolean enableIndexingMonthlyArchives;
 	private final boolean enablePreprocessing;
 	private final String fcaDataApiBaseUrl;
 	private final int fcaPastDays;
@@ -114,6 +120,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		dbPassword = requireNonNull(getEnv(DB_PASSWORD));
 		dbMaxLifetime = Long.parseLong(requireNonNull(getEnv(DB_MAX_LIFETIME, "300000")));
 		dbSeedScriptPath = getEnv(DB_SEED_SCRIPT_PATH);
+
+		enableIndexingArchiveArchives = Boolean.parseBoolean(requireNonNull(getEnv(ENABLE_INDEXING_ARCHIVE_ARCHIVES, "false")));
+		enableIndexingDailyArchives = Boolean.parseBoolean(requireNonNull(getEnv(ENABLE_INDEXING_DAILY_ARCHIVES, "false")));
+		enableIndexingMonthlyArchives = Boolean.parseBoolean(requireNonNull(getEnv(ENABLE_INDEXING_MONTHLY_ARCHIVES, "false")));
 
 		enablePreprocessing = Boolean.parseBoolean(requireNonNull(getEnv(ENABLE_PREPROCESSING, "false")));
 
@@ -251,6 +261,18 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public String dbSeedScriptPath() {
 		return dbSeedScriptPath;
+	}
+
+	public boolean enableIndexingArchiveArchives() {
+		return enableIndexingArchiveArchives;
+	}
+
+	public boolean enableIndexingDailyArchives() {
+		return enableIndexingDailyArchives;
+	}
+
+	public boolean enableIndexingMonthlyArchives() {
+		return enableIndexingMonthlyArchives;
 	}
 
 	public boolean enablePreprocessing() {

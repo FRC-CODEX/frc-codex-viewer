@@ -25,6 +25,15 @@ Parameters:
     Default: db.t4g.micro
   DBPassword:
     Type: String
+  EnableIndexingArchiveArchives:
+    Type: String
+    Default: "false"
+  EnableIndexingDailyArchives:
+    Type: String
+    Default: "false"
+  EnableIndexingMonthlyArchives:
+    Type: String
+    Default: "false"
   EnvironmentName:
     Type: String
     Description: "The name of the environment.  Use \"prod\" without quotes for the production environment."
@@ -394,6 +403,12 @@ Resources:
           Value: !Sub "jdbc:postgresql://${RDSDBInstance.Endpoint.Address}:${RDSDBInstance.Endpoint.Port}/${RDSDBInstance.DBName}"
         - Name: "DB_USERNAME"
           Value: !GetAtt RDSDBInstance.MasterUsername
+        - Name: "ENABLE_INDEXING_ARCHIVE_ARCHIVES"
+          Value: !Ref EnableIndexingArchiveArchives
+        - Name: "ENABLE_INDEXING_DAILY_ARCHIVES"
+          Value: !Ref EnableIndexingDailyArchives
+        - Name: "ENABLE_INDEXING_MONTHLY_ARCHIVES"
+          Value: !Ref EnableIndexingMonthlyArchives
         - Name: "FCA_DATA_API_BASE_URL"
           Value: "https://data.fca.org.uk/artefacts/"
         - Name: "FCA_SEARCH_API_URL"

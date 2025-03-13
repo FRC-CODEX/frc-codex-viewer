@@ -221,7 +221,6 @@ public class IndexerImpl implements Indexer {
 	}
 
 	private boolean processCompaniesHouseArchiveUsingTempFile(URI uri, ArchiveType archiveType, String filename, Path tempFile, Set<String> existingCompanyNumbers) {
-		boolean completed = true;
 		LOG.info("Downloading archive: {}", uri);
 		try {
 			this.companiesHouseHistoryClient.downloadArchive(uri, tempFile);
@@ -248,7 +247,6 @@ public class IndexerImpl implements Indexer {
 			Matcher matcher = companiesHouseFilenamePattern.matcher(arcname);
 			if (!matcher.matches()) {
 				LOG.warn("Found invalid archive entry in {}: {}", uri, arcname);
-				completed = false;
 				continue;
 			}
 			String companyNumber = matcher.group(1);
@@ -275,43 +273,53 @@ public class IndexerImpl implements Indexer {
 			LOG.debug("Created company {}.", companyNumber);
 			existingCompanyNumbers.add(companyNumber);
 		}
-		if (completed) {
-			CompaniesHouseArchive archive = CompaniesHouseArchive.builder()
-					.filename(filename)
-					.uri(uri)
-					.archiveType(archiveType.getCode())
-					.build();
-			databaseManager.createCompaniesHouseArchive(archive);
-			LOG.info("Completed archive: {}", filename);
-		} else {
-			LOG.error("Archive not completed: {}", filename);
-		}
+		CompaniesHouseArchive archive = CompaniesHouseArchive.builder()
+				.filename(filename)
+				.uri(uri)
+				.archiveType(archiveType.getCode())
+				.build();
+		databaseManager.createCompaniesHouseArchive(archive);
+		LOG.info("Completed archive: {}", filename);
 		return true;
 	}
 
 	@Scheduled(initialDelay = 5, fixedDelay = 30, timeUnit = TimeUnit.MINUTES)
 	public void indexCompaniesFromCompaniesHouseArchives() {
+		if (!properties.enableIndexingDailyArchives() &&
+				!properties.enableIndexingMonthlyArchives() &&
+				!properties.enableIndexingArchiveArchives()
+		) {
+			return;
+		}
+
 		if (databaseManager.checkCompaniesLimit(properties.unprocessedCompaniesLimit())) {
 			return;
 		}
+
 		var existingCompanyNumbers = new HashSet<String>(databaseManager.getCompaniesCompanyNumbers());
 		List<URI> downloadLinks;
-		downloadLinks = companiesHouseHistoryClient.getDailyDownloadLinks();
-		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, ArchiveType.DAILY, existingCompanyNumbers)) {
-				return;
+		if (properties.enableIndexingDailyArchives()) {
+			downloadLinks = companiesHouseHistoryClient.getDailyDownloadLinks();
+			for (URI uri : downloadLinks) {
+				if (!processCompaniesHouseArchive(uri, ArchiveType.DAILY, existingCompanyNumbers)) {
+					return;
+				}
 			}
 		}
-		downloadLinks = companiesHouseHistoryClient.getMonthlyDownloadLinks();
-		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, ArchiveType.MONTHLY, existingCompanyNumbers)) {
-				return;
+		if (properties.enableIndexingMonthlyArchives()) {
+			downloadLinks = companiesHouseHistoryClient.getMonthlyDownloadLinks();
+			for (URI uri : downloadLinks) {
+				if (!processCompaniesHouseArchive(uri, ArchiveType.MONTHLY, existingCompanyNumbers)) {
+					return;
+				}
 			}
 		}
-		downloadLinks = companiesHouseHistoryClient.getArchiveDownloadLinks();
-		for (URI uri : downloadLinks) {
-			if (!processCompaniesHouseArchive(uri, ArchiveType.ARCHIVE, existingCompanyNumbers)) {
-				return;
+		if (properties.enableIndexingArchiveArchives()) {
+			downloadLinks = companiesHouseHistoryClient.getArchiveDownloadLinks();
+			for (URI uri : downloadLinks) {
+				if (!processCompaniesHouseArchive(uri, ArchiveType.ARCHIVE, existingCompanyNumbers)) {
+					return;
+				}
 			}
 		}
 	}
