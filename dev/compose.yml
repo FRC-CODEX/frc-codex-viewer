@@ -101,11 +101,16 @@ services:
       test: exit 0 # TODO: Improve healthcheck
       timeout: 1s
     environment:
+      AWS_ACCESS_KEY_ID: 'local_aws_access_key_id'
+      AWS_ENDPOINT_URL: 'http://localstack.localhost:4566'
+      AWS_SECRET_ACCESS_KEY: 'local_aws_secret_access_key'
       DB_DATABASE: 'frc_codex'
       DB_HOST: 'postgres.localhost'
       DB_PASSWORD: 'frc_codex'
       DB_PORT: '5432'
       DB_USERNAME: 'frc_codex'
+      S3_RESULTS_BUCKET_NAME: 'frc-codex-results'
+      S3_REGION_NAME: 'eu-west-2'
     platform: linux/amd64
     ports:
       - 8082:8080
