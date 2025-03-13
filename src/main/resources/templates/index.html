@@ -318,6 +318,16 @@
         sessionStorage.setItem('ixbrl-viewer-home-link-query', query);
     }
 </script>
+<script>
+    // Scroll to search result, if on page
+    const element = document.getElementById('result-0');
+    if (element) {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+        });
+    }
+</script>
 </body>
 
 </html>
