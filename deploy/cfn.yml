@@ -965,7 +965,7 @@ Resources:
     Properties:
       ApplyOnTransformedLogs: false
       FilterName: !Sub "${EnvironmentName}-processor-error-metric-filter"
-      FilterPattern: "%[ERROR]%"
+      FilterPattern: "%\\[ERROR\\]%"
       LogGroupName: !Sub "/aws/lambda/${EnvironmentName}-processor"
       MetricTransformations:
         - DefaultValue: 0
