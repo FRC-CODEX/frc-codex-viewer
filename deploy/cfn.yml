@@ -936,7 +936,7 @@ Resources:
     Properties:
       ApplyOnTransformedLogs: false
       FilterName: !Sub "${EnvironmentName}-server-error-metric-filter"
-      FilterPattern: "%ERROR.*\[frc-codex\]%"
+      FilterPattern: "%ERROR.*\\[frc-codex\\]%"
       LogGroupName: !Sub "/ecs/${EnvironmentName}/server"
       MetricTransformations:
         - DefaultValue: 0
