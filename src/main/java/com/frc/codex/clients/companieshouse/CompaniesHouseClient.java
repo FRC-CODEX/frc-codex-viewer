@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.frc.codex.model.NewFilingRequest;
 
 public interface CompaniesHouseClient {
-	boolean filterCategory(String category);
+	boolean excludeCategory(String category);
 	CompaniesHouseCompany getCompany(String companyNumber) throws JsonProcessingException;
 	CompaniesHouseFiling getFiling(String companyNumber, String transactionId) throws JsonProcessingException;
 	List<NewFilingRequest> getCompanyFilings(String companyNumber, String companyName) throws JsonProcessingException;
