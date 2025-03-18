@@ -71,6 +71,10 @@ public class CompaniesHouseStreamListenerImpl implements CompaniesHouseStreamLis
 		} catch (RateLimitException e) {
 			LOG.warn("Rate limit exceeded while streaming CH filings. Resuming later.", e);
 		} catch (IOException | InterruptedException e) {
+			if (e.getMessage().contains("Premature EOF")) {
+				LOG.info("Companies house stream closed: {}", e.getMessage());
+				return;
+			}
 			LOG.error("Companies House stream closed with an exception.", e);
 		}
 	}
