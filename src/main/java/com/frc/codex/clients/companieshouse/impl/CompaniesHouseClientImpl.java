@@ -85,19 +85,13 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		));
 	}
 
-	public boolean filterCategory(String category) {
+	public boolean excludeCategory(String category) {
 		if (category == null) {
 			// Not clear what category being unset indicates, but probably safe to assume
 			// it won't have IXBRL until the filing is categorized.
-			return false;
+			return true;
 		}
-		if (companiesHouseExcludeCategories.contains(category)) {
-			return false;
-		}
-		if (!companiesHouseIncludeCategories.contains(category)) {
-			LOG.warn("Unknown filing category: {}", category);
-		}
-		return true;
+		return companiesHouseExcludeCategories.contains(category);
 	}
 
 	public CompaniesHouseCompany getCompany(String companyNumber) throws JsonProcessingException {
@@ -148,14 +142,22 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 			totalItems = node.get("total_count").asInt();
 			for (JsonNode item : items) {
 				String category = item.get("category").asText();
-				if (!filterCategory(category)) {
+				if (excludeCategory(category)) {
 					continue;
 				}
 				LocalDateTime filingDate = parseDate(item.get("date"));
 				LocalDateTime documentDate = parseDate(item.get("action_date"));
 				String externalFilingId = item.get("transaction_id").asText();
 				Set<String> filingUrls = getCompanyFilingUrls(item);
-				if (!filingUrls.isEmpty()) {
+				boolean ixbrlFound = !filingUrls.isEmpty();
+				if (!companiesHouseIncludeCategories.contains(category)) {
+					LOG.warn(
+							"Unknown filing category {} iXBRL " +
+									"(category=\"{}\",externalFilingId=\"{}\",companyNumber=\"{}\")",
+							ixbrlFound ? "with" : "without", category, externalFilingId, companyNumber
+					);
+				}
+				if (ixbrlFound) {
 					// There are matching IXBRL filing URLs
 					String downloadUrl = "https://find-and-update.company-information.service.gov.uk/company/"
 							+ companyNumber + "/filing-history/" + externalFilingId

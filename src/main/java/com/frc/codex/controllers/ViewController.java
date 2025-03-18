@@ -45,6 +45,7 @@ import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 @RestController
 public class ViewController {
@@ -278,6 +279,8 @@ public class ViewController {
 				OutputStream outputStream = response.getOutputStream()
 		) {
 			responseInputStream.transferTo(outputStream);
+		} catch (NoSuchKeyException e) {
+			throw new ResponseStatusException(NOT_FOUND, "Filing asset not found.");
 		}
 	}
 

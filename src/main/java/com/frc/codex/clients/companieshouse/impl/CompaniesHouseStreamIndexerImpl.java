@@ -72,7 +72,7 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 			return timepoint;
 		}
 		// Category is not explicitly excluded
-		if (!companiesHouseClient.filterCategory(companiesHouseFiling.category())) {
+		if (companiesHouseClient.excludeCategory(companiesHouseFiling.category())) {
 			LOG.debug(
 					"CH filing stream event: Skipped {}, category \"{}\" excluded.",
 					companiesHouseFiling.transactionId(),
