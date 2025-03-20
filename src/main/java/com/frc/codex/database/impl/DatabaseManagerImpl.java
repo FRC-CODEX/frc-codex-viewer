@@ -346,20 +346,25 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 	}
 
 	public Long getLatestStreamTimepoint(Long defaultTimepoint) {
+		Long timepoint = null;
 		try (Connection connection = getInitializedConnection(true)) {
 			PreparedStatement statement = connection.prepareStatement(
 					"SELECT MAX(timepoint) FROM stream_events"
 			);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				return resultSet.getLong(1);
+				timepoint = resultSet.getLong(1);
+			} else {
+				statement = connection.prepareStatement(
+						"SELECT MAX(stream_timepoint) FROM filings"
+				);
+				resultSet = statement.executeQuery();
+				if (resultSet.next()) {
+					timepoint = resultSet.getLong(1);
+				}
 			}
-			statement = connection.prepareStatement(
-					"SELECT MAX(stream_timepoint) FROM filings"
-			);
-			resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				return resultSet.getLong(1);
+			if (timepoint != null && timepoint > 0) {
+				return timepoint;
 			}
 			return defaultTimepoint;
 		} catch (SQLException e) {
