@@ -64,7 +64,7 @@ public class CompaniesHouseStreamListenerImpl implements CompaniesHouseStreamLis
 			companiesHouseSessionEventCount++;
 			return true; // Continue streaming
 		};
-		long startTimepoint = databaseManager.getLatestStreamTimepoint(null);
+		Long startTimepoint = databaseManager.getLatestStreamTimepoint(null);
 		companiesHouseStreamLastOpenedDate = new Date();
 		try {
 			companiesHouseClient.streamFilings(startTimepoint, callback);
