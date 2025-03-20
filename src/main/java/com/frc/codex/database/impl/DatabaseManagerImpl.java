@@ -23,6 +23,7 @@ import java.util.UUID;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -216,6 +217,12 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 					throw new SQLException("Creating filing failed, no ID obtained.");
 				}
 			}
+		} catch (PSQLException e) {
+			if (e.getMessage().contains("unique constraint \"filings_registry_code_external_filing_id_idx\"")) {
+				LOG.warn("Filing already exists: {} {}", newFilingRequest.getRegistryCode(), newFilingRequest.getExternalFilingId());
+				return getFilingId(newFilingRequest.getRegistryCode(), newFilingRequest.getExternalFilingId());
+			}
+			throw new RuntimeException(e);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
