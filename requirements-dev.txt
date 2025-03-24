@@ -1,9 +1,9 @@
-boto3-stubs==1.37.13
+boto3-stubs==1.37.18
 flake8==7.1.2
 lxml-stubs==0.5.1
 mypy==1.15.0
 pytest==8.3.5
-types-psycopg2==2.9.21.20250121
+types-psycopg2==2.9.21.20250318
 types-requests==2.32.0.20250306
 
 -r requirements.txt
