@@ -345,26 +345,54 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		}
 	}
 
-	public Long getLatestStreamTimepoint(Long defaultTimepoint) {
+	private Long getLatestFilingTimepoint() {
 		try (Connection connection = getInitializedConnection(true)) {
 			PreparedStatement statement = connection.prepareStatement(
 					"SELECT MAX(timepoint) FROM stream_events"
 			);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				return resultSet.getLong(1);
+				long timepoint = resultSet.getLong(1);
+				if (!resultSet.wasNull()) {
+					return timepoint;
+				}
 			}
-			statement = connection.prepareStatement(
-					"SELECT MAX(stream_timepoint) FROM filings"
-			);
-			resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				return resultSet.getLong(1);
-			}
-			return defaultTimepoint;
+			return null;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private Long getLatestStreamEventTimepoint() {
+		try (Connection connection = getInitializedConnection(true)) {
+			PreparedStatement statement = connection.prepareStatement(
+					"SELECT MAX(stream_timepoint) FROM filings"
+			);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				long timepoint = resultSet.getLong(1);
+				if (!resultSet.wasNull()) {
+					return timepoint;
+				}
+			}
+			return null;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Long getLatestStreamTimepoint(Long defaultTimepoint) {
+		Long timepoint = getLatestStreamEventTimepoint();
+		if (timepoint != null) {
+			LOG.info("Using latest stream event timepoint: {}", timepoint);
+			return timepoint;
+		}
+		timepoint = getLatestFilingTimepoint();
+		if (timepoint != null) {
+			LOG.info("Using latest filing timepoint: {}", timepoint);
+			return timepoint;
+		}
+		return defaultTimepoint;
 	}
 
 	public List<Filing> getFilingsByStatus(FilingStatus status) {
