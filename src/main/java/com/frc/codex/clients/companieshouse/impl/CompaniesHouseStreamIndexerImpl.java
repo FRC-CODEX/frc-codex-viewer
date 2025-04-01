@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
@@ -159,6 +160,12 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 			} catch (RateLimitException e) {
 				LOG.warn("Rate limit exceeded while streaming CH filings. Resuming later.", e);
 				break;
+			} catch (HttpClientErrorException e) {
+				if (e.getStatusCode().is5xxServerError()) {
+					LOG.warn("Companies House API responded with a 5xx server error.", e);
+					return;
+				}
+				throw e;
 			} catch (Exception e) {
 				LOG.error("Failed to handle CH filing stream event.", e);
 				break;

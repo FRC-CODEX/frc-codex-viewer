@@ -9,7 +9,9 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompaniesIndexer;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
@@ -49,6 +51,54 @@ public class CompaniesHouseCompaniesIndexerImpl implements CompaniesHouseCompani
 		return true;
 	}
 
+	public void runCompany(Company company, Supplier<Boolean> continueCallback) throws JsonProcessingException {
+		if (!continueCallback.get()) {
+			return;
+		}
+		String companyNumber = company.getCompanyNumber();
+		String companyName = company.getCompanyName();
+		if (companyName == null) {
+			// If we don't already have the company's name, pull it from the API.
+			CompaniesHouseCompany companiesHouseCompany = companiesHouseClient.getCompany(companyNumber);
+			companyName = companiesHouseCompany.getCompanyName();
+			Company updateCompany = Company.builder()
+					.companyNumber(companyNumber)
+					.companyName(companyName)
+					.build();
+			databaseManager.updateCompany(updateCompany);
+		}
+		LOG.info("Retrieving filings for company {}.", companyNumber);
+		List<NewFilingRequest> filings;
+		try {
+			filings = companiesHouseClient.getCompanyFilings(companyNumber, companyName);
+		} catch (RateLimitException e) {
+			LOG.warn("Rate limit exceeded while retrieving CH filing history. Resuming later.", e);
+			return;
+		}
+		LOG.info("Retrieved {} filings for company {}.", filings.size(), companyNumber);
+		for (NewFilingRequest filing : filings) {
+			if (!continueCallback.get()) {
+				break;
+			}
+			if (databaseManager.filingExists(filing.getRegistryCode(), filing.getExternalFilingId())) {
+				LOG.info("Skipping existing filing: {}", filing.getDownloadUrl());
+				continue;
+			}
+			UUID filingId = databaseManager.createFiling(filing);
+			LOG.info("Created CH filing for {}: {}", filing.getDownloadUrl(), filingId);
+			companiesHouseSessionFilingCount += 1;
+
+		}
+		Company updatedCompany = Company.builder()
+				.companyNumber(companyNumber)
+				.completedDate(new Timestamp(System.currentTimeMillis()))
+				.build();
+		databaseManager.updateCompany(updatedCompany);
+		LOG.info("Completed company: {}", companyNumber);
+		companiesHouseSessionCompanyCount += 1;
+	}
+
+
 	public void run(Supplier<Boolean> continueCallback) throws IOException {
 		if (!continueCallback.get()) {
 			return;
@@ -56,51 +106,16 @@ public class CompaniesHouseCompaniesIndexerImpl implements CompaniesHouseCompani
 		LOG.info("Indexing filings from companies index.");
 		List<Company> companies = databaseManager.getIncompleteCompanies(COMPANIES_BATCH_SIZE);
 		LOG.info("Loaded {} incomplete companies from companies index.", companies.size());
-		for (Company company : companies) {
-			if (!continueCallback.get()) {
-				break;
+		try {
+			for (Company company : companies) {
+				runCompany(company, continueCallback);
 			}
-			String companyNumber = company.getCompanyNumber();
-			String companyName = company.getCompanyName();
-			if (companyName == null) {
-				// If we don't already have the company's name, pull it from the API.
-				CompaniesHouseCompany companiesHouseCompany = companiesHouseClient.getCompany(companyNumber);
-				companyName = companiesHouseCompany.getCompanyName();
-				Company updateCompany = Company.builder()
-						.companyNumber(companyNumber)
-						.companyName(companyName)
-						.build();
-				databaseManager.updateCompany(updateCompany);
-			}
-			LOG.info("Retrieving filings for company {}.", companyNumber);
-			List<NewFilingRequest> filings;
-			try {
-				filings = companiesHouseClient.getCompanyFilings(companyNumber, companyName);
-			} catch (RateLimitException e) {
-				LOG.warn("Rate limit exceeded while retrieving CH filing history. Resuming later.", e);
+		} catch (HttpClientErrorException e) {
+			if (e.getStatusCode().is5xxServerError()) {
+				LOG.warn("Companies House API responded with a 5xx server error.", e);
 				return;
 			}
-			LOG.info("Retrieved {} filings for company {}.", filings.size(), companyNumber);
-			for (NewFilingRequest filing : filings) {
-				if (!continueCallback.get()) {
-					break;
-				}
-				if (databaseManager.filingExists(filing.getRegistryCode(), filing.getExternalFilingId())) {
-					LOG.info("Skipping existing filing: {}", filing.getDownloadUrl());
-					continue;
-				}
-				UUID filingId = databaseManager.createFiling(filing);
-				LOG.info("Created CH filing for {}: {}", filing.getDownloadUrl(), filingId);
-				companiesHouseSessionFilingCount += 1;
-
-			}
-			Company updatedCompany = Company.builder()
-					.companyNumber(companyNumber)
-					.completedDate(new Timestamp(System.currentTimeMillis()))
-					.build();
-			databaseManager.updateCompany(updatedCompany);
-			LOG.info("Completed company: {}", companyNumber);
-			companiesHouseSessionCompanyCount += 1;
+			throw e;
 		}
 	}
 }
