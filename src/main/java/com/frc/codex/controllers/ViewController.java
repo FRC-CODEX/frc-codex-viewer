@@ -6,7 +6,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -192,6 +191,9 @@ public class ViewController {
 				}
 				response.setContentType(contentType.toString());
 				inputStream.transferTo(outputStream);
+			} catch (IOException e) {
+				LOG.warn("Unable to write response body.", e);
+				response.setStatus(HttpStatus.NOT_FOUND.value());
 			}
 			return null;
 		};
