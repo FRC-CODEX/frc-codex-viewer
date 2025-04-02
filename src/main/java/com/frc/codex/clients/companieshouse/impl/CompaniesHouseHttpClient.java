@@ -12,7 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.frc.codex.clients.companieshouse.CompaniesHouseRateLimiter;
@@ -54,7 +54,7 @@ public class CompaniesHouseHttpClient {
 					this.getJsonEntity,
 					String.class
 			);
-		} catch (HttpClientErrorException e) {
+		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode() == HttpStatusCode.valueOf(429)) {
 				rateLimiter.notifyRejection();
 				LOG.error("Companies House API rate limit exceeded with 429 response.", e);
