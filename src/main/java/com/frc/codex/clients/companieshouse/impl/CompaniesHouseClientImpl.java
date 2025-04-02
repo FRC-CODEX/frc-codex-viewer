@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -110,7 +110,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		String json;
 		try {
 			json = information.get("/company/" + companyNumber + "/filing-history/" + filingId);
-		} catch (HttpClientErrorException e) {
+		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
 				LOG.warn("Filing not found: companyNumber={} filingId={}", companyNumber, filingId, e);
 				return Set.of();

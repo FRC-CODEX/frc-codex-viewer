@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseStreamListener;
@@ -71,7 +71,7 @@ public class CompaniesHouseStreamListenerImpl implements CompaniesHouseStreamLis
 			companiesHouseClient.streamFilings(startTimepoint, callback);
 		} catch (RateLimitException e) {
 			LOG.warn("Rate limit exceeded while streaming CH filings. Resuming later.", e);
-		} catch (HttpClientErrorException e) {
+		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode().is5xxServerError()) {
 				LOG.warn("Companies House API responded with a 5xx server error.", e);
 				return;
