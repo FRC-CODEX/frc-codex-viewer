@@ -70,6 +70,14 @@ Parameters:
   ProcessorImage:
     Type: String
     Default: 390403885523.dkr.ecr.eu-west-2.amazonaws.com/frc-codex/processor-lambda
+  ProcessorMemoryMB:
+    Type: String
+    Default: "3008"
+    Description: "The memory allocated for the lambda processor."
+  ProcessorStorageMB:
+    Type: String
+    Default: "1024"
+    Description: "The ephemeral storage allocated for the lambda processor."
   ServerAlarmPeriod:
     Type: Number
     Default: 300
@@ -797,11 +805,11 @@ Resources:
           S3_TAXONOMY_PACKAGES_BUCKET_NAME: !Ref S3TaxonomyPackagesBucket
           SERVICE_VERSION: !Ref Version
       EphemeralStorage:
-        Size: 1024
+        Size: !Ref ProcessorStorageMB
       LoggingConfig:
         LogFormat: "Text"
         LogGroup: !Sub "/aws/lambda/${EnvironmentName}-processor"
-      MemorySize: 3008
+      MemorySize: !Ref ProcessorMemoryMB
       Role: !GetAtt IAMRoleProcessorLambda.Arn
       PackageType: "Image"
       RecursiveLoop: "Terminate"
