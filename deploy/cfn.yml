@@ -20,6 +20,9 @@ Parameters:
     Type: Number
     Default: 1000
     Description: "The number of stream events to process during each run of the stream indexer."
+  DBAllocatedStorage:
+    Type: String
+    Default: "30"
   DBInstanceClass:
     Type: String
     Default: db.t4g.micro
@@ -65,18 +68,26 @@ Parameters:
     Description: "Length of processor alarm period in seconds."
   ProcessorAlarmThreshold:
     Type: Number
-    Default: 1
+    Default: 0
     Description: "The number of processor errors to exceed before triggering alarm."
   ProcessorImage:
     Type: String
     Default: 390403885523.dkr.ecr.eu-west-2.amazonaws.com/frc-codex/processor-lambda
+  ProcessorMemoryMB:
+    Type: String
+    Default: "3008"
+    Description: "The memory allocated for the lambda processor."
+  ProcessorStorageMB:
+    Type: String
+    Default: "2048"
+    Description: "The ephemeral storage allocated for the lambda processor."
   ServerAlarmPeriod:
     Type: Number
     Default: 300
     Description: "Length of server alarm period in seconds."
   ServerAlarmThreshold:
     Type: Number
-    Default: 1
+    Default: 0
     Description: "The number of server errors to exceed before triggering alarm."
   ServerImage:
     Type: String
@@ -92,10 +103,10 @@ Parameters:
     Default: 390403885523.dkr.ecr.eu-west-2.amazonaws.com/frc-codex/support
   ServerMillivCPU:
     Type: String
-    Default: "512"
+    Default: "1024"
   ServerMemoryMB:
     Type: String
-    Default: "3072"
+    Default: "2048"
   Version:
     Type: String
     Description: "The docker tag to use.  See ECR for available tags."
@@ -711,7 +722,7 @@ Resources:
     Type: "AWS::RDS::DBInstance"
     DeletionPolicy: "Retain"
     Properties:
-      AllocatedStorage: "20"
+      AllocatedStorage: !Ref DBAllocatedStorage
       AutoMinorVersionUpgrade: true
       BackupRetentionPeriod: 7
       CopyTagsToSnapshot: true
@@ -797,11 +808,11 @@ Resources:
           S3_TAXONOMY_PACKAGES_BUCKET_NAME: !Ref S3TaxonomyPackagesBucket
           SERVICE_VERSION: !Ref Version
       EphemeralStorage:
-        Size: 1024
+        Size: !Ref ProcessorStorageMB
       LoggingConfig:
         LogFormat: "Text"
         LogGroup: !Sub "/aws/lambda/${EnvironmentName}-processor"
-      MemorySize: 3008
+      MemorySize: !Ref ProcessorMemoryMB
       Role: !GetAtt IAMRoleProcessorLambda.Arn
       PackageType: "Image"
       RecursiveLoop: "Terminate"
