@@ -76,7 +76,7 @@ Parameters:
     Description: "The memory allocated for the lambda processor."
   ProcessorStorageMB:
     Type: String
-    Default: "1024"
+    Default: "2048"
     Description: "The ephemeral storage allocated for the lambda processor."
   ServerAlarmPeriod:
     Type: Number
