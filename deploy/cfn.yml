@@ -20,6 +20,9 @@ Parameters:
     Type: Number
     Default: 1000
     Description: "The number of stream events to process during each run of the stream indexer."
+  DBAllocatedStorage:
+    Type: String
+    Default: "20"
   DBInstanceClass:
     Type: String
     Default: db.t4g.micro
@@ -719,7 +722,7 @@ Resources:
     Type: "AWS::RDS::DBInstance"
     DeletionPolicy: "Retain"
     Properties:
-      AllocatedStorage: "20"
+      AllocatedStorage: !Ref DBAllocatedStorage
       AutoMinorVersionUpgrade: true
       BackupRetentionPeriod: 7
       CopyTagsToSnapshot: true
