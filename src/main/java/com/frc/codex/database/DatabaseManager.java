@@ -34,10 +34,12 @@ public interface DatabaseManager {
 	List<Filing> getFilingsByStatus(FilingStatus status, RegistryCode registryCode);
 	long getFilingsCount(SearchFilingsRequest searchFilingsRequest);
 	LocalDateTime getLatestFcaFilingDate(LocalDateTime defaultDate);
+	LocalDateTime getLatestStreamDiscoveredDate();
 	Long getLatestStreamTimepoint(Long defaultTimepoint);
 	long getRegistryCount(RegistryCode registryCode);
 	void resetCompany(String companyNumber);
 	List<StreamEvent> getStreamEvents(long limit);
+	long getStreamEventsCount();
 	void resetFiling(UUID filingId);
 	List<Filing> searchFilings(SearchFilingsRequest searchFilingsRequest);
 	void updateFilingStatus(UUID filingId, String status);

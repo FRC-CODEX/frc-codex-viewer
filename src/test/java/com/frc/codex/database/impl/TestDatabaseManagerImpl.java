@@ -79,6 +79,10 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 		return null;
 	}
 
+	public LocalDateTime getLatestStreamDiscoveredDate() {
+		return null;
+	}
+
 	public Long getLatestStreamTimepoint(Long defaultTimepoint) {
 		return defaultTimepoint;
 	}
@@ -103,6 +107,10 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 
 	public List<StreamEvent> getStreamEvents(long limit) {
 		return null;
+	}
+
+	public long getStreamEventsCount() {
+		return 0;
 	}
 
 	public void resetFiling(UUID filingId) { }
