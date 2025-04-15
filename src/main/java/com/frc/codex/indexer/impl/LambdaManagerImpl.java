@@ -26,7 +26,7 @@ import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 
 @Component
 public class LambdaManagerImpl implements LambdaManager {
-	private static final Logger LOG = LoggerFactory.getLogger(IndexerImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LambdaManagerImpl.class);
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	private final LambdaAsyncClient client;
 	private final FilingIndexProperties properties;

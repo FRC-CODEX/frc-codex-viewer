@@ -28,7 +28,7 @@ import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 
 @Component
 public class QueueManagerImpl implements QueueManager {
-	private static final Logger LOG = LoggerFactory.getLogger(IndexerImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(QueueManagerImpl.class);
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	private final FilingIndexProperties properties;
