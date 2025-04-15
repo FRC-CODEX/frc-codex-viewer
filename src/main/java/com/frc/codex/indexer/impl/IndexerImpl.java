@@ -44,6 +44,7 @@ import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.indexer.Indexer;
 import com.frc.codex.indexer.IndexerJob;
 import com.frc.codex.indexer.LambdaManager;
+import com.frc.codex.indexer.MetricManager;
 import com.frc.codex.indexer.QueueManager;
 import com.frc.codex.indexer.UploadIndexer;
 import com.frc.codex.model.ArchiveType;
@@ -72,6 +73,7 @@ public class IndexerImpl implements Indexer {
 	private final FcaClient fcaClient;
 	private final List<IndexerJob> jobs;
 	private final LambdaManager lambdaManager;
+	private final MetricManager metricManager;
 	private final FilingIndexProperties properties;
 	private final QueueManager queueManager;
 	private final UploadIndexer uploadIndexer;
@@ -90,6 +92,7 @@ public class IndexerImpl implements Indexer {
 			FcaClient fcaClient,
 			FilingIndexProperties properties,
 			LambdaManager lambdaManager,
+			MetricManager metricManager,
 			QueueManager queueManager,
 			UploadIndexer uploadIndexer
 
@@ -102,6 +105,7 @@ public class IndexerImpl implements Indexer {
 		this.databaseManager = databaseManager;
 		this.fcaClient = fcaClient;
 		this.lambdaManager = lambdaManager;
+		this.metricManager = metricManager;
 		this.properties = properties;
 		this.queueManager = queueManager;
 		this.uploadIndexer = uploadIndexer;
@@ -458,5 +462,13 @@ public class IndexerImpl implements Indexer {
 		queueManager.addJobs(filings, (Filing filing) -> {
 			databaseManager.updateFilingStatus(filing.getFilingId(), FilingStatus.QUEUED.toString());
 		});
+	}
+
+	/*
+	 * Calculates and uploads metrics on an approximate one-minute interval
+	 */
+	@Scheduled(initialDelay = 30, fixedDelay = 60, timeUnit = TimeUnit.SECONDS)
+	public void uploadMetrics() {
+		metricManager.uploadMetrics();
 	}
 }
