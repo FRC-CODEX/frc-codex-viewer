@@ -32,12 +32,15 @@ public interface FilingIndexProperties {
 	boolean isAws();
 	boolean isDbMigrateAsync();
 	int lambdaPreprocessingConcurrency();
+	String metricNamespace();
 	String s3IndexerUploadsBucketName();
 	String s3ResultsBucketName();
 	int searchMaximumPages();
 	int searchPageSize();
 	String sqsJobsQueueName();
 	String sqsResultsQueueName();
+	String streamDiscoveryDelayMetric();
+	String streamEventsMetric();
 	String supportEmail();
 	int dbHealthCheckTimeout();
 
