@@ -345,6 +345,21 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		}
 	}
 
+	public LocalDateTime getLatestStreamDiscoveredDate() {
+		try (Connection connection = getInitializedConnection(true)) {
+			String sql = "SELECT MAX(discovered_date) FROM filings WHERE stream_timepoint IS NOT NULL";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
+			LocalDateTime result = null;
+			if (resultSet.next()) {
+				result = getLocalDateTime(resultSet.getTimestamp(1));
+			}
+			return result;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private Long getLatestFilingTimepoint() {
 		try (Connection connection = getInitializedConnection(true)) {
 			PreparedStatement statement = connection.prepareStatement(
@@ -453,6 +468,18 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			statement.setLong(1, limit);
 			ResultSet resultSet = statement.executeQuery();
 			return getStreamEvents(resultSet);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public long getStreamEventsCount() {
+		try (Connection connection = getInitializedConnection(true)) {
+			String sql = "SELECT COUNT(*) FROM stream_events;";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			return resultSet.getLong(1);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

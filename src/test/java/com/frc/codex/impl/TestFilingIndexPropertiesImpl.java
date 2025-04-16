@@ -134,6 +134,10 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return 1;
 	}
 
+	public String metricNamespace() {
+		return null;
+	}
+
 	public String s3ResultsBucketName() {
 		return "frc-codex-results";
 	}
@@ -156,6 +160,14 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public String sqsResultsQueueName() {
 		return "frc_codex_results";
+	}
+
+	public String streamDiscoveryDelayMetric() {
+		return null;
+	}
+
+	public String streamEventsMetric() {
+		return null;
 	}
 
 	public String supportEmail() {

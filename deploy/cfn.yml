@@ -436,7 +436,9 @@ Resources:
           Value: "-XX:MaxRAMPercentage=80"
         - Name: "LAMBDA_PREPROCESSING_CONCURRENCY"
           Value: !Ref LambdaPreprocessingConcurrency
-        - Name: S3_TAXONOMY_PACKAGES_BUCKET_NAME
+        - Name: "METRIC_NAMESPACE"
+          Value: !Sub "${EnvironmentName}-server"
+        - Name: "S3_TAXONOMY_PACKAGES_BUCKET_NAME"
           Value: !Ref S3TaxonomyPackagesBucket
         - Name: "SQS_JOBS_QUEUE_NAME"
           Value: unused
@@ -446,6 +448,10 @@ Resources:
           Value: !Ref S3ResultsBucket
         - Name: "SQS_RESULTS_QUEUE_NAME"
           Value: unused
+        - Name: "STREAM_DISCOVERY_DELAY_METRIC"
+          Value: !Sub "${EnvironmentName}-server-stream-discovery-delay"
+        - Name: "STREAM_EVENTS_METRIC"
+          Value: !Sub "${EnvironmentName}-server-stream-events"
         - Name: "SUPPORT_EMAIL"
           Value: !Ref SupportEmail
         - Name: "UNPROCESSED_COMPANIES_LIMIT"

@@ -47,6 +47,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String FILING_LIMIT_COMPANIES_HOUSE = "FILING_LIMIT_COMPANIES_HOUSE";
 	private static final String FILING_LIMIT_FCA = "FILING_LIMIT_FCA";
 	private static final String LAMBDA_PREPROCESSING_CONCURRENCY = "LAMBDA_PREPROCESSING_CONCURRENCY";
+	private static final String METRIC_NAMESPACE = "METRIC_NAMESPACE";
 	private static final String S3_INDEXER_UPLOADS_BUCKET_NAME = "S3_INDEXER_UPLOADS_BUCKET_NAME";
 	private static final String S3_RESULTS_BUCKET_NAME = "S3_RESULTS_BUCKET_NAME";
 	private static final String SEARCH_MAXIMUM_PAGES = "SEARCH_MAXIMUM_PAGES";
@@ -54,6 +55,8 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String SECRETS_FILEPATH = "/run/secrets/frc-codex-server.secrets";
 	private static final String SQS_JOBS_QUEUE_NAME = "SQS_JOBS_QUEUE_NAME";
 	private static final String SQS_RESULTS_QUEUE_NAME = "SQS_RESULTS_QUEUE_NAME";
+	private static final String STREAM_DISCOVERY_DELAY_METRIC = "STREAM_DISCOVERY_DELAY_METRIC";
+	private static final String STREAM_EVENTS_METRIC = "STREAM_EVENTS_METRIC";
 	private static final String SUPPORT_EMAIL = "SUPPORT_EMAIL";
 	private static final String UNPROCESSED_COMPANIES_LIMIT = "UNPROCESSED_COMPANIES_LIMIT";
 	private final String adminCookieName;
@@ -85,12 +88,15 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final String awsLambdaFunctionName;
 	private final long awsLambdaTimeoutSeconds;
 	private final int lambdaPreprocessingConcurrency;
+	private final String metricNamespace;
 	private final String s3IndexerUploadsBucketName;
 	private final String s3ResultsBucketName;
 	private final int searchMaximumPages;
 	private final int searchPageSize;
 	private final String sqsJobsQueueName;
 	private final String sqsResultsQueueName;
+	private final String streamDiscoveryDelayMetric;
+	private final String streamEventsMetric;
 	private final String supportEmail;
 	private final int unprocessedCompaniesLimit;
 	private final String httpUsername;
@@ -139,6 +145,8 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 		lambdaPreprocessingConcurrency = Integer.parseInt(requireNonNull(getEnv(LAMBDA_PREPROCESSING_CONCURRENCY, "1")));
 
+		metricNamespace = requireNonNull(getEnv(METRIC_NAMESPACE, null));
+
 		searchMaximumPages = Integer.parseInt(requireNonNull(getEnv(SEARCH_MAXIMUM_PAGES, "10")));
 		searchPageSize = Integer.parseInt(requireNonNull(getEnv(SEARCH_PAGE_SIZE, "10")));
 
@@ -146,6 +154,9 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		s3ResultsBucketName = requireNonNull(getEnv(S3_RESULTS_BUCKET_NAME));
 		sqsJobsQueueName = requireNonNull(getEnv(SQS_JOBS_QUEUE_NAME));
 		sqsResultsQueueName = requireNonNull(getEnv(SQS_RESULTS_QUEUE_NAME));
+
+		streamDiscoveryDelayMetric = requireNonNull(getEnv(STREAM_DISCOVERY_DELAY_METRIC, null));
+		streamEventsMetric = requireNonNull(getEnv(STREAM_EVENTS_METRIC, null));
 
 		supportEmail = getEnv(SUPPORT_EMAIL, null);
 
@@ -332,6 +343,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		return lambdaPreprocessingConcurrency;
 	}
 
+	public String metricNamespace() {
+		return metricNamespace;
+	}
+
 	public String s3IndexerUploadsBucketName() {
 		return s3IndexerUploadsBucketName;
 	}
@@ -354,6 +369,14 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public String sqsResultsQueueName() {
 		return sqsResultsQueueName;
+	}
+
+	public String streamDiscoveryDelayMetric() {
+		return streamDiscoveryDelayMetric;
+	}
+
+	public String streamEventsMetric() {
+		return streamEventsMetric;
 	}
 
 	public String supportEmail() {
