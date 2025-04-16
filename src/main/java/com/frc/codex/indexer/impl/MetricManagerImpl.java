@@ -2,6 +2,9 @@ package com.frc.codex.indexer.impl;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,39 +35,59 @@ public class MetricManagerImpl implements MetricManager {
 
 	public void uploadMetrics() {
 		if (this.properties.metricNamespace() == null) {
-			LOG.debug("No metric namespace configured, skipping metric upload");
+			LOG.debug("No metric namespace configured, skipping metric upload.");
 			return;
 		}
-		PutMetricDataRequest.Builder requestBuilder = PutMetricDataRequest.builder()
-				.namespace(this.properties.metricNamespace());
-		if (this.properties.streamEventsMetric() != null) {
-			long streamEventsCount = this.databaseManager.getStreamEventsCount();
-			LOG.debug("Uploading metric: streamEventsCount={}", streamEventsCount);
-			requestBuilder.metricData(MetricDatum.builder()
-					.metricName(this.properties.streamEventsMetric())
-					.value((double) streamEventsCount)
-					.unit(StandardUnit.COUNT)
-					.build());
+		List<MetricDatum> metricData = Stream.of(
+						buildStreamDiscoveryDelayMetricDatum(),
+						buildStreamEventsMetricDatum())
+				.filter(Objects::nonNull)
+				.toList();
+		if (metricData.isEmpty()) {
+			LOG.debug("No metrics to upload, skipping metric upload.");
+			return;
 		}
-		if (this.properties.streamDiscoveryDelayMetric() != null) {
-			LocalDateTime latestStreamDiscoveredDate = this.databaseManager.getLatestStreamDiscoveredDate();
-			int streamDiscoveryDelay = 0;
-			if (latestStreamDiscoveredDate != null) {
-				streamDiscoveryDelay = (int) Duration.between(latestStreamDiscoveredDate, LocalDateTime.now()).toSeconds();
-				if (streamDiscoveryDelay < 0) {
-					streamDiscoveryDelay = 0;
-				}
-			}
-			LOG.debug("Uploading metric: streamDiscoveryDelay={}", streamDiscoveryDelay);
-			requestBuilder.metricData(MetricDatum.builder()
-					.metricName(this.properties.streamDiscoveryDelayMetric())
-					.value((double) streamDiscoveryDelay)
-					.unit(StandardUnit.SECONDS)
-					.build());
-		}
-		PutMetricDataResponse response = this.client.putMetricData(requestBuilder.build());
+		PutMetricDataRequest request = PutMetricDataRequest.builder()
+				.namespace(this.properties.metricNamespace())
+				.metricData(metricData)
+				.build();
+		PutMetricDataResponse response = this.client.putMetricData(request);
 		if (!response.sdkHttpResponse().isSuccessful()) {
-			LOG.error("Failed to upload metric: {} {}",response.sdkHttpResponse().statusCode(), response.sdkHttpResponse().statusText());
+			LOG.error("Failed to upload metric: {} {}", response.sdkHttpResponse().statusCode(), response.sdkHttpResponse().statusText());
 		}
 	}
+
+	private MetricDatum buildStreamDiscoveryDelayMetricDatum() {
+		if (this.properties.streamDiscoveryDelayMetric() == null) {
+			LOG.debug("No stream discovery delay metric name configured, skipping metric upload.");
+			return null;
+		}
+		LocalDateTime latestStreamDiscoveredDate = this.databaseManager.getLatestStreamDiscoveredDate();
+		int streamDiscoveryDelay = 0;
+		if (latestStreamDiscoveredDate != null) {
+			streamDiscoveryDelay = (int) Duration.between(latestStreamDiscoveredDate, LocalDateTime.now()).toSeconds();
+			if (streamDiscoveryDelay < 0) {
+				streamDiscoveryDelay = 0;
+			}
+		}
+		return MetricDatum.builder()
+				.metricName(this.properties.streamDiscoveryDelayMetric())
+				.value((double) streamDiscoveryDelay)
+				.unit(StandardUnit.SECONDS)
+				.build();
+	}
+
+	private MetricDatum buildStreamEventsMetricDatum() {
+		if (this.properties.streamEventsMetric() == null) {
+			LOG.debug("No stream events metric name configured, skipping metric upload.");
+			return null;
+		}
+		long streamEventsCount = this.databaseManager.getStreamEventsCount();
+		return MetricDatum.builder()
+				.metricName(this.properties.streamEventsMetric())
+				.value((double) streamEventsCount)
+				.unit(StandardUnit.COUNT)
+				.build();
+	}
+
 }
