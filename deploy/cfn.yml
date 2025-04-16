@@ -89,6 +89,14 @@ Parameters:
     Type: Number
     Default: 0
     Description: "The number of server errors to exceed before triggering alarm."
+  ServerStreamDiscoveryDelayAlarmThreshold:
+    Type: Number
+    Default: 28800
+    Description: "The number of seconds since the last stream filing discovery that indicates a potential problem."
+  ServerStreamEventsAlarmThreshold:
+    Type: Number
+    Default: 1000
+    Description: "The number of unprocessed stream events that indicates a potential problem."
   ServerImage:
     Type: String
     Default: 390403885523.dkr.ecr.eu-west-2.amazonaws.com/frc-codex/server
@@ -990,6 +998,40 @@ Resources:
       Period: !Ref ServerAlarmPeriod
       Statistic: Sum
       Threshold: !Ref ServerAlarmThreshold
+      TreatMissingData: missing
+  ServerStreamEventsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - !GetAtt ErrorAlarmTopic.TopicArn
+      AlarmDescription: !Sub "Alarm whenever metrics indicate a significant backlog of unprocessed stream events."
+      AlarmName: !Sub "${EnvironmentName}-server-stream-events-alarm"
+      ComparisonOperator: GreaterThanThreshold
+      DatapointsToAlarm: 2
+      EvaluationPeriods: 1
+      MetricName: !Sub "${EnvironmentName}-server-stream-events"
+      Namespace: !Sub "${EnvironmentName}-server"
+      Period: !Ref ServerAlarmPeriod
+      Statistic: Minimum
+      Threshold: !Ref ServerStreamEventsAlarmThreshold
+      TreatMissingData: missing
+  ServerStreamDiscoveryDelayAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - !GetAtt ErrorAlarmTopic.TopicArn
+      AlarmDescription: !Sub "Alarm whenever metrics indicate a significant delay in discovery of new filings from the stream."
+      AlarmName: !Sub "${EnvironmentName}-server-stream-discovery-delay-alarm"
+      ComparisonOperator: GreaterThanThreshold
+      DatapointsToAlarm: 2
+      EvaluationPeriods: 1
+      MetricName: !Sub "${EnvironmentName}-server-stream-discovery-delay"
+      Namespace: !Sub "${EnvironmentName}-server"
+      Period: !Ref ServerAlarmPeriod
+      Statistic: Minimum
+      Threshold: !Ref ServerStreamDiscoveryDelayAlarmThreshold
       TreatMissingData: missing
   ProcessorErrorMetricFilter:
     Type: AWS::Logs::MetricFilter
