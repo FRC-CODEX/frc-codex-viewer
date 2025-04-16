@@ -207,6 +207,19 @@ Resources:
             Action:
               - "s3:DeleteObject"
             Effect: "Allow"
+  IAMPolicyPutMetricData:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      ManagedPolicyName: !Sub "${EnvironmentName}CodexPutMetricData"
+      Path: "/"
+      Description: !Sub "Permission for publishing metric data."
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Resource: "*"
+            Action:
+              - "cloudwatch:PutMetricData"
+            Effect: "Allow"
   IAMPolicyReadResultsBucket:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
@@ -329,6 +342,7 @@ Resources:
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
       - Ref: IAMPolicyDeleteIndexerUploadsBucket
+      - Ref: IAMPolicyPutMetricData
       - Ref: IAMPolicyReadIndexerUploadsBucket
       - Ref: IAMPolicyReadResultsBucket
       MaxSessionDuration: 3600
