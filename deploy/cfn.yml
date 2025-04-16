@@ -1008,7 +1008,7 @@ Resources:
       AlarmDescription: !Sub "Alarm whenever metrics indicate a significant backlog of unprocessed stream events."
       AlarmName: !Sub "${EnvironmentName}-server-stream-events-alarm"
       ComparisonOperator: GreaterThanThreshold
-      DatapointsToAlarm: 2
+      DatapointsToAlarm: 1
       EvaluationPeriods: 1
       MetricName: !Sub "${EnvironmentName}-server-stream-events"
       Namespace: !Sub "${EnvironmentName}-server"
@@ -1025,7 +1025,7 @@ Resources:
       AlarmDescription: !Sub "Alarm whenever metrics indicate a significant delay in discovery of new filings from the stream."
       AlarmName: !Sub "${EnvironmentName}-server-stream-discovery-delay-alarm"
       ComparisonOperator: GreaterThanThreshold
-      DatapointsToAlarm: 2
+      DatapointsToAlarm: 1
       EvaluationPeriods: 1
       MetricName: !Sub "${EnvironmentName}-server-stream-discovery-delay"
       Namespace: !Sub "${EnvironmentName}-server"
@@ -1061,4 +1061,4 @@ Resources:
       Period: !Ref ProcessorAlarmPeriod
       Statistic: Sum
       Threshold: !Ref ProcessorAlarmThreshold
-      TreatMissingData: missing
+      TreatMissingData: notBreaching
