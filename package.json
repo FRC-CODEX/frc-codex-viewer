@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "govuk-frontend": "^5.9.0",
-    "i18next": "^24.2.3",
-    "i18next-browser-languagedetector": "^8.0.4",
+    "i18next": "^25.0.1",
+    "i18next-browser-languagedetector": "^8.0.5",
     "ixbrl-viewer": "^1.4.63"
   },
   "devDependencies": {
