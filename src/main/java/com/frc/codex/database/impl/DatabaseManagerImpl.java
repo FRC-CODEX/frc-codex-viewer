@@ -748,10 +748,7 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 				try (ResultSet resultSet = statement.executeQuery()) {
 					if (resultSet.next()) {
 						if (resultSet.getBoolean(1)) {
-							while (companyNumberCache.size() >= COMPANY_NUMBER_CACHE_SIZE) {
-								companyNumberCache.removeFirst();
-							}
-							companyNumberCache.add(companyNumber);
+							addToCompanyNumberCache(companyNumber);
 							return true;
 						}
 					}
@@ -762,6 +759,14 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 			return false;
 		}
 		return false;
+	}
+
+	private synchronized void addToCompanyNumberCache(String companyNumber) {
+
+		while (companyNumberCache.size() >= COMPANY_NUMBER_CACHE_SIZE) {
+			companyNumberCache.removeFirst();
+		}
+		companyNumberCache.add(companyNumber);
 	}
 
 	private PreparedStatement buildFilingsSearchQuery(Connection connection, SearchFilingsRequest searchFilingsRequest, boolean count) throws SQLException {
