@@ -20,7 +20,7 @@ dependencies {
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:3.4.5"
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.4.5'
 	implementation 'com.google.guava:guava:33.4.8-jre'
-	implementation 'com.opencsv:opencsv:5.10'
+	implementation 'com.opencsv:opencsv:5.11'
 	implementation 'com.zaxxer:HikariCP:6.3.0'
 	implementation 'org.flywaydb:flyway-core:11.8.0'
 	implementation 'org.flywaydb:flyway-database-postgresql:11.8.0'
@@ -28,11 +28,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security:3.4.5'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.4.5'
 	implementation 'org.springframework.boot:spring-boot-starter-web:3.4.5'
-	implementation 'software.amazon.awssdk:cloudwatch:2.31.30'
-	implementation 'software.amazon.awssdk:lambda:2.31.30'
-	implementation 'software.amazon.awssdk:netty-nio-client:2.31.30'
-	implementation 'software.amazon.awssdk:s3:2.31.30'
-	implementation 'software.amazon.awssdk:sqs:2.31.30'
+	implementation 'software.amazon.awssdk:cloudwatch:2.31.35'
+	implementation 'software.amazon.awssdk:lambda:2.31.35'
+	implementation 'software.amazon.awssdk:netty-nio-client:2.31.35'
+	implementation 'software.amazon.awssdk:s3:2.31.35'
+	implementation 'software.amazon.awssdk:sqs:2.31.35'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.4.5'
 }
 
