@@ -130,6 +130,7 @@ class Processor:
 
         job_message = JobMessage(
             filing_id=body['filing_id'],
+            format=body['format'],
             download_url=body['filing_url'],
             registry_code=body['registry_code'],
             receipt_handle=context.aws_request_id,

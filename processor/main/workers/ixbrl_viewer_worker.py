@@ -45,7 +45,7 @@ class IxbrlViewerWorker(Worker):
             taxonomy_package_urls: list[str],
     ) -> WorkerResult:
         assert filing_download.download_path is not None
-        result = self._generate_viewer(filing_download.download_path, viewer_directory, taxonomy_package_urls)
+        result = self._generate_viewer(job_message, filing_download.download_path, viewer_directory, taxonomy_package_urls)
         if not result.success:
             return WorkerResult(
                 job_message.filing_id,
@@ -102,7 +102,17 @@ class IxbrlViewerWorker(Worker):
             return next(iter(facts)).xValue
         return None
 
-    def _generate_viewer(self, target_path: Path, viewer_directory: Path, packages: list[str]) -> IxbrlViewerResult:
+    def _get_plugins(self, job_message: JobMessage) -> list[str]:
+        plugins = []
+        if job_message.registry_code != 'CH' or job_message.format != 'zip':
+            plugins.append('inlineXbrlDocumentSet')
+        plugins.extend([
+            'ixbrl-viewer',
+            'saveLoadableOIM',
+        ])
+        return plugins
+
+    def _generate_viewer(self, job_message: JobMessage, target_path: Path, viewer_directory: Path, packages: list[str]) -> IxbrlViewerResult:
         runtime_options = RuntimeOptions(
             cacheDirectory=str(self._http_cache_directory),
             disablePersistentConfig=True,
@@ -121,7 +131,7 @@ class IxbrlViewerWorker(Worker):
                 'viewerURL': '/ixbrlviewer.js',
                 'viewer_feature_mandatory_facts': 'companies-house'
             },
-            plugins="inlineXbrlDocumentSet|ixbrl-viewer|saveLoadableOIM",
+            plugins='|'.join(self._get_plugins(job_message))
         )
         with Session() as session:
             success = session.run(runtime_options)
