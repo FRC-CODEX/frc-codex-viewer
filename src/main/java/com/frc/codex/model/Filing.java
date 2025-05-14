@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.frc.codex.clients.companieshouse.FilingFormat;
+
 public class Filing {
 	private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -21,6 +23,7 @@ public class Filing {
 	private final String filename;
 	private final String filingType;
 	private final LocalDateTime filingDate;
+	private final String format;
 	private final LocalDateTime documentDate;
 	private final Long streamTimepoint;
 	private final String error;
@@ -42,6 +45,7 @@ public class Filing {
 		this.filename = b.filename;
 		this.filingType = b.filingType;
 		this.filingDate = b.filingDate;
+		this.format = b.format;
 		this.documentDate = b.documentDate;
 		this.streamTimepoint = b.streamTimepoint;
 		this.error = b.error;
@@ -120,6 +124,14 @@ public class Filing {
 		return filingDate;
 	}
 
+	public String getFormat() {
+		if (format == null) {
+			// For backwards compatability, null format defaults to XHTML
+			return FilingFormat.XHTML.getFormat();
+		}
+		return format;
+	}
+
 	public LocalDateTime getDocumentDate() {
 		return documentDate;
 	}
@@ -193,6 +205,7 @@ public class Filing {
 		private String filename;
 		private String filingType;
 		private LocalDateTime filingDate;
+		private String format;
 		private LocalDateTime documentDate;
 		private Long streamTimepoint;
 		private String error;
@@ -263,6 +276,11 @@ public class Filing {
 
 		public Builder filingDate(LocalDateTime filingDate) {
 			this.filingDate = filingDate;
+			return this;
+		}
+
+		public Builder format(String format) {
+			this.format = format;
 			return this;
 		}
 

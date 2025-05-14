@@ -185,12 +185,13 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		UUID filingId;
 		try (Connection connection = getInitializedConnection(false)) {
 			String sql = "INSERT INTO filings " +
-					"(status, registry_code, download_url, external_filing_id, external_view_url, document_date, filing_date, stream_timepoint, company_name, company_number) " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
+					"(status, registry_code, format, download_url, external_filing_id, external_view_url, document_date, filing_date, stream_timepoint, company_name, company_number) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
 			PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			int i = 0;
 			statement.setString(++i, FilingStatus.PENDING.toString());
 			statement.setString(++i, newFilingRequest.getRegistryCode());
+			statement.setString(++i, newFilingRequest.getFormat());
 			statement.setString(++i, newFilingRequest.getDownloadUrl());
 			statement.setString(++i, newFilingRequest.getExternalFilingId());
 			statement.setString(++i, newFilingRequest.getExternalViewUrl());
@@ -638,6 +639,7 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 					.filingDate(getLocalDateTime(
 							resultSet.getTimestamp("filing_date", TIMEZONE_UTC)
 					))
+					.format(resultSet.getString("format"))
 					.documentDate(getLocalDateTime(
 							resultSet.getTimestamp("document_date", TIMEZONE_UTC)
 					))
