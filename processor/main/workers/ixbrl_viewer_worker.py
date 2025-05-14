@@ -45,7 +45,9 @@ class IxbrlViewerWorker(Worker):
             taxonomy_package_urls: list[str],
     ) -> WorkerResult:
         assert filing_download.download_path is not None
-        result = self._generate_viewer(job_message, filing_download.download_path, viewer_directory, taxonomy_package_urls)
+        result = self._generate_viewer(
+            job_message, filing_download.download_path, viewer_directory, taxonomy_package_urls
+        )
         if not result.success:
             return WorkerResult(
                 job_message.filing_id,
@@ -112,7 +114,13 @@ class IxbrlViewerWorker(Worker):
         ])
         return plugins
 
-    def _generate_viewer(self, job_message: JobMessage, target_path: Path, viewer_directory: Path, packages: list[str]) -> IxbrlViewerResult:
+    def _generate_viewer(
+            self,
+            job_message: JobMessage,
+            target_path: Path,
+            viewer_directory: Path,
+            packages: list[str]
+    ) -> IxbrlViewerResult:
         runtime_options = RuntimeOptions(
             cacheDirectory=str(self._http_cache_directory),
             disablePersistentConfig=True,
