@@ -18,6 +18,7 @@ class TestProcessor(TestCase):
         job_messages = [
             JobMessage(
                 filing_id='filing_id1',
+                format='format1',
                 registry_code='registry_code1',
                 download_url='download_url1',
                 receipt_handle='receipt_handle1',
@@ -25,6 +26,7 @@ class TestProcessor(TestCase):
             ),
             JobMessage(
                 filing_id='filing_id2',
+                format='format2',
                 registry_code='registry_code2',
                 download_url='download_url2',
                 receipt_handle='receipt_handle2',

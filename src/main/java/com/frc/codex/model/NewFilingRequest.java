@@ -12,6 +12,7 @@ public class NewFilingRequest {
 	private final String downloadUrl;
 	private final String externalFilingId;
 	private final LocalDateTime filingDate;
+	private final String format;
 	private final String resourceId;
 	private final Long streamTimepoint;
 	private final String externalViewUrl;
@@ -24,6 +25,7 @@ public class NewFilingRequest {
 		this.externalFilingId = requireNonNull(builder.externalFilingId);
 		this.externalViewUrl = requireNonNull(builder.externalViewUrl);
 		this.filingDate = requireNonNull(builder.filingDate);
+		this.format = requireNonNull(builder.format);
 		this.registryCode = requireNonNull(builder.registryCode);
 		this.resourceId = builder.resourceId;
 		this.streamTimepoint = builder.streamTimepoint;
@@ -57,6 +59,10 @@ public class NewFilingRequest {
 		return filingDate;
 	}
 
+	public String getFormat() {
+		return format;
+	}
+
 	public String getRegistryCode() {
 		return registryCode;
 	}
@@ -81,6 +87,7 @@ public class NewFilingRequest {
 		private String downloadUrl;
 		private String externalFilingId;
 		private LocalDateTime filingDate;
+		private String format;
 		private String resourceId;
 		private Long streamTimepoint;
 		private String externalViewUrl;
@@ -121,6 +128,11 @@ public class NewFilingRequest {
 
 		public Builder filingDate(LocalDateTime filingDate) {
 			this.filingDate = filingDate;
+			return this;
+		}
+
+		public Builder format(String format) {
+			this.format = format;
 			return this;
 		}
 

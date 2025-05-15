@@ -38,6 +38,7 @@ import com.frc.codex.clients.companieshouse.CompaniesHouseCompaniesIndexer;
 import com.frc.codex.clients.companieshouse.CompaniesHouseHistoryClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseStreamIndexer;
 import com.frc.codex.clients.companieshouse.CompaniesHouseStreamListener;
+import com.frc.codex.clients.companieshouse.FilingFormat;
 import com.frc.codex.clients.fca.FcaClient;
 import com.frc.codex.clients.fca.FcaFiling;
 import com.frc.codex.database.DatabaseManager;
@@ -354,6 +355,7 @@ public class IndexerImpl implements Indexer {
 					.externalFilingId(filing.sequenceId())
 					.externalViewUrl(filing.infoUrl())
 					.filingDate(filing.submittedDate())
+					.format(FilingFormat.ZIP.getFormat())
 					.registryCode(RegistryCode.FCA.getCode())
 					.build();
 			if (databaseManager.filingExists(newFilingRequest.getRegistryCode(), newFilingRequest.getExternalFilingId())) {
@@ -399,6 +401,7 @@ public class IndexerImpl implements Indexer {
 					future = lambdaManager.invokeAsync(new FilingPayload(
 							filing.getFilingId(),
 							filing.getDownloadUrl(),
+							filing.getFormat(),
 							filing.getRegistryCode()
 					));
 					futures[i] = future;

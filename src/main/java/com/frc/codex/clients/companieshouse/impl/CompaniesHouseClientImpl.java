@@ -22,20 +22,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.frc.codex.model.RegistryCode;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompany;
 import com.frc.codex.clients.companieshouse.CompaniesHouseConfig;
 import com.frc.codex.clients.companieshouse.CompaniesHouseFiling;
 import com.frc.codex.clients.companieshouse.CompaniesHouseRateLimiter;
+import com.frc.codex.clients.companieshouse.FilingFormat;
+import com.frc.codex.clients.companieshouse.FilingUrl;
 import com.frc.codex.model.NewFilingRequest;
+import com.frc.codex.model.RegistryCode;
 
 @Component
 public class CompaniesHouseClientImpl implements CompaniesHouseClient {
-	private static final Set<String> ACCEPTED_CONTENT_TYPES = Set.of("application/xml", "application/xhtml+xml");
+	private static final Map<String, FilingFormat> ACCEPTED_CONTENT_TYPES = Map.of(
+			"application/xhtml+xml", FilingFormat.XHTML,
+			"application/xml", FilingFormat.XML,
+			"application/zip", FilingFormat.ZIP
+	);
 	private static final DateTimeFormatter CH_JSON_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private static final Set<String> IGNORED_CONTENT_TYPES = Set.of("application/pdf", "application/json", "text/csv");
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -105,7 +112,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 				.build();
 	}
 
-	public Set<String> getCompanyFilingUrls(String companyNumber, String filingId) throws JsonProcessingException {
+	public FilingUrl getCompanyFilingUrl(String companyNumber, String filingId) throws JsonProcessingException {
 		throwExceptionIfDisabled();
 		String json;
 		try {
@@ -113,12 +120,12 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
 				LOG.warn("Filing not found: companyNumber={} filingId={}", companyNumber, filingId, e);
-				return Set.of();
+				return null;
 			}
 			throw e;
 		}
 		JsonNode node = OBJECT_MAPPER.readTree(json);
-		return getCompanyFilingUrls(node);
+		return getCompanyFilingUrl(node);
 	}
 
 	public String getCompanyFilingHistory(String companyNumber, int itemsPerPage, int startIndex) {
@@ -148,20 +155,23 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 				LocalDateTime filingDate = parseDate(item.get("date"));
 				LocalDateTime documentDate = parseDate(item.get("action_date"));
 				String externalFilingId = item.get("transaction_id").asText();
-				Set<String> filingUrls = getCompanyFilingUrls(item);
-				boolean ixbrlFound = !filingUrls.isEmpty();
+				FilingUrl filingUrl = getCompanyFilingUrl(item);
+
 				if (!companiesHouseIncludeCategories.contains(category)) {
 					LOG.warn(
 							"Unknown filing category {} iXBRL " +
 									"(category=\"{}\",externalFilingId=\"{}\",companyNumber=\"{}\")",
-							ixbrlFound ? "with" : "without", category, externalFilingId, companyNumber
+							filingUrl != null ? "with" : "without", category, externalFilingId, companyNumber
 					);
 				}
-				if (ixbrlFound) {
-					// There are matching IXBRL filing URLs
-					String downloadUrl = "https://find-and-update.company-information.service.gov.uk/company/"
-							+ companyNumber + "/filing-history/" + externalFilingId
-							+ "/document?format=xhtml&download=0";
+				if (filingUrl != null) {
+					// There is a matching iXBRL filing URL
+					String format = filingUrl.getFilingFormat().getFormat();
+					String downloadUrl = ("https://find-and-update.company-information.service.gov.uk" +
+							"/company/%s" +
+							"/filing-history/%s" +
+							"/document?format=%s&download=0")
+							.formatted(companyNumber, externalFilingId, format);
 					NewFilingRequest newFilingRequest = NewFilingRequest.builder()
 						.companyName(companyName)
 						.companyNumber(companyNumber)
@@ -170,6 +180,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 						.externalFilingId(externalFilingId)
 						.externalViewUrl(downloadUrl)
 						.filingDate(filingDate)
+						.format(format)
 						.registryCode(RegistryCode.COMPANIES_HOUSE.getCode())
 						.build();
 					filings.add(newFilingRequest);
@@ -180,16 +191,17 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		return filings;
 	}
 
-	private Set<String> getCompanyFilingUrls(JsonNode node) throws JsonProcessingException {
+	private FilingUrl getCompanyFilingUrl(JsonNode node) throws JsonProcessingException {
 		throwExceptionIfDisabled();
-		Set<String> filingUrls = new HashSet<>();
+		FilingUrl filingUrl = null;
+		int maxPriority = 0;
 		JsonNode links = node.get("links");
 		if (links == null) {
-			return filingUrls;
+			return null;
 		}
 		JsonNode documentMetadata = links.get("document_metadata");
 		if (documentMetadata == null) {
-			return filingUrls;
+			return null;
 		}
 		String documentMetadataUrl = documentMetadata.asText();
 		String documentId = documentMetadataUrl.substring(documentMetadataUrl.lastIndexOf("/") + 1);
@@ -203,17 +215,25 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 				if (IGNORED_CONTENT_TYPES.contains(key)) {
 					continue;
 				}
-				if (!ACCEPTED_CONTENT_TYPES.contains(key)) {
+				if (!ACCEPTED_CONTENT_TYPES.containsKey(key)) {
 					LOG.error("Unexpected content type: {}", key);
 					continue;
 				}
-				// `contentType` query parameter is only added to indicate which content type is available at the URL
-				// It is not a functional use of the Companies House Documents API.
-				String contentType = URLEncoder.encode(key, StandardCharsets.UTF_8);
-				filingUrls.add(config.documentApiBaseUrl() + "/document/" + documentId + "/content?contentType=" + contentType);
+				FilingFormat filingFormat = ACCEPTED_CONTENT_TYPES.get(key);
+
+				if (filingUrl == null || maxPriority < filingFormat.getPriority()) {
+					maxPriority = filingFormat.getPriority();
+					// `contentType` and `format` query parameters are only added to indicate which content type is available at the URL
+					// It is not a functional use of the Companies House Documents API.
+					String contentType = URLEncoder.encode(key, StandardCharsets.UTF_8);
+					filingUrl = new FilingUrl(
+							filingFormat,
+							"%s/document/%s/content?contentType=%s".formatted(
+									config.documentApiBaseUrl(), documentId, contentType));
+				}
 			}
 		}
-		return filingUrls;
+		return filingUrl;
 	}
 
 	public CompaniesHouseFiling getFiling(String companyNumber, String filingId) throws JsonProcessingException {

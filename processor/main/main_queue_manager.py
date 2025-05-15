@@ -55,6 +55,7 @@ class MainQueueManager(QueueManager):
                 yield JobMessage(
                     download_url=message.message_attributes['DownloadUrl']['StringValue'],
                     filing_id=message.body,
+                    format=message.message_attributes['Format']['StringValue'],
                     message_id=message.message_id,
                     receipt_handle=message.receipt_handle,
                     registry_code=message.message_attributes['RegistryCode']['StringValue'],

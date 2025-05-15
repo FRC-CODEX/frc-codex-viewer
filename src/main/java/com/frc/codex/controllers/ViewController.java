@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.frc.codex.clients.companieshouse.FilingFormat;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.indexer.LambdaManager;
 import com.frc.codex.model.Filing;
@@ -34,6 +36,7 @@ import com.frc.codex.model.FilingPayload;
 import com.frc.codex.model.FilingResultRequest;
 import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.OimFormat;
+import com.frc.codex.model.RegistryCode;
 import com.frc.codex.oim.ReportPackageProvider;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.tools.RateLimiter;
@@ -100,6 +103,7 @@ public class ViewController {
 			CompletableFuture<InvokeResponse> invokeResponse = lambdaManager.invokeAsync(new FilingPayload(
 					filingId,
 					filing.getDownloadUrl(),
+					filing.getFormat(),
 					filing.getRegistryCode()
 			));
 			invokeFutures.put(filingId, invokeResponse);
@@ -169,6 +173,13 @@ public class ViewController {
 		}
 	}
 
+	private boolean filingSupportsPreview(Filing filing) {
+		if (Objects.equals(filing.getRegistryCode(), RegistryCode.FCA.getCode())) {
+			return true;
+		}
+		return !filing.getFormat().equals(FilingFormat.ZIP.getFormat());
+	}
+
 	@GetMapping("/view/{filingId}/public")
 	public void publicPage(
 			HttpServletResponse response,
@@ -177,6 +188,9 @@ public class ViewController {
 
 		UUID filingUuid = UUID.fromString(filingId);
 		Filing filing = databaseManager.getFiling(filingUuid);
+		if (!filingSupportsPreview(filing)) {
+			return;
+		}
 		String filingUrl = filing.getExternalViewUrl();
 
 		response.setStatus(HttpStatus.OK.value());
