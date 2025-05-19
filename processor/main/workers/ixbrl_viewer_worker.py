@@ -106,7 +106,7 @@ class IxbrlViewerWorker(Worker):
 
     def _get_plugins(self, job_message: JobMessage) -> list[str]:
         plugins = []
-        if job_message.registry_code != 'CH' or job_message.format != 'zip':
+        if job_message.registry_code != 'CH':
             plugins.append('inlineXbrlDocumentSet')
         plugins.extend([
             'ixbrl-viewer',
