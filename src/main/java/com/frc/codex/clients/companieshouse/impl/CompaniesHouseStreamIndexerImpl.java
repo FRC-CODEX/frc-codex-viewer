@@ -2,7 +2,6 @@ package com.frc.codex.clients.companieshouse.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -16,6 +15,7 @@ import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompany;
 import com.frc.codex.clients.companieshouse.CompaniesHouseFiling;
 import com.frc.codex.clients.companieshouse.CompaniesHouseStreamIndexer;
+import com.frc.codex.clients.companieshouse.FilingUrl;
 import com.frc.codex.clients.companieshouse.RateLimitException;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.model.NewFilingRequest;
@@ -87,11 +87,11 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 			return timepoint;
 		}
 		// Check if an IXBRL document is associated with the filing
-		Set<String> filingUrls = companiesHouseClient.getCompanyFilingUrls(
+		FilingUrl filingUrl = companiesHouseClient.getCompanyFilingUrl(
 				companiesHouseFiling.companyNumber(),
 				companiesHouseFiling.resourceId()
 		);
-		if (filingUrls.isEmpty()) {
+		if (filingUrl == null) {
 			LOG.debug("CH filing stream event: Skipped {}, no IXBRL documents.", companiesHouseFiling.transactionId());
 			return timepoint;
 		}
@@ -118,6 +118,7 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 				.externalFilingId(companiesHouseFiling.transactionId())
 				.externalViewUrl(companiesHouseFiling.downloadUrl())
 				.filingDate(companiesHouseFiling.date())
+				.format(filingUrl.getFilingFormat().getFormat())
 				.registryCode(RegistryCode.COMPANIES_HOUSE.getCode())
 				.streamTimepoint(companiesHouseFiling.timepoint())
 				.build();
