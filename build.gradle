@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.5'
+	id 'org.springframework.boot' version '3.5.0'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -17,23 +17,23 @@ repositories {
 }
 
 dependencies {
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:3.4.5"
-	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.4.5'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:3.5.0"
+	developmentOnly 'org.springframework.boot:spring-boot-devtools:3.5.0'
 	implementation 'com.google.guava:guava:33.4.8-jre'
 	implementation 'com.opencsv:opencsv:5.11'
 	implementation 'com.zaxxer:HikariCP:6.3.0'
 	implementation 'org.flywaydb:flyway-core:11.8.2'
 	implementation 'org.flywaydb:flyway-database-postgresql:11.8.2'
 	implementation 'org.postgresql:postgresql:42.7.5'
-    implementation 'org.springframework.boot:spring-boot-starter-security:3.4.5'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.4.5'
-	implementation 'org.springframework.boot:spring-boot-starter-web:3.4.5'
-	implementation 'software.amazon.awssdk:cloudwatch:2.31.45'
-	implementation 'software.amazon.awssdk:lambda:2.31.45'
-	implementation 'software.amazon.awssdk:netty-nio-client:2.31.45'
-	implementation 'software.amazon.awssdk:s3:2.31.45'
-	implementation 'software.amazon.awssdk:sqs:2.31.45'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.4.5'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.5.0'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.5.0'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.5.0'
+	implementation 'software.amazon.awssdk:cloudwatch:2.31.50'
+	implementation 'software.amazon.awssdk:lambda:2.31.50'
+	implementation 'software.amazon.awssdk:netty-nio-client:2.31.50'
+	implementation 'software.amazon.awssdk:s3:2.31.50'
+	implementation 'software.amazon.awssdk:sqs:2.31.50'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.5.0'
 }
 
 tasks.named('test') {
