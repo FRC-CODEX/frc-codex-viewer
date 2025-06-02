@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "govuk-frontend": "^5.10.1",
+    "govuk-frontend": "^5.10.2",
     "i18next": "^25.2.1",
     "i18next-browser-languagedetector": "^8.1.0",
     "ixbrl-viewer": "^1.4.66"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.1",
+    "@babel/core": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
     "@jest/globals": "^29.7.0",
     "babel-jest": "^29.7.0",
