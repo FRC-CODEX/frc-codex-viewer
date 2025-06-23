@@ -8,11 +8,11 @@
   "devDependencies": {
     "@babel/core": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
-    "@jest/globals": "^30.0.0",
-    "babel-jest": "^30.0.0",
+    "@jest/globals": "^30.0.2",
+    "babel-jest": "^30.0.2",
     "i18next-parser": "^9.3.0",
-    "jest": "^30.0.0",
-    "puppeteer": "^24.10.1",
+    "jest": "^30.0.2",
+    "puppeteer": "^24.10.2",
     "puppeteer-screen-recorder": "3.0.3"
   },
   "scripts": {
