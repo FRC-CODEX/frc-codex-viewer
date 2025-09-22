@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "govuk-frontend": "^5.11.2",
+    "govuk-frontend": "^5.12.0",
     "i18next": "^25.5.2",
     "i18next-browser-languagedetector": "^8.2.0",
     "ixbrl-viewer": "^1.4.75"
@@ -12,7 +12,7 @@
     "babel-jest": "^30.1.2",
     "i18next-parser": "^9.3.0",
     "jest": "^30.1.3",
-    "puppeteer": "^24.21.0",
+    "puppeteer": "^24.22.0",
     "puppeteer-screen-recorder": "3.0.3"
   },
   "scripts": {
