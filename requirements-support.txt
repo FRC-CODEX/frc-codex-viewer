@@ -1,2 +1,2 @@
-boto3==1.40.35
+boto3==1.40.40
 psycopg2-binary==2.9.10
