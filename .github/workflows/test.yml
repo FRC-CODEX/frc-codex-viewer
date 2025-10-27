@@ -44,7 +44,7 @@ jobs:
       - name: "Smoke Test"
         shell: bash
         run: ./dev/smoke-test.sh
-      - uses: actions/upload-artifact@v4.6.2
+      - uses: actions/upload-artifact@v5.0.0
         if: always()
         with:
           name: docker-logs
@@ -93,7 +93,7 @@ jobs:
       - name: "Test"
         shell: bash
         run: npm run test
-      - uses: actions/upload-artifact@v4.6.2
+      - uses: actions/upload-artifact@v5.0.0
         if: failure()
         with:
           name: puppeteer-artifacts
