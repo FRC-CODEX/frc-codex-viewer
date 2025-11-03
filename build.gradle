@@ -28,11 +28,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security:3.5.7'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.5.7'
 	implementation 'org.springframework.boot:spring-boot-starter-web:3.5.7'
-	implementation 'software.amazon.awssdk:cloudwatch:2.36.2'
-	implementation 'software.amazon.awssdk:lambda:2.36.2'
-	implementation 'software.amazon.awssdk:netty-nio-client:2.36.2'
-	implementation 'software.amazon.awssdk:s3:2.36.2'
-	implementation 'software.amazon.awssdk:sqs:2.36.2'
+	implementation 'software.amazon.awssdk:cloudwatch:2.37.3'
+	implementation 'software.amazon.awssdk:lambda:2.37.3'
+	implementation 'software.amazon.awssdk:netty-nio-client:2.37.3'
+	implementation 'software.amazon.awssdk:s3:2.37.3'
+	implementation 'software.amazon.awssdk:sqs:2.37.3'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.5.7'
 }
 
