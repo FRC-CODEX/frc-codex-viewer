@@ -7,6 +7,7 @@ FROM amazoncorretto:21
 
 COPY gradle/ /gradle/
 COPY build.gradle /build.gradle
+COPY gradle.properties /gradle.properties
 COPY gradlew /gradlew
 COPY settings.gradle /settings.gradle
 
