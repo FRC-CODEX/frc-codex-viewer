@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -209,8 +208,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		JsonNode metadataNode = OBJECT_MAPPER.readTree(metadata);
 		JsonNode resources = metadataNode.get("resources");
 		if (resources != null) {
-			for (Iterator<Map.Entry<String, JsonNode>> it = resources.fields(); it.hasNext(); ) {
-				Map.Entry<String, JsonNode> field = it.next();
+			for (Map.Entry<String, JsonNode> field : resources.properties()) {
 				String key = field.getKey();
 				if (IGNORED_CONTENT_TYPES.contains(key)) {
 					continue;
