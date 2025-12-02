@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { expect } from '@jest/globals';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder';
 import { Search } from "./page_objects/search";
 import { waitFor } from "./utils";
@@ -33,6 +33,7 @@ export class CodexPage {
     async buildPage() {
         // Launch the browser
         this.browser = await puppeteer.launch({
+            channel: 'chrome',
             headless: this.#isCi ? 'new' : false,
             args: [`--window-size=1440,900`],
             defaultViewport: { width: 1440, height: 821 },
