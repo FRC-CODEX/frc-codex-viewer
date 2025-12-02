@@ -1,7 +1,7 @@
 import { getElementByXpath, getProperty, getTextContent, waitFor } from './utils.js';
 import { CodexPage} from './codex_page.js';
 import { expect } from '@jest/globals';
-import { ElementHandle } from 'puppeteer';
+import { ElementHandle } from 'puppeteer-core';
 
 
 export class Element {

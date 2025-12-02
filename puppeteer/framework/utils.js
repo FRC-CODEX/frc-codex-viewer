@@ -1,4 +1,4 @@
-import { ElementHandle } from 'puppeteer';
+import { ElementHandle } from 'puppeteer-core';
 /**
  * Gets an element matching an XPath selector.
  *
