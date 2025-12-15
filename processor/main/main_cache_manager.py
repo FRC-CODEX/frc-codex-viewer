@@ -61,7 +61,7 @@ class MainCacheManager(CacheManager):
             self._s3_client.download_file(
                 self._bucket_name,
                 s3_path,
-                self._cache_zip_path
+                str(self._cache_zip_path)
             )
             self._cache_last_modified = cache_last_modified
         except ClientError as e:
