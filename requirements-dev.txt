@@ -1,8 +1,8 @@
-boto3-stubs==1.42.9
 flake8==7.3.0
-lxml-stubs==0.5.1
 mypy==1.19.0
 pytest==9.0.2
+types-boto3[s3,sqs]==1.42.9
+types-lxml==2025.11.25
 types-psycopg2==2.9.21.20251012
 types-requests==2.32.4.20250913
 
