@@ -1,8 +1,8 @@
 flake8==7.3.0
 mypy==1.19.1
 pytest==9.0.2
-types-boto3[s3,sqs]==1.42.17
-types-lxml==2025.11.25
+types-boto3[s3,sqs]==1.42.21
+types-lxml==2026.1.1
 types-psycopg2==2.9.21.20251012
 types-requests==2.32.4.20250913
 
