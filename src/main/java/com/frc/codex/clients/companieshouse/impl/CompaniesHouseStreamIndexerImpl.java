@@ -114,7 +114,7 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 		String downloadUrl = ("https://find-and-update.company-information.service.gov.uk" +
 				"/company/%s" +
 				"/filing-history/%s" +
-				"/document?format=%s&download=1")
+				"/document?format=%s&download=0")
 				.formatted(
 						companiesHouseFiling.companyNumber(),
 						companiesHouseFiling.transactionId(),
