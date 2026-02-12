@@ -13,11 +13,4 @@ public record CompaniesHouseFiling(
 		Long timepoint,
 		String transactionId
 ) {
-
-	public String downloadUrl() {
-		return "https://find-and-update.company-information.service.gov.uk/company/"
-				+ companyNumber + "/filing-history/" + transactionId
-				+ "/document?format=xhtml&download=1";
-	}
-
 }

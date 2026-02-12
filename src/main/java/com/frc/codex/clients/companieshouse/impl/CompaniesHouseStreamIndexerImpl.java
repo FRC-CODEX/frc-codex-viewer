@@ -110,15 +110,25 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 		CompaniesHouseCompany company = companiesHouseClient.getCompany(companiesHouseFiling.companyNumber());
 		String companyName = company.getCompanyName();
 
+		String format = filingUrl.getFilingFormat().getFormat();
+		String downloadUrl = ("https://find-and-update.company-information.service.gov.uk" +
+				"/company/%s" +
+				"/filing-history/%s" +
+				"/document?format=%s&download=0")
+				.formatted(
+						companiesHouseFiling.companyNumber(),
+						companiesHouseFiling.transactionId(),
+						format);
+
 		NewFilingRequest newFilingRequest = NewFilingRequest.builder()
 				.companyName(companyName)
 				.companyNumber(companiesHouseFiling.companyNumber())
 				.documentDate(documentDate)
-				.downloadUrl(companiesHouseFiling.downloadUrl())
+				.downloadUrl(downloadUrl)
 				.externalFilingId(companiesHouseFiling.transactionId())
-				.externalViewUrl(companiesHouseFiling.downloadUrl())
+				.externalViewUrl(downloadUrl)
 				.filingDate(companiesHouseFiling.date())
-				.format(filingUrl.getFilingFormat().getFormat())
+				.format(format)
 				.registryCode(RegistryCode.COMPANIES_HOUSE.getCode())
 				.streamTimepoint(companiesHouseFiling.timepoint())
 				.build();
