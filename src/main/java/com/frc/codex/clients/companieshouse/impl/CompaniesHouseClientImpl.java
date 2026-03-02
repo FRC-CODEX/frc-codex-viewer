@@ -22,9 +22,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompany;
 import com.frc.codex.clients.companieshouse.CompaniesHouseConfig;
@@ -100,7 +100,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		return companiesHouseExcludeCategories.contains(category);
 	}
 
-	public CompaniesHouseCompany getCompany(String companyNumber) throws JsonProcessingException {
+	public CompaniesHouseCompany getCompany(String companyNumber) throws JacksonException {
 		throwExceptionIfDisabled();
 		String json = information.get("/company/" + companyNumber);
 		JsonNode root = OBJECT_MAPPER.readTree(json);
@@ -111,7 +111,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 				.build();
 	}
 
-	public FilingUrl getCompanyFilingUrl(String companyNumber, String filingId) throws JsonProcessingException {
+	public FilingUrl getCompanyFilingUrl(String companyNumber, String filingId) throws JacksonException {
 		throwExceptionIfDisabled();
 		String json;
 		try {
@@ -132,7 +132,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		return information.get("/company/" + companyNumber + "/filing-history?category=accounts&items_per_page=" + itemsPerPage + "&start_index=" + startIndex);
 	}
 
-	public List<NewFilingRequest> getCompanyFilings(String companyNumber, String companyName) throws JsonProcessingException {
+	public List<NewFilingRequest> getCompanyFilings(String companyNumber, String companyName) throws JacksonException {
 		throwExceptionIfDisabled();
 		List<NewFilingRequest> filings = new ArrayList<>();
 		int index = 0;
@@ -190,7 +190,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		return filings;
 	}
 
-	private FilingUrl getCompanyFilingUrl(JsonNode node) throws JsonProcessingException {
+	private FilingUrl getCompanyFilingUrl(JsonNode node) throws JacksonException {
 		throwExceptionIfDisabled();
 		FilingUrl filingUrl = null;
 		int maxPriority = 0;
@@ -234,7 +234,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		return filingUrl;
 	}
 
-	public CompaniesHouseFiling getFiling(String companyNumber, String filingId) throws JsonProcessingException {
+	public CompaniesHouseFiling getFiling(String companyNumber, String filingId) throws JacksonException {
 		throwExceptionIfDisabled();
 		String json = information.get("/company/" + companyNumber + "/filing-history/" + filingId);
 		return parseFiling(json, companyNumber);
@@ -253,7 +253,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		return date;
 	}
 
-	public CompaniesHouseFiling parseFiling(String json, String companyNumber) throws JsonProcessingException {
+	public CompaniesHouseFiling parseFiling(String json, String companyNumber) throws JacksonException {
 		JsonNode data = OBJECT_MAPPER.readTree(json);
 
 		// Note: `action_date` is not a documented field but appears to consistently represent
@@ -275,7 +275,7 @@ public class CompaniesHouseClientImpl implements CompaniesHouseClient {
 		);
 	}
 
-	public CompaniesHouseFiling parseStreamedFiling(String json) throws JsonProcessingException {
+	public CompaniesHouseFiling parseStreamedFiling(String json) throws JacksonException {
 		JsonNode filing = OBJECT_MAPPER.readTree(json);
 
 		JsonNode event = filing.get("event");

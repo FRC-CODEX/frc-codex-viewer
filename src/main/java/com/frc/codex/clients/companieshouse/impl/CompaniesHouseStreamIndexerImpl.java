@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompany;
 import com.frc.codex.clients.companieshouse.CompaniesHouseFiling;
@@ -59,7 +59,7 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 	 * Processes a filing event from the Companies House streaming API.
 	 * Returns the timepoint of the event.
 	 */
-	private long handleFilingStreamEvent(CompaniesHouseFiling companiesHouseFiling) throws JsonProcessingException {
+	private long handleFilingStreamEvent(CompaniesHouseFiling companiesHouseFiling) throws JacksonException {
 		LOG.debug("CH filing stream event. Handling {}.", companiesHouseFiling.transactionId());
 		long timepoint = companiesHouseFiling.timepoint();
 		// Streaming event is a filing (should always be the case, but might as well check)

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
 import com.frc.codex.clients.companieshouse.CompaniesHouseCompaniesIndexer;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
@@ -51,7 +51,7 @@ public class CompaniesHouseCompaniesIndexerImpl implements CompaniesHouseCompani
 		return true;
 	}
 
-	public void runCompany(Company company, Supplier<Boolean> continueCallback) throws JsonProcessingException {
+	public void runCompany(Company company, Supplier<Boolean> continueCallback) throws JacksonException {
 		if (!continueCallback.get()) {
 			return;
 		}

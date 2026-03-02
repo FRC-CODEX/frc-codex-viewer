@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.util.StringUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.database.DatabaseManager;
@@ -125,7 +125,7 @@ public class AdminController extends BaseController {
 			HttpServletRequest request,
 			Model model,
 			@PathVariable("companyNumber") String companyNumber
-	) throws JsonProcessingException {
+	) throws JacksonException {
 		if (!authenticateAdmin(request)) {
 			return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
 		}

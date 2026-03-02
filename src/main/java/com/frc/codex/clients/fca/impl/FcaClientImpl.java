@@ -20,10 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.clients.fca.FcaClient;
 import com.frc.codex.clients.fca.FcaFiling;
@@ -136,7 +136,7 @@ public class FcaClientImpl implements FcaClient {
 		JsonNode root;
 		try {
 			root = mapper.readTree(response.getBody());
-		} catch (JsonProcessingException e) {
+		} catch (JacksonException e) {
 			throw new RuntimeException(e);
 		}
 		int processed = 0;
