@@ -1,6 +1,5 @@
 package com.frc.codex.indexer.impl;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
@@ -10,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.indexer.LambdaManager;
 import com.frc.codex.model.FilingPayload;
@@ -83,12 +82,8 @@ public class LambdaManagerImpl implements LambdaManager {
 	public FilingResultRequest parseResult(InvokeResponse invokeResponse) {
 		JsonNode root;
 		byte[] byteArray;
-		try {
-			byteArray = invokeResponse.payload().asByteArray();
-			root = OBJECT_MAPPER.readTree(byteArray);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		byteArray = invokeResponse.payload().asByteArray();
+		root = OBJECT_MAPPER.readTree(byteArray);
 		try {
 			return FilingResultRequest.builder()
 					.json(root)

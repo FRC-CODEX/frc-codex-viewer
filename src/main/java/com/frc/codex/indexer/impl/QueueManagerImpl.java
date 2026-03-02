@@ -1,6 +1,5 @@
 package com.frc.codex.indexer.impl;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -10,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import com.frc.codex.properties.FilingIndexProperties;
 import com.frc.codex.indexer.QueueManager;
@@ -139,11 +138,7 @@ public class QueueManagerImpl implements QueueManager {
 
 			for(Message message : messages) {
 				JsonNode root;
-				try {
-					root = OBJECT_MAPPER.readTree(message.body());
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
+				root = OBJECT_MAPPER.readTree(message.body());
 
 				FilingResultRequest filingResultRequest;
 				try {
