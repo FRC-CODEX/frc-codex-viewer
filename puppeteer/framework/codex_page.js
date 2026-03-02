@@ -76,7 +76,11 @@ export class CodexPage {
      */
     async tearDown() {
         console.log(this.#logMsgs.join('\n'));
-        await this.#recorder.stop();
+        try {
+            await this.#recorder.stop();
+        } catch (e) {
+            console.log(`Failed to stop recorder: ${e.message}`);
+        }
         await this.browser.close();
     }
 
