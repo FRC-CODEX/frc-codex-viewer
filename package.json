@@ -1,18 +1,18 @@
 {
   "dependencies": {
     "govuk-frontend": "^6.1.0",
-    "i18next": "^25.8.18",
+    "i18next": "^25.10.4",
     "i18next-browser-languagedetector": "^8.2.1",
     "ixbrl-viewer": "^1.4.89"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
     "@jest/globals": "^30.3.0",
     "babel-jest": "^30.3.0",
     "i18next-parser": "^9.4.0",
     "jest": "^30.3.0",
-    "puppeteer-core": "^24.39.1",
+    "puppeteer-core": "^24.40.0",
     "puppeteer-screen-recorder": "3.0.3"
   },
   "scripts": {
