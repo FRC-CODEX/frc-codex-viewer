@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '4.0.3'
+	id 'org.springframework.boot' version '4.0.4'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -17,24 +17,24 @@ repositories {
 }
 
 dependencies {
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:4.0.3"
-	developmentOnly 'org.springframework.boot:spring-boot-devtools:4.0.3'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:4.0.4"
+	developmentOnly 'org.springframework.boot:spring-boot-devtools:4.0.4'
 	implementation 'com.google.guava:guava:33.5.0-jre'
 	implementation 'com.opencsv:opencsv:5.12.0'
 	implementation 'com.zaxxer:HikariCP:7.0.2'
-	implementation 'org.flywaydb:flyway-core:12.1.0'
-	implementation 'org.flywaydb:flyway-database-postgresql:12.1.0'
+	implementation 'org.flywaydb:flyway-core:12.1.1'
+	implementation 'org.flywaydb:flyway-database-postgresql:12.1.1'
 	implementation 'org.postgresql:postgresql:42.7.10'
-    implementation 'org.springframework.boot:spring-boot-starter-security:4.0.3'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:4.0.3'
-	implementation 'org.springframework.boot:spring-boot-starter-web:4.0.3'
-	implementation 'software.amazon.awssdk:cloudwatch:2.42.13'
-	implementation 'software.amazon.awssdk:lambda:2.42.13'
-	implementation 'software.amazon.awssdk:netty-nio-client:2.42.13'
-	implementation 'software.amazon.awssdk:s3:2.42.13'
-	implementation 'software.amazon.awssdk:sqs:2.42.13'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test:4.0.3'
-	testImplementation 'org.springframework.boot:spring-boot-resttestclient:4.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security:4.0.4'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:4.0.4'
+	implementation 'org.springframework.boot:spring-boot-starter-web:4.0.4'
+	implementation 'software.amazon.awssdk:cloudwatch:2.42.18'
+	implementation 'software.amazon.awssdk:lambda:2.42.18'
+	implementation 'software.amazon.awssdk:netty-nio-client:2.42.18'
+	implementation 'software.amazon.awssdk:s3:2.42.18'
+	implementation 'software.amazon.awssdk:sqs:2.42.18'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:4.0.4'
+	testImplementation 'org.springframework.boot:spring-boot-resttestclient:4.0.4'
 }
 
 tasks.named('test') {
