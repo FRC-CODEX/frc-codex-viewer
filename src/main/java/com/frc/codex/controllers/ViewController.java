@@ -6,6 +6,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -85,7 +87,16 @@ public class ViewController {
 	}
 
 	public boolean isViewerUnavailable(Filing filing) {
-		return FilingStatus.FAILED.toString().equals(filing.getStatus()) || FilingStatus.DELETED.toString().equals(filing.getStatus());
+		if (FilingStatus.DELETED.toString().equals(filing.getStatus())) {
+			return true;
+		}
+		if (filing.getStatus().equals(FilingStatus.FAILED.toString())) {
+			Instant resultInstant = filing.getResultTimestamp().toInstant();
+			Instant now = Instant.now();
+			Duration age = Duration.between(resultInstant, now);
+			return age.toMinutes() < this.properties.allowRetryMinutes();
+		}
+		return false;
 	}
 
 	private ModelAndView loadingResult(Filing filing) {
