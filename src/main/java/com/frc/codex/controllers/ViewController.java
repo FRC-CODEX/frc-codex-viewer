@@ -84,6 +84,10 @@ public class ViewController {
 
 	}
 
+	public boolean isViewerUnavailable(Filing filing) {
+		return FilingStatus.FAILED.toString().equals(filing.getStatus()) || FilingStatus.DELETED.toString().equals(filing.getStatus());
+	}
+
 	private ModelAndView loadingResult(Filing filing) {
 		return new ModelAndView("redirect:/view/" + filing.getFilingId() + "/loading");
 	}
@@ -154,7 +158,7 @@ public class ViewController {
 			}
 		}
 		if (
-				FilingStatus.isViewerUnavailable(filing.getStatus()) ||
+				isViewerUnavailable(filing) ||
 				filing.getFilename() == null ||
 				filing.getOimDirectory() == null
 		) {
@@ -259,7 +263,7 @@ public class ViewController {
 			// Already completed, redirect directly to viewer.
 			return viewerResult(filing.getFilingId(), filing.getStubViewerUrl());
 		}
-		if (FilingStatus.isViewerUnavailable(filing.getStatus())) {
+		if (isViewerUnavailable(filing)) {
 			// Generation failed, show error message.
 			return unavailableResult("Sorry, this viewer is currently unavailable.");
 		}
