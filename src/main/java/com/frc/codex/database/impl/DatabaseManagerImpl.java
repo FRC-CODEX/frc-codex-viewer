@@ -643,6 +643,7 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 					.documentDate(getLocalDateTime(
 							resultSet.getTimestamp("document_date", TIMEZONE_UTC)
 					))
+					.resultTimestamp(resultSet.getTimestamp("result_timestamp"))
 					.streamTimepoint(resultSet.getLong("stream_timepoint"))
 					.oimDirectory(resultSet.getString("oim_directory"))
 					.stubViewerUrl(resultSet.getString("stub_viewer_url"))

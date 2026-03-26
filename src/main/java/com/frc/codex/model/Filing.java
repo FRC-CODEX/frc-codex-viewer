@@ -25,6 +25,7 @@ public class Filing {
 	private final LocalDateTime filingDate;
 	private final String format;
 	private final LocalDateTime documentDate;
+	private final Timestamp resultTimestamp;
 	private final Long streamTimepoint;
 	private final String error;
 	private final String logs;
@@ -47,6 +48,7 @@ public class Filing {
 		this.filingDate = b.filingDate;
 		this.format = b.format;
 		this.documentDate = b.documentDate;
+		this.resultTimestamp = b.resultTimestamp;
 		this.streamTimepoint = b.streamTimepoint;
 		this.error = b.error;
 		this.logs = b.logs;
@@ -136,6 +138,8 @@ public class Filing {
 		return documentDate;
 	}
 
+	public Timestamp getResultTimestamp() { return resultTimestamp; }
+
 	public Long getStreamTimepoint() {
 		return streamTimepoint;
 	}
@@ -207,6 +211,7 @@ public class Filing {
 		private LocalDateTime filingDate;
 		private String format;
 		private LocalDateTime documentDate;
+		private Timestamp resultTimestamp;
 		private Long streamTimepoint;
 		private String error;
 		private String logs;
@@ -286,6 +291,11 @@ public class Filing {
 
 		public Builder documentDate(LocalDateTime documentDate) {
 			this.documentDate = documentDate;
+			return this;
+		}
+
+		public Builder resultTimestamp(Timestamp resultTimestamp) {
+			this.resultTimestamp = resultTimestamp;
 			return this;
 		}
 
