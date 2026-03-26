@@ -2,4 +2,4 @@ arelle-release==2.39.2
 boto3==1.42.73
 filelock==3.25.2
 ixbrl-viewer==1.4.89
-requests==2.32.5
+requests==2.33.0
