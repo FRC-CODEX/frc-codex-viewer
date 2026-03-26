@@ -6,6 +6,7 @@ public interface FilingIndexProperties {
 	String adminCookieName();
 	boolean adminEnabled();
 	String adminKey();
+	long allowRetryMinutes();
 	String awsLambdaFunctionName();
 	long awsLambdaTimeoutSeconds();
 	String companiesHouseDocumentApiBaseUrl();

@@ -22,6 +22,10 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return "XYZ";
 	}
 
+	public long allowRetryMinutes() {
+		return 60 * 24;
+	}
+
 	public String awsLambdaFunctionName() {
 		return "function";
 	}
