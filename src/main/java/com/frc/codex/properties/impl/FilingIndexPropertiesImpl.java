@@ -19,6 +19,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String ADMIN_COOKIE_NAME = "ADMIN_COOKIE_NAME";
 	private static final String ADMIN_ENABLED = "ADMIN_ENABLED";
 	private static final String ADMIN_KEY = "ADMIN_KEY";
+	private static final String ALLOW_RETRY_MINUTES = "ALLOW_RETRY_MINUTES";
 	private static final String AWS_LAMBDA_FUNCTION_NAME = "AWS_LAMBDA_FUNCTION_NAME";
 	private static final String AWS_LAMBDA_TIMEOUT_SECONDS = "AWS_LAMBDA_TIMEOUT_SECONDS";
 	private static final String COMPANIES_HOUSE_DOCUMENT_API_BASE_URL = "COMPANIES_HOUSE_DOCUMENT_API_BASE_URL";
@@ -62,6 +63,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final String adminCookieName;
 	private final boolean adminEnabled;
 	private final String adminKey;
+	private final long allowRetryMinutes;
 	private final String companiesHouseDocumentApiBaseUrl;
 	private final String companiesHouseInformationApiBaseUrl;
 	private final int companiesHouseRapidRateLimit;
@@ -108,6 +110,8 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		adminCookieName = requireNonNull(getEnv(ADMIN_COOKIE_NAME, "frc_codex_admin_key"));
 		adminEnabled = Boolean.parseBoolean(requireNonNull(getEnv(ADMIN_ENABLED, "false")));
 		adminKey = requireNonNull(getEnv(ADMIN_KEY, ""));
+
+		allowRetryMinutes = Long.parseLong(requireNonNull(getEnv(ALLOW_RETRY_MINUTES, "1440"))); // 24 hours
 
 		awsLambdaFunctionName = requireNonNull(getEnv(AWS_LAMBDA_FUNCTION_NAME, "function"));
 		awsLambdaTimeoutSeconds = Long.parseLong(requireNonNull(getEnv(AWS_LAMBDA_TIMEOUT_SECONDS, "300")));
@@ -228,6 +232,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public String adminKey() {
 		return adminKey;
+	}
+
+	public long allowRetryMinutes() {
+		return allowRetryMinutes;
 	}
 
 	public String awsLambdaFunctionName() {

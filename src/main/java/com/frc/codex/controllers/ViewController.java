@@ -6,6 +6,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -84,6 +87,23 @@ public class ViewController {
 
 	}
 
+	public boolean isViewerUnavailable(Filing filing) {
+		if (FilingStatus.DELETED.toString().equals(filing.getStatus())) {
+			return true;
+		}
+		if (filing.getStatus().equals(FilingStatus.FAILED.toString())) {
+			Timestamp resultTimestamp = filing.getResultTimestamp();
+			if (resultTimestamp == null) {
+				return false;
+			}
+			Instant resultInstant = resultTimestamp.toInstant();
+			Instant now = Instant.now();
+			Duration age = Duration.between(resultInstant, now);
+			return age.toMinutes() < this.properties.allowRetryMinutes();
+		}
+		return false;
+	}
+
 	private ModelAndView loadingResult(Filing filing) {
 		return new ModelAndView("redirect:/view/" + filing.getFilingId() + "/loading");
 	}
@@ -154,7 +174,7 @@ public class ViewController {
 			}
 		}
 		if (
-				FilingStatus.isViewerUnavailable(filing.getStatus()) ||
+				isViewerUnavailable(filing) ||
 				filing.getFilename() == null ||
 				filing.getOimDirectory() == null
 		) {
@@ -259,7 +279,7 @@ public class ViewController {
 			// Already completed, redirect directly to viewer.
 			return viewerResult(filing.getFilingId(), filing.getStubViewerUrl());
 		}
-		if (FilingStatus.isViewerUnavailable(filing.getStatus())) {
+		if (isViewerUnavailable(filing)) {
 			// Generation failed, show error message.
 			return unavailableResult("Sorry, this viewer is currently unavailable.");
 		}
