@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
@@ -91,7 +92,11 @@ public class ViewController {
 			return true;
 		}
 		if (filing.getStatus().equals(FilingStatus.FAILED.toString())) {
-			Instant resultInstant = filing.getResultTimestamp().toInstant();
+			Timestamp resultTimestamp = filing.getResultTimestamp();
+			if (resultTimestamp == null) {
+				return false;
+			}
+			Instant resultInstant = resultTimestamp.toInstant();
 			Instant now = Instant.now();
 			Duration age = Duration.between(resultInstant, now);
 			return age.toMinutes() < this.properties.allowRetryMinutes();
