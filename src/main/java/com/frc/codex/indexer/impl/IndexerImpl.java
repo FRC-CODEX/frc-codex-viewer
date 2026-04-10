@@ -140,7 +140,7 @@ public class IndexerImpl implements Indexer {
 	 * Indexes Companies House filings from captured filing stream events.
 	 * Processes in batches to allow for other tasks to run.
 	 */
-	@Scheduled(initialDelay = 30, fixedDelay = 30, timeUnit = TimeUnit.SECONDS)
+	@Scheduled(initialDelay = 90, fixedDelay = 30, timeUnit = TimeUnit.SECONDS)
 	public void indexCompaniesHouseFilings() throws IOException {
 		Supplier<Boolean> continueCallback = () -> {
 			if (!companiesHouseClient.isEnabled()) {
