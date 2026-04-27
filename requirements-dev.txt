@@ -1,9 +1,9 @@
 flake8==7.3.0
-mypy==1.20.1
+mypy==1.20.2
 pytest==9.0.3
-types-boto3[s3,sqs]==1.42.91
+types-boto3[s3,sqs]==1.42.96
 types-lxml==2026.2.16
-types-psycopg2==2.9.21.20260408
+types-psycopg2==2.9.21.20260422
 types-requests==2.33.0.20260408
 
 -r requirements.txt
