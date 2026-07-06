@@ -40,7 +40,7 @@ export class CodexPage {
         });
         const pages = await this.browser.pages();
         this.page = pages[0];
-        this.#recorder = new PuppeteerScreenRecorder(this.page);
+        this.#recorder = new PuppeteerScreenRecorder(this.page, { followNewTab: false });
         this.search = new Search(this);
 
         // Set up the video recording
