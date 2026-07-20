@@ -103,12 +103,18 @@ public class FcaClientImpl implements FcaClient {
 		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 		String body = buildJson(sinceDate, page);
 		HttpEntity<String> entity = new HttpEntity<>(body, headers);
-		ResponseEntity<String> response = restTemplate.exchange(
-				this.searchApiUrl,
-				HttpMethod.POST,
-				entity,
-				String.class
-		);
+		ResponseEntity<String> response;
+		try {
+			response = restTemplate.exchange(
+					this.searchApiUrl,
+					HttpMethod.POST,
+					entity,
+					String.class
+			);
+		} catch (Exception e) {
+			LOG.error("FCA search request failed: POST {}", this.searchApiUrl, e);
+			throw e;
+		}
 		int processed = processPage(response, filings);
 		return processed >= this.pageSize;
 	}
