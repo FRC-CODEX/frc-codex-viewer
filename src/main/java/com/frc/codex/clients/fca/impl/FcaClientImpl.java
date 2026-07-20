@@ -59,7 +59,7 @@ public class FcaClientImpl implements FcaClient {
 		// since filings are not guaranteed to be added to the index in "submission_date"
 		// order, but attempting to filter by "last_updated_date" yields "Unable to search the data".
 		node.put("sort", "submitted_date");
-		node.put("sortorder", "desc");
+		node.put("sortorder", "asc");
 		ObjectNode criteriaObj = node.putObject("criteriaObj");
 		ObjectNode criteria = criteriaObj.putArray("criteria").addObject();
 		criteria.put("name", "tag_esef");
