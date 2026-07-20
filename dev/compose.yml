@@ -26,7 +26,7 @@ services:
       DB_URL: "jdbc:postgresql://postgres.localhost:5432/frc_codex"
       DB_USERNAME: "frc_codex"
       FCA_DATA_API_BASE_URL: "https://data.fca.org.uk/artefacts/"
-      FCA_SEARCH_API_URL: "https://api.data.fca.org.uk/search?index=fca-nsm-searchdata"
+      FCA_SEARCH_API_URL: "https://api.data.fca.org.uk/search?index=nsm-search"
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,address=*:8180,suspend=n"
       METRIC_NAMESPACE: 'frc-codex'
       S3_INDEXER_UPLOADS_BUCKET_NAME: "frc-codex-indexer-uploads"

@@ -2,8 +2,11 @@ package com.frc.codex.controllers;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -270,7 +273,9 @@ public class AdminController extends BaseController {
 			}
 			filingsReady = filings.size() >= RegistryCode.values().length;
 			if (!filingsReady) {
-				LOG.info("Waiting for filings to be ready for smoke testing...");
+				Set<RegistryCode> missing = new HashSet<>(Arrays.asList(RegistryCode.values()));
+				missing.removeAll(filings.keySet());
+				LOG.info("Waiting for PENDING filings from registries: {}", missing);
 				Thread.sleep(5000);
 			}
 		}

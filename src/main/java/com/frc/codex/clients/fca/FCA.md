@@ -6,7 +6,7 @@ Instead, we can recreate the requests generated on [their search page](https://d
 
 Example search request:
 ```
-POST https://api.data.fca.org.uk/search?index=fca-nsm-searchdata
+POST https://api.data.fca.org.uk/search?index=nsm-search
 {
   "from": 0,
   "size": 50,
@@ -60,7 +60,7 @@ Example response:
     "max_score": null,
     "hits": [
       {
-        "_index": "fca-nsm-searchdata",
+        "_index": "nsm-search",
         "_type": "_doc",
         "_id": "NI-000103799-0",
         "_score": null,
