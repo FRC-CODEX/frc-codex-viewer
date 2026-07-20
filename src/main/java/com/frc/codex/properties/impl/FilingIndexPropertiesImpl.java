@@ -138,7 +138,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		enablePreprocessing = Boolean.parseBoolean(requireNonNull(getEnv(ENABLE_PREPROCESSING, "false")));
 
 		fcaDataApiBaseUrl = requireNonNull(getEnv(FCA_DATA_API_BASE_URL));
-		fcaPastDays = Integer.parseInt(getEnv(FCA_PAST_DAYS, "0"));
+		fcaPastDays = Integer.parseInt(getEnv(FCA_PAST_DAYS, "-1"));
 		fcaSearchApiUrl = requireNonNull(getEnv(FCA_SEARCH_API_URL));
 
 		// Limits must be explicitly overridden

@@ -55,8 +55,11 @@ public class FcaClientImpl implements FcaClient {
 		ObjectNode node = new ObjectMapper().createObjectNode();
 		node.put("from", this.pageSize * (page - 1));
 		node.put("size", this.pageSize);
+		// Filtering/sorting based on "last_updated_date" would be preferred
+		// since filings are not guaranteed to be added to the index in "submission_date"
+		// order, but attempting to filter by "last_updated_date" yields "Unable to search the data".
 		node.put("sort", "submitted_date");
-		node.put("sortorder", "desc");
+		node.put("sortorder", "asc");
 		ObjectNode criteriaObj = node.putObject("criteriaObj");
 		ObjectNode criteria = criteriaObj.putArray("criteria").addObject();
 		criteria.put("name", "tag_esef");
