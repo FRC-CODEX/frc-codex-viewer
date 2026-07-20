@@ -342,10 +342,16 @@ public class IndexerImpl implements Indexer {
 		if (databaseManager.checkRegistryLimit(RegistryCode.FCA, properties.filingLimitFca())) {
 			return;
 		}
-		LocalDateTime fcaStartDate = properties.fcaPastDays() <= 0 ? null :
-				LocalDateTime.now().minusDays(properties.fcaPastDays());
-		LocalDateTime latestSubmittedDate = databaseManager.getLatestFcaFilingDate(fcaStartDate);
-		List<FcaFiling> filings = fcaClient.fetchAllSinceDate(latestSubmittedDate);
+		LocalDateTime latestSubmittedDate = databaseManager.getLatestFcaFilingDate(LocalDateTime.now());
+		// The sorting/filtering mechanism we use to retrieve the latest FCA filings
+		// attempts to capture all filings sequentially by filtering/sorting by
+		// submission date. Unfortunately, filings are not guaranteed to be added
+		// to the FCA index in submission order, so past entries may be added after a
+		// more recent submission date has already been captured, causing missed filings.
+		// To reduce the likelihood of missed filings (which are most often added only
+		// minutes/hours out of order), add an overlap period on each indexing run.
+		LocalDateTime overlapDate = latestSubmittedDate.minusDays(this.properties.fcaPastDays());
+		List<FcaFiling> filings = fcaClient.fetchAllSinceDate(overlapDate);
 		for (FcaFiling filing : filings) {
 			NewFilingRequest newFilingRequest = NewFilingRequest.builder()
 					.companyName(filing.companyName())
