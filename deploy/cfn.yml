@@ -445,7 +445,7 @@ Resources:
         - Name: "FCA_DATA_API_BASE_URL"
           Value: "https://data.fca.org.uk/artefacts/"
         - Name: "FCA_SEARCH_API_URL"
-          Value: "https://api.data.fca.org.uk/search?index=fca-nsm-searchdata"
+          Value: "https://api.data.fca.org.uk/search?index=nsm-search"
         - Name: "FILING_LIMIT_COMPANIES_HOUSE"
           Value: !Ref CompaniesHouseFilingLimit
         - Name: "FILING_LIMIT_FCA"
