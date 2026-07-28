@@ -3,7 +3,7 @@ WORKDIR /usr/app
 COPY package.json ./
 RUN npm install --omit=dev
 
-FROM amazoncorretto:25
+FROM amazoncorretto:26
 
 # Install findutils (provides xargs) which is required by gradlew
 RUN yum install -y findutils && \
