@@ -1,5 +1,16 @@
 version: 2
 updates:
+  - package-ecosystem: "docker"
+    cooldown:
+      default-days: 1
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
   - package-ecosystem: "github-actions"
     cooldown:
       default-days: 1
@@ -57,14 +68,3 @@ updates:
         update-types:
           - "version-update:semver-major"
           - "version-update:semver-minor"
-  - package-ecosystem: "docker"
-    cooldown:
-      default-days: 1
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "python"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
