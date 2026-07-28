@@ -1,10 +1,10 @@
 version: 2
 updates:
-  - package-ecosystem: "docker"
+  - package-ecosystem: docker
     directories:
       - /**
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       docker-dependencies:
         patterns:
@@ -12,7 +12,7 @@ updates:
         update-types:
           - minor
           - patch
-  - package-ecosystem: "github-actions"
+  - package-ecosystem: github-actions
     directories:
       - /**
     schedule:
@@ -24,13 +24,13 @@ updates:
         update-types:
           - minor
           - patch
-  - package-ecosystem: "gradle"
+  - package-ecosystem: gradle
     cooldown:
       default-days: 3
     directories:
       - /**
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       gradle-dependencies:
         patterns:
@@ -38,7 +38,7 @@ updates:
         update-types:
           - minor
           - patch
-  - package-ecosystem: "npm"
+  - package-ecosystem: npm
     cooldown:
       default-days: 3
       exclude:
@@ -47,7 +47,7 @@ updates:
     directories:
       - /**
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       npm-dependencies:
         patterns:
@@ -56,14 +56,14 @@ updates:
           - minor
           - patch
     ignore:
-      - dependency-name: "ixbrl-viewer"
+      - dependency-name: ixbrl-viewer
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
-      - dependency-name: "puppeteer-core"
+          - version-update:semver-major
+          - version-update:semver-minor
+      - dependency-name: puppeteer-core
         versions:
           - ">=25"
-      - dependency-name: "puppeteer-screen-recorder"
+      - dependency-name: puppeteer-screen-recorder
         versions:
           - "3.0.5"
           - "3.0.6"
@@ -85,7 +85,7 @@ updates:
           - minor
           - patch
     ignore:
-      - dependency-name: "ixbrl-viewer"
+      - dependency-name: ixbrl-viewer
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
+          - version-update:semver-major
+          - version-update:semver-minor
