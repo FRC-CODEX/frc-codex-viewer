@@ -7,11 +7,13 @@ updates:
       - /**
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "python"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+    groups:
+      docker-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
   - package-ecosystem: "github-actions"
     cooldown:
       default-days: 1
@@ -23,6 +25,9 @@ updates:
       gha-dependencies:
         patterns:
           - "*"
+        update-types:
+          - minor
+          - patch
   - package-ecosystem: "gradle"
     cooldown:
       default-days: 1
@@ -34,6 +39,9 @@ updates:
       gradle-dependencies:
         patterns:
           - "*"
+        update-types:
+          - minor
+          - patch
   - package-ecosystem: "npm"
     cooldown:
       default-days: 1
@@ -45,6 +53,9 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
+        update-types:
+          - minor
+          - patch
     ignore:
       - dependency-name: "ixbrl-viewer"
         update-types:
@@ -68,6 +79,9 @@ updates:
       python-dependencies:
         patterns:
           - "*"
+        update-types:
+          - minor
+          - patch
     ignore:
       - dependency-name: "ixbrl-viewer"
         update-types:
