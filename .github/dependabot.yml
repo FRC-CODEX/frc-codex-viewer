@@ -1,70 +1,91 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    cooldown:
-      default-days: 1
-    directory: "/"
+  - package-ecosystem: docker
+    directories:
+      - /**
+    schedule:
+      interval: weekly
+    groups:
+      docker-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+  - package-ecosystem: github-actions
+    directories:
+      - /**
     schedule:
       interval: weekly
     groups:
       gha-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: "gradle"
+        update-types:
+          - minor
+          - patch
+  - package-ecosystem: gradle
     cooldown:
-      default-days: 1
-    directory: "/"
+      default-days: 3
+    directories:
+      - /**
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       gradle-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: "npm"
+        update-types:
+          - minor
+          - patch
+  - package-ecosystem: npm
     cooldown:
-      default-days: 1
-    directory: "/"
+      default-days: 3
+      exclude:
+        - govuk-frontend
+        - ixbrl-viewer
+    directories:
+      - /**
     schedule:
-      interval: "weekly"
+      interval: weekly
     groups:
       npm-dependencies:
         patterns:
           - "*"
-    ignore:
-      - dependency-name: "ixbrl-viewer"
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
-      - dependency-name: "puppeteer-core"
+          - minor
+          - patch
+    ignore:
+      - dependency-name: ixbrl-viewer
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
+      - dependency-name: puppeteer-core
         versions:
           - ">=25"
-      - dependency-name: "puppeteer-screen-recorder"
+      - dependency-name: puppeteer-screen-recorder
         versions:
           - "3.0.5"
           - "3.0.6"
   - package-ecosystem: pip
     cooldown:
-      default-days: 1
-    directory: "/"
+      default-days: 3
+      exclude:
+        - arelle-release
+        - ixbrl-viewer
+    directories:
+      - /**
     schedule:
       interval: weekly
     groups:
       python-dependencies:
         patterns:
           - "*"
-    ignore:
-      - dependency-name: "ixbrl-viewer"
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
-  - package-ecosystem: "docker"
-    cooldown:
-      default-days: 1
-    directory: "/"
-    schedule:
-      interval: "weekly"
+          - minor
+          - patch
     ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "python"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: ixbrl-viewer
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
