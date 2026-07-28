@@ -1,8 +1,6 @@
 version: 2
 updates:
   - package-ecosystem: "docker"
-    cooldown:
-      default-days: 1
     directories:
       - /**
     schedule:
@@ -15,8 +13,6 @@ updates:
           - minor
           - patch
   - package-ecosystem: "github-actions"
-    cooldown:
-      default-days: 1
     directories:
       - /**
     schedule:
@@ -30,7 +26,7 @@ updates:
           - patch
   - package-ecosystem: "gradle"
     cooldown:
-      default-days: 1
+      default-days: 3
     directories:
       - /**
     schedule:
@@ -44,7 +40,10 @@ updates:
           - patch
   - package-ecosystem: "npm"
     cooldown:
-      default-days: 1
+      default-days: 3
+      exclude:
+        - govuk-frontend
+        - ixbrl-viewer
     directories:
       - /**
     schedule:
@@ -70,7 +69,10 @@ updates:
           - "3.0.6"
   - package-ecosystem: pip
     cooldown:
-      default-days: 1
+      default-days: 3
+      exclude:
+        - arelle-release
+        - ixbrl-viewer
     directories:
       - /**
     schedule:
