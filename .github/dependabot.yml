@@ -56,10 +56,6 @@ updates:
           - minor
           - patch
     ignore:
-      - dependency-name: ixbrl-viewer
-        update-types:
-          - version-update:semver-major
-          - version-update:semver-minor
       - dependency-name: puppeteer-core
         versions:
           - ">=25"
@@ -84,8 +80,3 @@ updates:
         update-types:
           - minor
           - patch
-    ignore:
-      - dependency-name: ixbrl-viewer
-        update-types:
-          - version-update:semver-major
-          - version-update:semver-minor
