@@ -1,5 +1,6 @@
 package com.frc.codex.database.impl;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.model.StreamEvent;
+import com.frc.codex.model.StreamEventsStats;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 
 @Component
@@ -109,8 +111,8 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 		return null;
 	}
 
-	public long getStreamEventsCount() {
-		return 0;
+	public StreamEventsStats getStreamEventsStats() {
+		return new StreamEventsStats(0, 0);
 	}
 
 	public void resetFiling(UUID filingId) { }
@@ -120,6 +122,12 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 	}
 
 	public void updateFilingStatus(UUID filingId, String status) { }
+
+	public Instant getLastStreamEventReceivedDate() {
+		return null;
+	}
+
+	public void updateLastStreamEventReceivedDate(Instant receivedDate) { }
 
 	public Set<String> getCompaniesCompanyNumbers() {
 		return Set.of();

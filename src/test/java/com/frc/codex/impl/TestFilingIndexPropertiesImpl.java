@@ -170,7 +170,15 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return null;
 	}
 
+	public String streamEventsHeadAgeMetric() {
+		return null;
+	}
+
 	public String streamEventsMetric() {
+		return null;
+	}
+
+	public String streamReceivedEventsAgeMetric() {
 		return null;
 	}
 

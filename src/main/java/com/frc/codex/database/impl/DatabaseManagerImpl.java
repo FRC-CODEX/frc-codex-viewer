@@ -39,6 +39,7 @@ import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.model.StreamEvent;
+import com.frc.codex.model.StreamEventsStats;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.google.common.collect.ImmutableList;
@@ -328,6 +329,21 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		}
 	}
 
+	public Instant getLastStreamEventReceivedDate() {
+		try (Connection connection = getInitializedConnection(true)) {
+			String sql = "SELECT last_received_date FROM stream_receipts WHERE id = 1";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.next()) {
+				return null;
+			}
+			Timestamp lastReceivedDate = resultSet.getTimestamp(1);
+			return lastReceivedDate == null ? null : lastReceivedDate.toInstant();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public LocalDateTime getLatestFcaFilingDate(LocalDateTime defaultDate) {
 		try (Connection connection = getInitializedConnection(true)) {
 			String sql = "SELECT MAX(filing_date) FROM filings WHERE registry_code = 'FCA'";
@@ -474,13 +490,20 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		}
 	}
 
-	public long getStreamEventsCount() {
+	public StreamEventsStats getStreamEventsStats() {
 		try (Connection connection = getInitializedConnection(true)) {
-			String sql = "SELECT COUNT(*) FROM stream_events;";
+			String sql = """
+					SELECT
+						COUNT(*),
+						COALESCE(EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - MIN(created_date)))::BIGINT, 0)
+					FROM stream_events;""";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
-			return resultSet.getLong(1);
+			return new StreamEventsStats(
+					resultSet.getLong(1),
+					resultSet.getLong(2)
+			);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -506,6 +529,20 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 	private Connection getInitializedConnection(boolean readOnly) throws SQLException {
 		DataSource dataSource = readOnly ? readDataSource : writeDataSource;
 		return dataSource.getConnection();
+	}
+
+	public void updateLastStreamEventReceivedDate(Instant receivedDate) {
+		try (Connection connection = getInitializedConnection(false)) {
+			String sql = """
+					INSERT INTO stream_receipts (id, last_received_date) VALUES (1, ?)
+					ON CONFLICT (id) DO UPDATE SET last_received_date = EXCLUDED.last_received_date;""";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setTimestamp(1, Timestamp.from(receivedDate));
+			statement.executeUpdate();
+			connection.commit();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void updateFilingStatus(UUID filingId, String status) {
