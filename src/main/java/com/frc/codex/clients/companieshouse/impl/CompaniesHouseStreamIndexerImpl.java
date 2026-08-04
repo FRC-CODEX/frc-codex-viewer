@@ -178,7 +178,7 @@ public class CompaniesHouseStreamIndexerImpl implements CompaniesHouseStreamInde
 				}
 				throw e;
 			} catch (Exception e) {
-				LOG.error("Failed to handle CH filing stream event.", e);
+				LOG.error("Failed to handle CH filing stream event: {}", streamEvent.getStreamEventId(), e);
 				break;
 			}
 
