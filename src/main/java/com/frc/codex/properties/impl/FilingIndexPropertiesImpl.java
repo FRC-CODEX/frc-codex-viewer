@@ -58,6 +58,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String SQS_RESULTS_QUEUE_NAME = "SQS_RESULTS_QUEUE_NAME";
 	private static final String STREAM_DISCOVERY_DELAY_METRIC = "STREAM_DISCOVERY_DELAY_METRIC";
 	private static final String STREAM_EVENTS_METRIC = "STREAM_EVENTS_METRIC";
+	private static final String STREAM_RECEIVED_EVENTS_AGE_METRIC = "STREAM_RECEIVED_EVENTS_AGE_METRIC";
 	private static final String SUPPORT_EMAIL = "SUPPORT_EMAIL";
 	private static final String UNPROCESSED_COMPANIES_LIMIT = "UNPROCESSED_COMPANIES_LIMIT";
 	private final String adminCookieName;
@@ -99,6 +100,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final String sqsResultsQueueName;
 	private final String streamDiscoveryDelayMetric;
 	private final String streamEventsMetric;
+	private final String streamReceivedEventsAgeMetric;
 	private final String supportEmail;
 	private final int unprocessedCompaniesLimit;
 	private final String httpUsername;
@@ -161,6 +163,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 		streamDiscoveryDelayMetric = requireNonNull(getEnv(STREAM_DISCOVERY_DELAY_METRIC, null));
 		streamEventsMetric = requireNonNull(getEnv(STREAM_EVENTS_METRIC, null));
+		streamReceivedEventsAgeMetric = requireNonNull(getEnv(STREAM_RECEIVED_EVENTS_AGE_METRIC, null));
 
 		supportEmail = getEnv(SUPPORT_EMAIL, null);
 
@@ -385,6 +388,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public String streamEventsMetric() {
 		return streamEventsMetric;
+	}
+
+	public String streamReceivedEventsAgeMetric() {
+		return streamReceivedEventsAgeMetric;
 	}
 
 	public String supportEmail() {

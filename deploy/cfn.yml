@@ -474,6 +474,8 @@ Resources:
           Value: !Sub "${EnvironmentName}-server-stream-discovery-delay"
         - Name: "STREAM_EVENTS_METRIC"
           Value: !Sub "${EnvironmentName}-server-stream-events"
+        - Name: "STREAM_RECEIVED_EVENTS_AGE_METRIC"
+          Value: !Sub "${EnvironmentName}-server-stream-received-events-age"
         - Name: "SUPPORT_EMAIL"
           Value: !Ref SupportEmail
         - Name: "UNPROCESSED_COMPANIES_LIMIT"

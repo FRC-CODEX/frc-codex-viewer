@@ -42,6 +42,7 @@ public interface FilingIndexProperties {
 	String sqsResultsQueueName();
 	String streamDiscoveryDelayMetric();
 	String streamEventsMetric();
+	String streamReceivedEventsAgeMetric();
 	String supportEmail();
 	int dbHealthCheckTimeout();
 

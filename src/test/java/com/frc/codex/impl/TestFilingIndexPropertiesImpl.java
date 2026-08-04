@@ -174,6 +174,10 @@ public class TestFilingIndexPropertiesImpl implements FilingIndexProperties {
 		return null;
 	}
 
+	public String streamReceivedEventsAgeMetric() {
+		return null;
+	}
+
 	public String supportEmail() {
 		return null;
 	}
