@@ -1,5 +1,6 @@
 package com.frc.codex.database.impl;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -120,6 +121,12 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 	}
 
 	public void updateFilingStatus(UUID filingId, String status) { }
+
+	public Instant getLastStreamEventReceivedDate() {
+		return null;
+	}
+
+	public void updateLastStreamEventReceivedDate(Instant receivedDate) { }
 
 	public Set<String> getCompaniesCompanyNumbers() {
 		return Set.of();
