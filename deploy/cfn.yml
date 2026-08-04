@@ -93,6 +93,10 @@ Parameters:
     Type: Number
     Default: 0
     Description: "Minutes a deployment waits after the new server task is healthy before it completes. Pinned so an AWS-side default cannot change deployment duration or the rollback window."
+  ServerHealthCheckGracePeriod:
+    Type: Number
+    Default: 0
+    Description: "Seconds a starting server task is exempt from load balancer health checks. Raise this for a deploy that is expected to run a database migration, to a value exceeding the migration's duration, then return it to 0."
   ServerStreamDiscoveryDelayAlarmThreshold:
     Type: Number
     Default: 28800
@@ -661,6 +665,7 @@ Resources:
         Type: ECS
       DesiredCount: 1
       EnableECSManagedTags: true
+      HealthCheckGracePeriodSeconds: !Ref ServerHealthCheckGracePeriod
       LoadBalancers:
         - ContainerName: server
           ContainerPort: 8080
