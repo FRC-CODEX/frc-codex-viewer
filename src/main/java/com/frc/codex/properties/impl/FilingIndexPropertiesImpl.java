@@ -57,6 +57,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private static final String SQS_JOBS_QUEUE_NAME = "SQS_JOBS_QUEUE_NAME";
 	private static final String SQS_RESULTS_QUEUE_NAME = "SQS_RESULTS_QUEUE_NAME";
 	private static final String STREAM_DISCOVERY_DELAY_METRIC = "STREAM_DISCOVERY_DELAY_METRIC";
+	private static final String STREAM_EVENTS_HEAD_AGE_METRIC = "STREAM_EVENTS_HEAD_AGE_METRIC";
 	private static final String STREAM_EVENTS_METRIC = "STREAM_EVENTS_METRIC";
 	private static final String STREAM_RECEIVED_EVENTS_AGE_METRIC = "STREAM_RECEIVED_EVENTS_AGE_METRIC";
 	private static final String SUPPORT_EMAIL = "SUPPORT_EMAIL";
@@ -99,6 +100,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 	private final String sqsJobsQueueName;
 	private final String sqsResultsQueueName;
 	private final String streamDiscoveryDelayMetric;
+	private final String streamEventsHeadAgeMetric;
 	private final String streamEventsMetric;
 	private final String streamReceivedEventsAgeMetric;
 	private final String supportEmail;
@@ -162,6 +164,7 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 		sqsResultsQueueName = requireNonNull(getEnv(SQS_RESULTS_QUEUE_NAME));
 
 		streamDiscoveryDelayMetric = requireNonNull(getEnv(STREAM_DISCOVERY_DELAY_METRIC, null));
+		streamEventsHeadAgeMetric = requireNonNull(getEnv(STREAM_EVENTS_HEAD_AGE_METRIC, null));
 		streamEventsMetric = requireNonNull(getEnv(STREAM_EVENTS_METRIC, null));
 		streamReceivedEventsAgeMetric = requireNonNull(getEnv(STREAM_RECEIVED_EVENTS_AGE_METRIC, null));
 
@@ -384,6 +387,10 @@ public class FilingIndexPropertiesImpl implements FilingIndexProperties {
 
 	public String streamDiscoveryDelayMetric() {
 		return streamDiscoveryDelayMetric;
+	}
+
+	public String streamEventsHeadAgeMetric() {
+		return streamEventsHeadAgeMetric;
 	}
 
 	public String streamEventsMetric() {

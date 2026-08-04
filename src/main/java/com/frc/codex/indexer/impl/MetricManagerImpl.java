@@ -15,6 +15,7 @@ import com.frc.codex.clients.companieshouse.CompaniesHouseClient;
 import com.frc.codex.clients.companieshouse.CompaniesHouseStreamListener;
 import com.frc.codex.database.DatabaseManager;
 import com.frc.codex.indexer.MetricManager;
+import com.frc.codex.model.StreamEventsStats;
 import com.frc.codex.properties.FilingIndexProperties;
 
 import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
@@ -53,7 +54,7 @@ public class MetricManagerImpl implements MetricManager {
 		List<MetricDatum> metricData = new ArrayList<>();
 		collect(metricData, "stream discovery delay", this::addStreamDiscoveryDelayMetricDatum);
 		collect(metricData, "stream received events age", this::addStreamReceivedEventsAgeMetricDatum);
-		collect(metricData, "stream events", this::addStreamEventsMetricDatum);
+		collect(metricData, "stream events", this::addStreamEventsMetricData);
 		if (metricData.isEmpty()) {
 			LOG.debug("No metrics to upload, skipping metric upload.");
 			return;
@@ -100,12 +101,20 @@ public class MetricManagerImpl implements MetricManager {
 		addMetricDatum(metricData, this.properties.streamDiscoveryDelayMetric(), streamDiscoveryDelay, StandardUnit.SECONDS);
 	}
 
-	private void addStreamEventsMetricDatum(List<MetricDatum> metricData) {
-		if (this.properties.streamEventsMetric() == null) {
-			LOG.debug("No stream events metric name configured, skipping that metric.");
+	private void addStreamEventsMetricData(List<MetricDatum> metricData) {
+		String eventsMetric = this.properties.streamEventsMetric();
+		String headAgeMetric = this.properties.streamEventsHeadAgeMetric();
+		if (eventsMetric == null && headAgeMetric == null) {
+			LOG.debug("No stream events metric names configured, skipping those metrics.");
 			return;
 		}
-		addMetricDatum(metricData, this.properties.streamEventsMetric(), this.databaseManager.getStreamEventsCount(), StandardUnit.COUNT);
+		StreamEventsStats stats = this.databaseManager.getStreamEventsStats();
+		if (eventsMetric != null) {
+			addMetricDatum(metricData, eventsMetric, stats.eventsCount(), StandardUnit.COUNT);
+		}
+		if (headAgeMetric != null) {
+			addMetricDatum(metricData, headAgeMetric, stats.headAgeSeconds(), StandardUnit.SECONDS);
+		}
 	}
 
 	private void addStreamReceivedEventsAgeMetricDatum(List<MetricDatum> metricData) {

@@ -15,6 +15,7 @@ import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.model.StreamEvent;
+import com.frc.codex.model.StreamEventsStats;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 
 public interface DatabaseManager {
@@ -41,7 +42,7 @@ public interface DatabaseManager {
 	long getRegistryCount(RegistryCode registryCode);
 	void resetCompany(String companyNumber);
 	List<StreamEvent> getStreamEvents(long limit);
-	long getStreamEventsCount();
+	StreamEventsStats getStreamEventsStats();
 	void resetFiling(UUID filingId);
 	List<Filing> searchFilings(SearchFilingsRequest searchFilingsRequest);
 	void updateFilingStatus(UUID filingId, String status);

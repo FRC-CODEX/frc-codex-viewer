@@ -39,6 +39,7 @@ import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.RegistryCode;
 import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.model.StreamEvent;
+import com.frc.codex.model.StreamEventsStats;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 import com.frc.codex.properties.FilingIndexProperties;
 import com.google.common.collect.ImmutableList;
@@ -489,13 +490,20 @@ public class DatabaseManagerImpl implements AutoCloseable, DatabaseManager {
 		}
 	}
 
-	public long getStreamEventsCount() {
+	public StreamEventsStats getStreamEventsStats() {
 		try (Connection connection = getInitializedConnection(true)) {
-			String sql = "SELECT COUNT(*) FROM stream_events;";
+			String sql = """
+					SELECT
+						COUNT(*),
+						COALESCE(EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - MIN(created_date)))::BIGINT, 0)
+					FROM stream_events;""";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
-			return resultSet.getLong(1);
+			return new StreamEventsStats(
+					resultSet.getLong(1),
+					resultSet.getLong(2)
+			);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

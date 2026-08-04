@@ -34,6 +34,7 @@ services:
       SQS_JOBS_QUEUE_NAME: "frc_codex_jobs"
       SQS_RESULTS_QUEUE_NAME: "frc_codex_results"
       STREAM_EVENTS_METRIC: "stream-events"
+      STREAM_EVENTS_HEAD_AGE_METRIC: "stream-events-head-age"
       STREAM_RECEIVED_EVENTS_AGE_METRIC: "stream-received-events-age"
       STREAM_DISCOVERY_DELAY_METRIC: "stream-discovery-delay"
       SUPPORT_EMAIL: "dev@localhost"

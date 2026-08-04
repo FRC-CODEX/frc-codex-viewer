@@ -19,6 +19,7 @@ import com.frc.codex.model.FilingStatus;
 import com.frc.codex.model.NewFilingRequest;
 import com.frc.codex.model.SearchFilingsRequest;
 import com.frc.codex.model.StreamEvent;
+import com.frc.codex.model.StreamEventsStats;
 import com.frc.codex.model.companieshouse.CompaniesHouseArchive;
 
 @Component
@@ -110,8 +111,8 @@ public class TestDatabaseManagerImpl implements DatabaseManager {
 		return null;
 	}
 
-	public long getStreamEventsCount() {
-		return 0;
+	public StreamEventsStats getStreamEventsStats() {
+		return new StreamEventsStats(0, 0);
 	}
 
 	public void resetFiling(UUID filingId) { }
