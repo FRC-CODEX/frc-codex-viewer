@@ -89,6 +89,10 @@ Parameters:
     Type: Number
     Default: 0
     Description: "The number of server errors to exceed before triggering alarm."
+  ServerDeploymentBakeTime:
+    Type: Number
+    Default: 0
+    Description: "Minutes a deployment waits after the new server task is healthy before it completes. Pinned so an AWS-side default cannot change deployment duration or the rollback window."
   ServerStreamDiscoveryDelayAlarmThreshold:
     Type: Number
     Default: 28800
@@ -647,6 +651,7 @@ Resources:
       ServiceName: server
       Cluster: !Ref ECSCluster
       DeploymentConfiguration:
+        BakeTimeInMinutes: !Ref ServerDeploymentBakeTime
         MaximumPercent: 200
         MinimumHealthyPercent: 100
         DeploymentCircuitBreaker:
