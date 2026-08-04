@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,8 @@ public class MetricManagerImpl implements MetricManager {
 			return;
 		}
 		List<MetricDatum> metricData = new ArrayList<>();
-		addStreamDiscoveryDelayMetricDatum(metricData);
-		addStreamEventsMetricDatum(metricData);
+		collect(metricData, "stream discovery delay", this::addStreamDiscoveryDelayMetricDatum);
+		collect(metricData, "stream events", this::addStreamEventsMetricDatum);
 		if (metricData.isEmpty()) {
 			LOG.debug("No metrics to upload, skipping metric upload.");
 			return;
@@ -51,6 +52,14 @@ public class MetricManagerImpl implements MetricManager {
 		PutMetricDataResponse response = this.client.putMetricData(request);
 		if (!response.sdkHttpResponse().isSuccessful()) {
 			LOG.error("Failed to upload metric: {} {}", response.sdkHttpResponse().statusCode(), response.sdkHttpResponse().statusText());
+		}
+	}
+
+	private void collect(List<MetricDatum> metricData, String description, Consumer<List<MetricDatum>> collector) {
+		try {
+			collector.accept(metricData);
+		} catch (RuntimeException e) {
+			LOG.warn("Failed to collect the {} metric.", description, e);
 		}
 	}
 
