@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.14.2026.08.02.12
+FROM public.ecr.aws/lambda/python:3.14.2026.08.09.12
 
 RUN mkdir /tmp/_HTTP_CACHE && chown nobody:nobody /tmp/_HTTP_CACHE
 COPY --chown=nobody _HTTP_CACHE /tmp/_HTTP_CACHE
