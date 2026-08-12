@@ -9,6 +9,8 @@ updates:
       docker-dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - python
         update-types:
           - minor
           - patch
