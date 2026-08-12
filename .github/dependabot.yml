@@ -77,6 +77,3 @@ updates:
       python-dependencies:
         patterns:
           - "*"
-        update-types:
-          - minor
-          - patch
