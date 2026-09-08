@@ -29,7 +29,7 @@ pytest processor_tests
 
 To run code style tests:
 ```bash
-flake8 .
+ruff check
 ```
 
 To run typing tests:
