@@ -109,3 +109,25 @@ This will require a user to first navigate to `/admin/login/{ADMIN_KEY}` to gain
 
 > [!WARNING]
 > This authentication is not secure and should not be used in a production environment.
+
+### Linting with Ruff
+
+frc-codex-viewer uses [Ruff][ruff] to lint the codebase. Make sure you've installed the
+development dependencies (`pip install -r requirements-dev.txt`), then run the
+following from the root of the repository to check your changes:
+
+```
+ruff check
+```
+
+Many issues that Ruff detects can be fixed automatically. To have Ruff apply
+those fixes for you, run:
+
+```
+ruff check --fix
+```
+
+Review any automatic fixes before committing, since not every change is safe
+to apply blindly.
+
+[ruff]: https://docs.astral.sh/ruff/
