@@ -11,7 +11,7 @@ from processor.base.cache_manager import CacheManager
 from processor.processor_options import ProcessorOptions
 
 
-CACHE_IGNORE_SUFFIXES = {'.lock', '.zip', '.tmp', '.DS_Store'}
+CACHE_IGNORE_SUFFIXES = {".lock", ".zip", ".tmp", ".DS_Store"}
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class MainCacheManager(CacheManager):
     def __init__(self, processor_options: ProcessorOptions, cache_zip_path: Path):
         self._cache_zip_path = cache_zip_path
         self._s3_client = boto3.client(
-            's3',
+            "s3",
             region_name=processor_options.s3_region_name,
         )
         self._bucket_name = processor_options.s3_http_cache_bucket_name
@@ -31,7 +31,7 @@ class MainCacheManager(CacheManager):
         head = self._s3_client.head_object(
             Bucket=self._bucket_name, Key=self._cache_zip_path.name
         )
-        return head['LastModified']
+        return head["LastModified"]
 
     def download(self, backup_path: Path | None = None) -> bool:
         """
@@ -65,15 +65,15 @@ class MainCacheManager(CacheManager):
             )
             self._cache_last_modified = cache_last_modified
         except ClientError as e:
-            if e.response['Error']['Code'] != '404':
+            if e.response["Error"]["Code"] != "404":
                 return False
             logger.info("HTTP cache not found on S3")
             if not backup_path or not backup_path.exists():
                 return False
             logger.info("Copying backup cache from %s", backup_path)
             shutil.copyfile(backup_path, self._cache_zip_path)
-        with zipfile.ZipFile(self._cache_zip_path, 'r') as zip_file:
-            logger.debug("Initial HTTP cache: \n%s", '\n'.join(zip_file.namelist()))
+        with zipfile.ZipFile(self._cache_zip_path, "r") as zip_file:
+            logger.debug("Initial HTTP cache: \n%s", "\n".join(zip_file.namelist()))
         return True
 
     def extract(self, cache_directories: list[Path]) -> None:
@@ -83,7 +83,7 @@ class MainCacheManager(CacheManager):
         :return:
         """
         for cache_directory in cache_directories:
-            with zipfile.ZipFile(self._cache_zip_path, 'r') as zip_file:
+            with zipfile.ZipFile(self._cache_zip_path, "r") as zip_file:
                 zip_file.extractall(cache_directory)
 
     def sync(self, cache_directories: list[Path]) -> set[str]:
@@ -95,11 +95,11 @@ class MainCacheManager(CacheManager):
         paths_added = set()
         namelist = set()
         if self._cache_zip_path.exists():
-            with zipfile.ZipFile(self._cache_zip_path, 'r') as zip_file:
+            with zipfile.ZipFile(self._cache_zip_path, "r") as zip_file:
                 namelist.update(zip_file.namelist())
-        with zipfile.ZipFile(self._cache_zip_path, 'a') as zip_file:
+        with zipfile.ZipFile(self._cache_zip_path, "a") as zip_file:
             for cache_directory in cache_directories:
-                for cache_path in cache_directory.glob('**/*'):
+                for cache_path in cache_directory.glob("**/*"):
                     if any(cache_path.suffix.endswith(suffix) for suffix in CACHE_IGNORE_SUFFIXES):
                         continue
                     if cache_path.is_dir():
@@ -119,9 +119,9 @@ class MainCacheManager(CacheManager):
         :return:
         """
         s3_path = self._cache_zip_path.name
-        with zipfile.ZipFile(self._cache_zip_path, 'r') as zip_file:
+        with zipfile.ZipFile(self._cache_zip_path, "r") as zip_file:
             new_namelist = zip_file.namelist()
-        logger.debug("Files in updated cache: %s", '\n'.join(new_namelist))
+        logger.debug("Files in updated cache: %s", "\n".join(new_namelist))
         logger.info(
             "Added files to cache. Uploading HTTP cache: (%s) to %s: %s",
             self._cache_zip_path, self._bucket_name, s3_path

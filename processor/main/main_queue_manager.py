@@ -27,8 +27,8 @@ class MainQueueManager(QueueManager):
     def complete_job(self, job_message: JobMessage) -> None:
         self._jobs_queue.delete_messages(
             Entries=[{
-                'Id': job_message.message_id,
-                'ReceiptHandle': job_message.receipt_handle
+                "Id": job_message.message_id,
+                "ReceiptHandle": job_message.receipt_handle
             }]
         )
 
@@ -53,12 +53,12 @@ class MainQueueManager(QueueManager):
                     attributes_names, message.message_id, message.body
                 )
                 yield JobMessage(
-                    download_url=message.message_attributes['DownloadUrl']['StringValue'],
+                    download_url=message.message_attributes["DownloadUrl"]["StringValue"],
                     filing_id=message.body,
-                    format=message.message_attributes['Format']['StringValue'],
+                    format=message.message_attributes["Format"]["StringValue"],
                     message_id=message.message_id,
                     receipt_handle=message.receipt_handle,
-                    registry_code=message.message_attributes['RegistryCode']['StringValue'],
+                    registry_code=message.message_attributes["RegistryCode"]["StringValue"],
                 )
                 logger.info("Processing completed for message: (%s) %s", message.message_id, message.body)
         except ClientError as error:
@@ -67,27 +67,27 @@ class MainQueueManager(QueueManager):
 
     def publish_result(self, worker_result: WorkerResult) -> None:
         message_body = {
-            'ArelleVersion': self._arelle_version,
-            'ArelleViewerVersion': self._ixbrl_viewer_version,
-            'ServiceVersion': self._service_version,
-            'CompanyName': worker_result.company_name,
-            'CompanyNumber': worker_result.company_number,
-            'Error': worker_result.error,
-            'FilingId': worker_result.filing_id,
-            'Logs': worker_result.logs,
-            'Success': worker_result.success,
+            "ArelleVersion": self._arelle_version,
+            "ArelleViewerVersion": self._ixbrl_viewer_version,
+            "ServiceVersion": self._service_version,
+            "CompanyName": worker_result.company_name,
+            "CompanyNumber": worker_result.company_number,
+            "Error": worker_result.error,
+            "FilingId": worker_result.filing_id,
+            "Logs": worker_result.logs,
+            "Success": worker_result.success,
             "Filename": worker_result.filename,
-            'ViewerEntrypoint': worker_result.viewer_entrypoint,
-            'OimDirectory': worker_result.oim_directory,
+            "ViewerEntrypoint": worker_result.viewer_entrypoint,
+            "OimDirectory": worker_result.oim_directory,
             # Analytics
-            'DownloadTime': worker_result.download_time,
-            'TotalProcessingTime': worker_result.total_processing_time,
-            'TotalUploadedBytes': worker_result.total_uploaded_bytes,
-            'UploadTime': worker_result.upload_time,
-            'WorkerTime': worker_result.worker_time,
+            "DownloadTime": worker_result.download_time,
+            "TotalProcessingTime": worker_result.total_processing_time,
+            "TotalUploadedBytes": worker_result.total_uploaded_bytes,
+            "UploadTime": worker_result.upload_time,
+            "WorkerTime": worker_result.worker_time,
         }
         if worker_result.document_date is not None:
-            message_body['DocumentDate'] = worker_result.document_date.strftime('%Y-%m-%d')
+            message_body["DocumentDate"] = worker_result.document_date.strftime("%Y-%m-%d")
         self._results_queue.send_message(
             MessageBody=json.dumps(message_body),
         )
@@ -96,7 +96,7 @@ class MainQueueManager(QueueManager):
     def _get_queue(queue_name: str, processor_options: ProcessorOptions):
         session = boto3.session.Session()
         client = session.resource(
-            'sqs',
+            "sqs",
             region_name=processor_options.sqs_region_name,
         )
         queue = client.get_queue_by_name(QueueName=queue_name)

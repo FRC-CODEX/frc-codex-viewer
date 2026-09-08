@@ -11,7 +11,7 @@ from processor.processor_options import ProcessorOptions
 
 logger = logging.getLogger(__name__)
 
-LOCAL_PACKAGES_DIRECTORY = Path('/tmp/local_packages')
+LOCAL_PACKAGES_DIRECTORY = Path("/tmp/local_packages")
 
 
 class MainDownloadManager(DownloadManager):
@@ -41,11 +41,11 @@ class MainDownloadManager(DownloadManager):
     def _download_packages(self) -> list[Path]:
         LOCAL_PACKAGES_DIRECTORY.mkdir(parents=True, exist_ok=True)
         bucket_name = self._processor_options.s3_taxonomy_packages_bucket_name
-        s3_client = boto3.client('s3')
+        s3_client = boto3.client("s3")
         response = s3_client.list_objects_v2(Bucket=bucket_name)
         downloaded_paths = []
-        for item in response.get('Contents', []):
-            key = item['Key']
+        for item in response.get("Contents", []):
+            key = item["Key"]
             file_path = LOCAL_PACKAGES_DIRECTORY / key
             if file_path.exists():
                 continue
@@ -56,7 +56,7 @@ class MainDownloadManager(DownloadManager):
 
     def _get_ch_download_path(self, directory, response):
         # Get original filename from: 'inline;filename="..."'
-        content_disposition = response.headers['Content-Disposition']
+        content_disposition = response.headers["Content-Disposition"]
         filename_match = re.search(r'filename="(.+)"', content_disposition)
         assert filename_match, f"Could not find filename in Content-Disposition: {content_disposition}"
         filename = filename_match.group(1)
@@ -72,13 +72,13 @@ class MainDownloadManager(DownloadManager):
         return response
 
     def _save(self, response: requests.Response, path: Path) -> None:
-        with open(path, 'wb') as file:
+        with open(path, "wb") as file:
             file.write(response.content)
 
     def download_filing(self, filing_id: str, registry_code: str, download_url: str, directory: Path) -> Path:
-        if registry_code == 'CH':
+        if registry_code == "CH":
             return self._download_ch_filing(filing_id, download_url, directory)
-        if registry_code == 'FCA':
+        if registry_code == "FCA":
             return self._download_fca_filing(filing_id, download_url, directory)
         raise ValueError(f"Unknown registry code: {registry_code}")
 
@@ -90,6 +90,6 @@ class MainDownloadManager(DownloadManager):
                 logger.info("Downloaded (%s) package(s): (%s)", len(downloaded_paths), downloaded_paths)
             except Exception as e:
                 logger.error("Failed to download taxonomy packages.", e)
-            self._package_urls = sorted(str(file) for file in LOCAL_PACKAGES_DIRECTORY.glob('*.zip'))
+            self._package_urls = sorted(str(file) for file in LOCAL_PACKAGES_DIRECTORY.glob("*.zip"))
             logger.info("Discovered (%s) local package(s): (%s)", len(self._package_urls), self._package_urls)
         return self._package_urls

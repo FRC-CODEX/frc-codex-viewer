@@ -14,32 +14,32 @@ from support.actions.reset_stream_events_action import ResetStreamEventsAction
 logger = logging.getLogger(__name__)
 
 ACTIONS_MAP = {
-    'delete_filing': DeleteFilingAction,
-    'get_ch_indexing_stats': GetChIndexingStatsAction,
-    'get_ch_streaming_stats': GetChStreamingStatsAction,
-    'get_filing_details': GetFilingDetailsAction,
-    'list_errors': ListErrorsAction,
-    'reset_archives': ResetArchivesAction,
-    'reset_companies': ResetCompaniesAction,
-    'reset_filings': ResetFilingsAction,
-    'reset_stream_events': ResetStreamEventsAction
+    "delete_filing": DeleteFilingAction,
+    "get_ch_indexing_stats": GetChIndexingStatsAction,
+    "get_ch_streaming_stats": GetChStreamingStatsAction,
+    "get_filing_details": GetFilingDetailsAction,
+    "list_errors": ListErrorsAction,
+    "reset_archives": ResetArchivesAction,
+    "reset_companies": ResetCompaniesAction,
+    "reset_filings": ResetFilingsAction,
+    "reset_stream_events": ResetStreamEventsAction
 }
 
 
 def _error(message):
     return {
-        'success': False,
-        'message': message,
+        "success": False,
+        "message": message,
     }
 
 
 def lambda_handler(event, _):
     body = event
-    if 'body' in body:
-        body = json.loads(body['body'])
-    if 'action' not in body:
+    if "body" in body:
+        body = json.loads(body["body"])
+    if "action" not in body:
         return _error("No action specified in request.")
-    action_name = body['action']
+    action_name = body["action"]
     if action_name not in ACTIONS_MAP:
         return _error(f"Unknown action: '{action_name}'. Available actions: {sorted(ACTIONS_MAP.keys())}")
     action = ACTIONS_MAP[action_name]()
@@ -51,7 +51,7 @@ def lambda_handler(event, _):
         return _error(message)
     logger.info("Successfully completed support action '%s': %s", action_name, message)
     return {
-        'success': True,
-        'message': message,
-        'results': results
+        "success": True,
+        "message": message,
+        "results": results
     }

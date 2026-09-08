@@ -10,14 +10,14 @@ from processor.base.job_message import JobMessage
 @dataclass
 class WorkerResult:
     filing_id: str
-    error: str = ''
-    logs: str = ''
+    error: str = ""
+    logs: str = ""
     company_name: str | None = None
     company_number: str | None = None
     document_date: datetime.datetime | None = None
-    viewer_entrypoint: str = ''
+    viewer_entrypoint: str = ""
     oim_directory: str | None = None
-    filename: str = ''
+    filename: str = ""
     success: bool = False
 
     # Analytics

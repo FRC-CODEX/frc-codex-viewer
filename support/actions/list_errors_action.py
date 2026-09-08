@@ -13,7 +13,7 @@ class ListErrorsAction(BaseAction):
         errors = defaultdict(list)
         for row in rows:
             filing_id, error = row
-            errors[error or '[None]'].append(filing_id)
+            errors[error or "[None]"].append(filing_id)
         count = sum(len(e) for e in errors.values())
         message = f"Found {count} failed filing(s)."
         return True, message, errors

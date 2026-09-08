@@ -68,17 +68,17 @@ class Processor:
     def _process_filing(self, job_message: JobMessage) -> WorkerResult:
         processing_start_ts = time.perf_counter()
         try:
-            with tempfile.TemporaryDirectory(prefix='ixbrl-viewer_') as temp_dir:
+            with tempfile.TemporaryDirectory(prefix="ixbrl-viewer_") as temp_dir:
                 temp_dir_path = Path(temp_dir)
                 # Download filing
                 download_start_ts = time.perf_counter()
                 taxonomy_package_urls = self._download_manager.get_package_urls()
                 filing_download_result = self._download_filing(job_message, temp_dir_path)
 
-                logger.info('Using downloaded filing: %s', filing_download_result.download_path)
+                logger.info("Using downloaded filing: %s", filing_download_result.download_path)
                 # Prepare directory for viewer files
 
-                viewer_directory = temp_dir_path / 'viewer'
+                viewer_directory = temp_dir_path / "viewer"
                 viewer_directory.mkdir()
 
                 worker_start_ts = time.perf_counter()
@@ -114,7 +114,7 @@ class Processor:
             )
             return WorkerResult(
                 job_message.filing_id,
-                error='An unexpected error occurred while processing the filing: ' + str(e)
+                error="An unexpected error occurred while processing the filing: " + str(e)
             )
 
     def run_from_queue(self, queue_manager: QueueManager) -> list[WorkerResult]:
@@ -125,14 +125,14 @@ class Processor:
 
     def run_from_lambda(self, event, context) -> WorkerResult:
         body = event
-        if 'body' in body:
-            body = json.loads(body['body'])
+        if "body" in body:
+            body = json.loads(body["body"])
 
         job_message = JobMessage(
-            filing_id=body['filing_id'],
-            format=body['format'],
-            download_url=body['filing_url'],
-            registry_code=body['registry_code'],
+            filing_id=body["filing_id"],
+            format=body["format"],
+            download_url=body["filing_url"],
+            registry_code=body["registry_code"],
             receipt_handle=context.aws_request_id,
             message_id=context.aws_request_id,
         )
