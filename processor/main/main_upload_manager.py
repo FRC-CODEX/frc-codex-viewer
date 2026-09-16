@@ -13,14 +13,14 @@ class MainUploadManager(UploadManager):
     def __init__(self, processor_options):
         self._processor_options = processor_options
         self._s3_client = boto3.client(
-            's3',
+            "s3",
             region_name=processor_options.s3_region_name,
         )
 
     def upload_files(self, filing_id: str, viewer_directory: Path) -> int:
         bucket_name = self._processor_options.s3_results_bucket_name
         total_bytes = 0
-        for viewer_file in viewer_directory.rglob('*'):
+        for viewer_file in viewer_directory.rglob("*"):
             if not viewer_file.is_file():
                 continue
             total_bytes += viewer_file.stat().st_size

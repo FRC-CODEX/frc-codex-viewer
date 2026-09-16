@@ -13,10 +13,10 @@ from processor.processor import Processor
 from processor.processor_options import ProcessorOptions
 
 
-BACKUP_CACHE_ZIP_PATH = Path('/tmp/_HTTP_CACHE.zip')
+BACKUP_CACHE_ZIP_PATH = Path("/tmp/_HTTP_CACHE.zip")
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='{%(processName)s} [%(levelname)s] %(message)s')
+logging.basicConfig(level=logging.INFO, format="{%(processName)s} [%(levelname)s] %(message)s")
 
 
 def _get_processor_count(processor_options: ProcessorOptions) -> int:
@@ -58,8 +58,8 @@ def _run_processor(processor_options: ProcessorOptions, http_cache_directory: Pa
 def main():
     processor_options = ProcessorOptions()
 
-    with tempfile.TemporaryDirectory(prefix='shared-cache_') as global_dir:
-        cache_zip_path = Path(global_dir) / '_HTTP_CACHE.zip'
+    with tempfile.TemporaryDirectory(prefix="shared-cache_") as global_dir:
+        cache_zip_path = Path(global_dir) / "_HTTP_CACHE.zip"
         cache_manager = MainCacheManager(processor_options, cache_zip_path)
         cache_zip_downloaded = cache_manager.download(backup_path=BACKUP_CACHE_ZIP_PATH)
 
@@ -67,7 +67,7 @@ def main():
 
         temp_directories = {}
         for i in range(processor_count):
-            temp_directories[i] = tempfile.TemporaryDirectory(prefix=f'processor-cache-{i}_')
+            temp_directories[i] = tempfile.TemporaryDirectory(prefix=f"processor-cache-{i}_")
 
         temp_directory_paths = [Path(temp_dir.name) for temp_dir in temp_directories.values()]
         if cache_zip_downloaded:
@@ -84,7 +84,7 @@ def main():
                         target=_run_processor,
                         args=(processor_options, cache_directory, next_sync_ts)
                     )
-                    process.name = f'Processor-{i}'
+                    process.name = f"Processor-{i}"
                     process.start()
                     processes.append(process)
                 for process in processes:
@@ -97,11 +97,11 @@ def main():
                     elif cache_manager.download():
                         cache_manager.extract(temp_directory_paths)
                 except Exception:
-                    logger.exception('An unexpected error occurred while syncing the cache.')
+                    logger.exception("An unexpected error occurred while syncing the cache.")
         finally:
             for temp_dir in temp_directories.values():
                 temp_dir.cleanup()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

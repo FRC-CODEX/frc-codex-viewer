@@ -7,9 +7,9 @@ from support.actions.base_action import BaseAction
 class GetFilingDetailsAction(BaseAction):
 
     def _run(self, options, cursor) -> tuple[bool, str, Any]:
-        if 'filing_id' not in options:
+        if "filing_id" not in options:
             return False, "Must provide 'filing_id'.", 0
-        filing_id = options['filing_id']
+        filing_id = options["filing_id"]
         try:
             uuid.UUID(filing_id)
         except ValueError:

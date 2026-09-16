@@ -13,11 +13,11 @@ class BaseAction(ABC):
 
     def run(self, options) -> tuple[bool, str, list | int | dict]:
         connection = psycopg2.connect(
-            dbname=os.getenv('DB_DATABASE'),
-            user=os.getenv('DB_USERNAME'),
-            password=os.getenv('DB_PASSWORD'),
-            host=os.getenv('DB_HOST'),
-            port=os.getenv('DB_PORT')
+            dbname=os.getenv("DB_DATABASE"),
+            user=os.getenv("DB_USERNAME"),
+            password=os.getenv("DB_PASSWORD"),
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT")
         )
         try:
             cursor = connection.cursor()

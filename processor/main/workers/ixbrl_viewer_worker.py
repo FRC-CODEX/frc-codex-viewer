@@ -14,10 +14,10 @@ from processor.base.job_message import JobMessage
 from processor.base.worker import Worker, WorkerResult
 from processor.processor_options import ProcessorOptions
 
-VIEWER_HTML_FILENAME = 'ixbrlviewer.html'
-OIM_DIRECTORY = 'OIM'
-XBRL_CSV_DIRECTORY = 'CSV'
-XBRL_JSON_DIRECTORY = 'JSON'
+VIEWER_HTML_FILENAME = "ixbrlviewer.html"
+OIM_DIRECTORY = "OIM"
+XBRL_CSV_DIRECTORY = "CSV"
+XBRL_JSON_DIRECTORY = "JSON"
 
 
 logger = logging.getLogger(__name__)
@@ -51,26 +51,26 @@ class IxbrlViewerWorker(Worker):
         if not result.success:
             return WorkerResult(
                 job_message.filing_id,
-                error='Viewer generation failed within Arelle. Check the logs for details.',
+                error="Viewer generation failed within Arelle. Check the logs for details.",
                 logs=result.logs
             )
         viewer_path = viewer_directory / VIEWER_HTML_FILENAME
         if not viewer_path.exists():
             return WorkerResult(
                 job_message.filing_id,
-                error='Arelle reported success but viewer was not found. Check the logs for details.',
+                error="Arelle reported success but viewer was not found. Check the logs for details.",
                 logs=result.logs
             )
         oim_path = viewer_directory / OIM_DIRECTORY
         xbrl_csv_files = []
         xbrl_json_files = []
         for f in oim_path.iterdir():
-            if f.name.endswith(('.csv', 'metadata.json')):
+            if f.name.endswith((".csv", "metadata.json")):
                 xbrl_csv_files.append(f)
-            elif f.name.endswith('.json'):
+            elif f.name.endswith(".json"):
                 xbrl_json_files.append(f)
             else:
-                logger.error(f'Unexpected file found in OIM directory: {f.name}')
+                logger.error(f"Unexpected file found in OIM directory: {f.name}")
         if len(xbrl_csv_files) > 0:
             xbrl_csv_path = oim_path / XBRL_CSV_DIRECTORY
             xbrl_csv_path.mkdir(exist_ok=True)
@@ -106,11 +106,11 @@ class IxbrlViewerWorker(Worker):
 
     def _get_plugins(self, job_message: JobMessage) -> list[str]:
         plugins = []
-        if job_message.registry_code != 'CH':
-            plugins.append('inlineXbrlDocumentSet')
+        if job_message.registry_code != "CH":
+            plugins.append("inlineXbrlDocumentSet")
         plugins.extend([
-            'ixbrl-viewer',
-            'saveLoadableOIM',
+            "ixbrl-viewer",
+            "saveLoadableOIM",
         ])
         return plugins
 
@@ -126,20 +126,20 @@ class IxbrlViewerWorker(Worker):
             disablePersistentConfig=True,
             entrypointFile=str(target_path),
             internetLogDownloads=True,
-            internetRecheck='never',
+            internetRecheck="never",
             keepOpen=True,
             logFormat="[%(messageCode)s] %(message)s - %(file)s",
-            logFile='logToBuffer',
+            logFile="logToBuffer",
             packages=packages,
             pluginOptions={
-                'saveLoadableOIMDirectory': str(viewer_directory / OIM_DIRECTORY),
-                'saveViewerDest': str(viewer_directory),
-                'useStubViewer': True,
-                'viewerNoCopyScript': True,
-                'viewerURL': '/ixbrlviewer.js',
-                'viewer_feature_mandatory_facts': 'companies-house'
+                "saveLoadableOIMDirectory": str(viewer_directory / OIM_DIRECTORY),
+                "saveViewerDest": str(viewer_directory),
+                "useStubViewer": True,
+                "viewerNoCopyScript": True,
+                "viewerURL": "/ixbrlviewer.js",
+                "viewer_feature_mandatory_facts": "companies-house"
             },
-            plugins='|'.join(self._get_plugins(job_message))
+            plugins="|".join(self._get_plugins(job_message))
         )
         with Session() as session:
             success = session.run(runtime_options)
@@ -149,10 +149,10 @@ class IxbrlViewerWorker(Worker):
             model_xbrls = session.get_models()
             if model_xbrls:
                 model_xbrl = model_xbrls[0]
-                company_name = self._get_value_by_local_name(model_xbrl, 'EntityCurrentLegalOrRegisteredName')
-                company_number = self._get_value_by_local_name(model_xbrl, 'UKCompaniesHouseRegisteredNumber')
-                document_date = cast(datetime.datetime, self._get_value_by_local_name(model_xbrl, 'BalanceSheetDate'))
-            logs = session.get_logs('text', clear_logs=True)
+                company_name = self._get_value_by_local_name(model_xbrl, "EntityCurrentLegalOrRegisteredName")
+                company_number = self._get_value_by_local_name(model_xbrl, "UKCompaniesHouseRegisteredNumber")
+                document_date = cast(datetime.datetime, self._get_value_by_local_name(model_xbrl, "BalanceSheetDate"))
+            logs = session.get_logs("text", clear_logs=True)
             return IxbrlViewerResult(
                 success=success,
                 logs=logs,
