@@ -3,10 +3,12 @@ import logging
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import cast
 
 from arelle.api.Session import Session  # type: ignore
 from arelle.packages.report.DetectReportPackage import isReportPackageExtension  # type: ignore
+from arelle.packages.report.ReportPackageConst import REPORT_PACKAGE_FILE  # type: ignore
 from arelle.RuntimeOptions import RuntimeOptions  # type: ignore
 
 from processor.base.filing_download_result import FilingDownloadResult
@@ -46,7 +48,7 @@ class IxbrlViewerWorker(Worker):
     ) -> WorkerResult:
         assert filing_download.download_path is not None
         result = self._generate_viewer(
-            job_message, filing_download.download_path, viewer_directory, taxonomy_package_urls
+            job_message, filing_download, viewer_directory, taxonomy_package_urls
         )
         if not result.success:
             return WorkerResult(
@@ -104,9 +106,21 @@ class IxbrlViewerWorker(Worker):
             return next(iter(facts)).xValue
         return None
 
-    def _get_plugins(self, job_message: JobMessage) -> list[str]:
+    def _is_report_package(self, filing_download: FilingDownloadResult) -> bool:
+        report_package_file_parts = PurePosixPath(REPORT_PACKAGE_FILE).parts
+        for name in filing_download.namelist:
+            parts = PurePosixPath(name).parts
+            if len(parts) == len(report_package_file_parts) + 1 and parts[1:] == report_package_file_parts:
+                return True
+        return False
+
+    def _get_plugins(
+            self,
+            job_message: JobMessage,
+            filing_download: FilingDownloadResult,
+    ) -> list[str]:
         plugins = []
-        if job_message.registry_code != "CH":
+        if job_message.registry_code != "CH" or self._is_report_package(filing_download):
             plugins.append("inlineXbrlDocumentSet")
         plugins.extend([
             "ixbrl-viewer",
@@ -117,14 +131,14 @@ class IxbrlViewerWorker(Worker):
     def _generate_viewer(
             self,
             job_message: JobMessage,
-            target_path: Path,
+            filing_download: FilingDownloadResult,
             viewer_directory: Path,
             packages: list[str]
     ) -> IxbrlViewerResult:
         runtime_options = RuntimeOptions(
             cacheDirectory=str(self._http_cache_directory),
             disablePersistentConfig=True,
-            entrypointFile=str(target_path),
+            entrypointFile=str(filing_download.download_path),
             internetLogDownloads=True,
             internetRecheck="never",
             keepOpen=True,
@@ -139,7 +153,7 @@ class IxbrlViewerWorker(Worker):
                 "viewerURL": "/ixbrlviewer.js",
                 "viewer_feature_mandatory_facts": "companies-house"
             },
-            plugins="|".join(self._get_plugins(job_message))
+            plugins="|".join(self._get_plugins(job_message, filing_download))
         )
         with Session() as session:
             success = session.run(runtime_options)
