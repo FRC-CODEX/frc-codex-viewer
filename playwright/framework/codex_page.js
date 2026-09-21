@@ -10,7 +10,7 @@ export class CodexPage {
     page;
     search;
 
-    #artifactDirectory = './puppeteer/artifacts';
+    #artifactDirectory = './playwright/artifacts';
     #cleanedTestName = expect.getState()
         .currentTestName
         .replaceAll(/[^a-zA-Z0-9-]/g, '_');

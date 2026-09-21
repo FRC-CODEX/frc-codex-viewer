@@ -18,6 +18,6 @@
   },
   "scripts": {
     "i18n": "i18next -c i18next-parser.config.js",
-    "test": "npx jest --rootDir ./puppeteer"
+    "test": "npx jest --rootDir ./playwright"
   }
 }

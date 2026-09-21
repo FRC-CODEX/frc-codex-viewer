@@ -94,6 +94,5 @@ jobs:
           name: puppeteer-artifacts
           if-no-files-found: error
           path: |
-            ./puppeteer/artifacts
             ./playwright/artifacts
             ./dev/logs
