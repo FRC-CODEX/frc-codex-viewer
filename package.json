@@ -18,6 +18,7 @@
   },
   "scripts": {
     "i18n": "i18next -c i18next-parser.config.js",
-    "test": "npx jest --rootDir ./playwright"
+    "test": "playwright test",
+    "test:install": "playwright install --with-deps chromium"
   }
 }

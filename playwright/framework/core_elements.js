@@ -1,12 +1,7 @@
-import { getElementByXpath, getProperty, getTextContent, waitFor } from './utils.js';
-import { CodexPage} from './codex_page.js';
-import { expect } from '@jest/globals';
-import { ElementHandle } from 'puppeteer-core';
-
+import { expect } from '@playwright/test';
 
 export class Element {
     #codexPage;
-    #xpathSelector;
     #name;
 
     /**
@@ -17,7 +12,7 @@ export class Element {
      */
     constructor(codexPage, xpathSelector, name) {
         this.#codexPage = codexPage;
-        this.#xpathSelector = xpathSelector;
+        this.locator = codexPage.page.locator('xpath=' + xpathSelector);
         this.#name = name;
     }
 
@@ -39,17 +34,7 @@ export class Element {
      */
     async assertVisible() {
         this.codexPage.log(`Asserting ${this.name} is visible`);
-        const element = await this.getElement();
-        const isVisible = await element.isVisible();
-        expect(isVisible).toBe(true);
-    }
-
-    /**
-     * Gets the element by its XPath selector.
-     * @returns {Promise<ElementHandle<Element>>}
-     */
-    async getElement() {
-        return await getElementByXpath(this.#codexPage.page, this.#xpathSelector);
+        await expect(this.locator).toBeVisible();
     }
 
     /**
@@ -58,93 +43,51 @@ export class Element {
      */
     async scrollToElement() {
         this.codexPage.log(`Scrolling to ${this.name}`);
-        let element = await this.getElement();
-        await element.scrollIntoView();
+        await this.locator.scrollIntoViewIfNeeded();
     }
 }
 
-
 export class Button extends Element {
-
-    /**
-     * Creates an instance of Button.
-     * @param {CodexPage} codexPage - The page viewer object.
-     * @param {string} xpathSelector - The XPath selector for the element.
-     * @param {string} name - Name to represent this element in logging.
-     */
-    constructor(codexPage, xpathSelector, name) {
-        super(codexPage, xpathSelector, name);
-    }
-
     /**
      * Clicks the button element.
      * @returns {Promise<void>}
      */
     async select() {
         this.codexPage.log(`Select ${this.name}`);
-        const button = await this.getElement();
-        await button.click();
+        await this.locator.click();
     }
 }
 
 export class Dropdown extends Element {
-
     /**
-     * Creates an instance of Dropdown.
-     * @param {CodexPage} codexPage - The page viewer object.
-     * @param {string} xpathSelector - The XPath selector for the element.
-     * @param {string} name - Name to represent this element in logging
-     */
-    constructor(codexPage, xpathSelector, name) {
-        super(codexPage, xpathSelector, name);
-    }
-
-    /** Asserts the value of the dropdown element matches the expected value.
+     * Asserts the value of the dropdown element matches the expected value.
      * @param {string} expected - The expected value of the dropdown element.
      * @returns {Promise<void>}
      */
     async assertValue(expected) {
-        this.codexPage.log(`Getting value of ${this.name}`);
-        await waitFor(async () => {
-            const dropdown = await this.getElement();
-            const value = await getProperty(dropdown, 'value');
-            expect(value).toEqual(expected);
-        });
+        this.codexPage.log(`Asserting value of ${this.name} equals "${expected}"`);
+        await expect(this.locator).toHaveValue(expected);
     }
 
     /**
-     * Selects an option from the dropdown element.
-     * @param {string} option - The option to select from the dropdown element.
+     * Selects an option from the dropdown element by its value.
+     * @param {string} option - The value of the option to select.
      * @returns {Promise<void>}
      */
     async selectOption(option) {
-        this.codexPage.log(`Selecting ${option} from ${this.name}`);
-        const dropdown = await this.getElement();
-        await dropdown.select(option);
-
+        this.codexPage.log(`Selecting "${option}" from ${this.name}`);
+        await this.locator.selectOption({ value: option });
     }
 }
 
 export class Link extends Element {
-
-    /**
-     * Creates an instance of Link.
-     * @param {CodexPage} codexPage - The page viewer object.
-     * @param {string} xpathSelector - The XPath selector for the element.
-     * @param {string} name - Name to represent this element in logging.
-     */
-    constructor(codexPage, xpathSelector, name) {
-        super(codexPage, xpathSelector, name);
-    }
-
     /**
      * Clicks the link element.
      * @returns {Promise<void>}
      */
     async select() {
         this.codexPage.log(`Select ${this.name}`);
-        const link = await this.getElement();
-        await link.click();
+        await this.locator.click();
     }
 
     /**
@@ -152,72 +95,40 @@ export class Link extends Element {
      * @returns {Promise<string>}
      */
     async getText() {
-        const link = await this.getElement();
-        return await getTextContent(link);
+        return await this.locator.textContent();
     }
 }
 
 export class Text extends Element {
-
-    /**
-     * Creates an instance of Text.
-     * @param {CodexPage} codexPage - The page viewer object.
-     * @param {string} xpathSelector - The XPath selector for the element.
-     * @param {string} name - Name to represent this element in logging.
-     */
-    constructor(codexPage, xpathSelector, name) {
-        super(codexPage, xpathSelector, name);
-    }
-
     /**
      * Gets the text content of the element.
      * @returns {Promise<string>}
      */
     async getText() {
         this.codexPage.log(`Getting text content of ${this.name}`);
-        const elem = await this.getElement();
-        return await getTextContent(elem);
+        return await this.locator.textContent();
     }
 }
 
 export class TextInput extends Element {
-
-    /**
-     * Creates an instance of TextInput.
-     * @param {CodexPage} codexPage - The page viewer object.
-     * @param {string} xpathSelector - The XPath selector for the element.
-     * @param {string} name - Name to represent this element in logging.
-     */
-    constructor(codexPage, xpathSelector, name) {
-        super(codexPage, xpathSelector, name);
-    }
-
     /**
      * Asserts the content of the text input element matches the expected text.
-     * Will wait for the content to match if needed
+     * Will wait for the content to match if needed.
      * @param {string} expectedText
      * @returns {Promise<void>}
      */
     async assertContent(expectedText) {
         this.codexPage.log(`Asserting content of ${this.name} equals "${expectedText}"`);
-        await waitFor(async () => {
-            const input = await this.getElement();
-            const property = await input.getProperty('value');
-            const value = await property.jsonValue();
-            expect(value).toEqual(expectedText);
-        });
+        await expect(this.locator).toHaveValue(expectedText);
     }
 
     /**
-     * Clears the text input element by selecting all text via triple click, then
-     * presses the Backspace key.
+     * Clears the text input element.
      * @returns {Promise<void>}
      */
     async clear() {
         this.codexPage.log(`Clearing ${this.name}`);
-        const input = await this.getElement();
-        await input.click({ clickCount: 3 });
-        await input.press('Backspace');
+        await this.locator.clear();
     }
 
     /**
@@ -229,9 +140,8 @@ export class TextInput extends Element {
      */
     async enterText(text, pressEnter = false) {
         this.codexPage.log(`Entering "${text}" into ${this.name}`);
-        const input = await this.getElement();
-        await input.type(text);
+        await this.locator.pressSequentially(text);
         await this.assertContent(text);
-        if (pressEnter){ await input.press('Enter'); }
+        if (pressEnter) { await this.locator.press('Enter'); }
     }
 }

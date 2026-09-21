@@ -1,5 +1,5 @@
-import { Button, Dropdown, Link, Text, TextInput } from "../core_elements";
-import { getElementsByXpath, getProperty, waitFor } from "../utils";
+import { Button, Dropdown, Link, Text, TextInput } from '../core_elements.js';
+import { expect } from '@playwright/test';
 
 /**
  * Represents the search options on the UK iXBRL Viewer page.
@@ -25,12 +25,7 @@ export class Search {
      */
     async assertResultCount(expectedCount) {
         this.#codexPage.log(`Asserting result count is ${expectedCount}`);
-        await waitFor(async () => {
-            const cards = await this._getResultCards()
-            if (cards.length !== expectedCount) {
-                throw new Error(`Expected ${expectedCount} results, but found ${cards.length}`);
-            }
-        });
+        await expect(this.#resultCards).toHaveCount(expectedCount);
     }
 
     /**
@@ -43,9 +38,10 @@ export class Search {
      * @returns {Promise<SearchResultCard>} - The search result card that matches the specified criteria.
      */
     async getSearchResult(name = '', crn = '', docDate = '', filingDate = '') {
+        this.#codexPage.log(`Finding search result with name: ${name}, crn: ${crn}, doc date: ${docDate}, filing date: ${filingDate}`);
         let result = null;
-        await waitFor(async () => {
-            const cards = await this._getResultCards();
+        await expect(async () => {
+            const cards = await this.#getResultCards();
             for (const card of cards) {
                 const [cardName, cardCrn,
                     cardDocDate, cardFilingDate] = await Promise.all([
@@ -66,24 +62,21 @@ export class Search {
             if (result === null) {
                 throw new Error(`No search result found with name: ${name}, doc date: ${docDate}, filing date: ${filingDate}`);
             }
-        }, 30000, 500);
+        }).toPass({ timeout: 30000, intervals: [500] });
         return result;
+    }
+
+    get #resultCards() {
+        return this.#codexPage.page.locator('xpath=//*[contains(@id,"result")]');
     }
 
     /**
      * Gets the search result cards from the search results.
      * @returns {Promise<SearchResultCard[]>} - for each search result.
-     * @private
      */
-    async _getResultCards() {
-        const elements = await getElementsByXpath(this.#codexPage.page, '//*[contains(@id,"result")]');
-        if (elements.length === 0) {
-            return elements;
-        }
-        return await Promise.all(elements.map(async (e) => {
-            const elementId = await getProperty(e, 'id');
-            return new SearchResultCard(this.#codexPage, `//*[@id="${elementId}"]`);
-        }));
+    async #getResultCards() {
+        const elementIds = await this.#resultCards.evaluateAll(elements => elements.map(e => e.id));
+        return elementIds.map(id => new SearchResultCard(this.#codexPage, `//*[@id="${id}"]`));
     }
 }
 

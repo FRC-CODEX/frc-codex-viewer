@@ -1,19 +1,7 @@
-import { CodexPage } from '../framework/codex_page';
-import { afterEach, beforeEach, describe, test } from "@jest/globals";
+import { test } from '../framework/fixtures.js';
 
-describe('Filing Index', () => {
-    let codexPage;
-
-    beforeEach(async () => {
-        codexPage = new CodexPage();
-        await codexPage.buildPage();
-    })
-
-    afterEach(async () => {
-        await codexPage.tearDown();
-    })
-
-    test('Advanced Search - Date Filed', async () => {
+test.describe('Filing Index', () => {
+    test('Advanced Search - Date Filed', async ({ codexPage }) => {
         await codexPage.navigateToFilingIndex();
         await codexPage.search.companyNameAndNumberInput.enterText('TUSCANY PIZZA LTD');
 
