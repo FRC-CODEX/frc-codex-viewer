@@ -56,6 +56,17 @@ export class Button extends Element {
         this.codexPage.log(`Select ${this.name}`);
         await this.locator.click();
     }
+
+    /**
+     * Clicks the button element and waits for the new tab it opens.
+     * @returns {Promise<import('@playwright/test').Page>} - The newly opened tab.
+     */
+    async selectPopup() {
+        this.codexPage.log(`Select ${this.name} and wait for a new tab`);
+        const popupPromise = this.codexPage.page.waitForEvent('popup');
+        await this.locator.click();
+        return await popupPromise;
+    }
 }
 
 export class Dropdown extends Element {

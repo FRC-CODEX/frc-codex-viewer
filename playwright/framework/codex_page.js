@@ -29,6 +29,19 @@ export class CodexPage {
     }
 
     /**
+     * Asserts the viewer has finished generating in the tab opened by Open Viewer.
+     * The tab shows a loading page until processing completes, so this waits for
+     * the generated viewer title rather than the loading title.
+     * @param {import('@playwright/test').Page} viewerTab - The tab opened by Open Viewer.
+     * @returns {Promise<void>}
+     */
+    async assertViewerLoaded(viewerTab) {
+        this.log('Asserting the viewer loaded in the new tab');
+        await expect(viewerTab).toHaveURL(/\/view\//);
+        await expect(viewerTab).toHaveTitle('iXBRL Viewer', { timeout: 90000 });
+    }
+
+    /**
      * Navigates the browser to the UK iXBRL Viewer page.
      * @returns {Promise<void>}
      */

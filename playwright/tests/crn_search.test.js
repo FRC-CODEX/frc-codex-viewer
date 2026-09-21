@@ -20,8 +20,8 @@ test.describe('Filing Index', () => {
 
         // Open Viewer
         await result.viewerButton.scrollToElement();
-        await result.viewerButton.select();
-        await codexPage.assertPageNavigation('iXBRL Viewer');
+        const viewerTab = await result.viewerButton.selectPopup();
+        await codexPage.assertViewerLoaded(viewerTab);
 
         // Go back to Filing Index
         await codexPage.page.goBack({waitUntil: 'domcontentloaded'});
