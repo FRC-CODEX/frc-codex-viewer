@@ -6,15 +6,8 @@
     "ixbrl-viewer": "^1.5.7"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.6",
-    "@babel/preset-env": "^8.0.6",
-    "@jest/globals": "^30.5.2",
     "@playwright/test": "1.63.0",
-    "babel-jest": "^30.5.2",
-    "i18next-parser": "^9.4.0",
-    "jest": "^30.5.2",
-    "puppeteer-core": "^24.43.1",
-    "puppeteer-screen-recorder": "3.0.3"
+    "i18next-parser": "^9.4.0"
   },
   "scripts": {
     "i18n": "i18next -c i18next-parser.config.js",
