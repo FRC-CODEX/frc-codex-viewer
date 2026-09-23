@@ -3,15 +3,15 @@
     "govuk-frontend": "^6.5.1",
     "i18next": "^26.4.2",
     "i18next-browser-languagedetector": "^8.2.1",
-    "ixbrl-viewer": "^1.5.4"
+    "ixbrl-viewer": "^1.5.7"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.5",
-    "@babel/preset-env": "^8.0.5",
-    "@jest/globals": "^30.5.1",
-    "babel-jest": "^30.5.1",
+    "@babel/core": "^8.0.6",
+    "@babel/preset-env": "^8.0.6",
+    "@jest/globals": "^30.5.2",
+    "babel-jest": "^30.5.2",
     "i18next-parser": "^9.4.0",
-    "jest": "^30.5.1",
+    "jest": "^30.5.2",
     "puppeteer-core": "^24.43.1",
     "puppeteer-screen-recorder": "3.0.3"
   },
