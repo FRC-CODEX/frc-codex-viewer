@@ -75,6 +75,9 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: npm ci
+      - name: Install test browsers
+        shell: bash
+        run: npm run test:install --if-present
       - name: "Create Dummy Secrets File"
         shell: bash
         run: touch ./frc-codex-server.secrets # Seeded DB does not require secrets
@@ -92,4 +95,5 @@ jobs:
           if-no-files-found: error
           path: |
             ./puppeteer/artifacts
+            ./playwright/artifacts
             ./dev/logs
