@@ -47,7 +47,7 @@ export class CodexPage {
      */
     async navigateToFilingIndex() {
         this.log('Navigating to /');
-        await this.page.goto('/', { waitUntil: 'networkidle' });
+        await this.page.goto('/');
         await expect(this.page.locator('xpath=//*[contains(@class, "loading")]')).toHaveCount(0);
     }
 }
