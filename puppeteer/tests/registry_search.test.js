@@ -42,7 +42,7 @@ describe('Filing Index', () => {
 
         // Change Registry to Any, then search again
         await codexPage.search.registry.scrollToElement();
-        await codexPage.search.registry.selectOption('ANY');
+        await codexPage.search.registry.selectOption('');
         await codexPage.search.registry.assertValue('');
         await codexPage.search.submitButton.select();
 
