@@ -57,14 +57,6 @@ updates:
         update-types:
           - minor
           - patch
-    ignore:
-      - dependency-name: puppeteer-core
-        versions:
-          - ">=25"
-      - dependency-name: puppeteer-screen-recorder
-        versions:
-          - "3.0.5"
-          - "3.0.6"
   - package-ecosystem: pip
     cooldown:
       default-days: 3

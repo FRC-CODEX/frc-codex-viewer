@@ -1,19 +1,7 @@
-import { CodexPage } from '../framework/codex_page';
-import { afterEach, beforeEach, describe, test } from "@jest/globals";
+import { test } from '../framework/fixtures.js';
 
-describe('Filing Index', () => {
-    let codexPage;
-
-    beforeEach(async () => {
-        codexPage = new CodexPage();
-        await codexPage.buildPage();
-    })
-
-    afterEach(async () => {
-        await codexPage.tearDown();
-    })
-
-    test('Registry Search', async () => {
+test.describe('Filing Index', () => {
+    test('Registry Search', async ({ codexPage }) => {
         await codexPage.navigateToFilingIndex();
 
         // Search for company by name and registry
@@ -42,7 +30,7 @@ describe('Filing Index', () => {
 
         // Change Registry to Any, then search again
         await codexPage.search.registry.scrollToElement();
-        await codexPage.search.registry.selectOption('ANY');
+        await codexPage.search.registry.selectOption('');
         await codexPage.search.registry.assertValue('');
         await codexPage.search.submitButton.select();
 

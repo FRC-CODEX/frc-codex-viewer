@@ -1,19 +1,7 @@
-import { CodexPage } from '../framework/codex_page';
-import { afterEach, beforeEach, describe, test } from "@jest/globals";
+import { test } from '../framework/fixtures.js';
 
-describe('Filing Index', () => {
-    let codexPage;
-
-    beforeEach(async () => {
-        codexPage = new CodexPage();
-        await codexPage.buildPage();
-    })
-
-    afterEach(async () => {
-        await codexPage.tearDown();
-    })
-
-    test('CRN Search', async () => {
+test.describe('Filing Index', () => {
+    test('CRN Search', async ({ codexPage }) => {
 
         //'Navigate to Filing Index
         await codexPage.navigateToFilingIndex();
@@ -32,8 +20,8 @@ describe('Filing Index', () => {
 
         // Open Viewer
         await result.viewerButton.scrollToElement();
-        await result.viewerButton.select();
-        await codexPage.assertPageNavigation('iXBRL Viewer');
+        const viewerTab = await result.viewerButton.selectPopup();
+        await codexPage.assertViewerLoaded(viewerTab);
 
         // Go back to Filing Index
         await codexPage.page.goBack({waitUntil: 'domcontentloaded'});

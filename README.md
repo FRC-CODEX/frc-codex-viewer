@@ -89,12 +89,24 @@ You can attach to the composed Docker container within IntelliJ for debugging:
 6. Run the "Remote JVM Debug" configuration in IntelliJ.
 7. A successful attachment will show "Connected to the target VM (...)" or similar.
 
-## Running Puppeteer Tests
+## Running Playwright Tests
 All commands should be run from repository root.
 1. Install npm. Instructions can be found here: <https://www.npmjs.com/get-npm>
-2. Install the dependencies for puppeteer by running: `npm install`.
-3. Start the docker containers by running: `SEEDED=true ./dev/env-setup.sh`
-4. Run the tests by running: `npm run test`.
+2. Install the npm dependencies by running: `npm ci`.
+3. Install Chromium and its system dependencies by running: `npm run test:install`.
+4. Start the docker containers by running: `SEEDED=true ./dev/env-setup.sh`
+5. Run the tests by running: `npm run test`.
+
+Tests run headlessly by default. To watch the browser, run `npm run test -- --headed`.
+To debug interactively, run `npm run test -- --ui`.
+
+Reports and test results are written to `playwright/artifacts/`. Failed tests retain
+screenshots, videos, and traces. Browser logs are attached to each test in the report.
+Open the report with:
+
+```shell
+npx playwright show-report playwright/artifacts/report
+```
 
 ## Features
 

@@ -1,5 +1,14 @@
-import { Button, Dropdown, Link, Text, TextInput } from "../core_elements";
-import { getElementsByXpath, getProperty, waitFor } from "../utils";
+import { Button, Dropdown, Link, Text, TextInput } from '../core_elements.js';
+import { expect } from '@playwright/test';
+
+const RESULT_CARDS_XPATH = '//*[contains(@id,"result")]';
+
+const CARD_FIELD_XPATHS = {
+    companyName: '//h3',
+    crn: `//dt[span[contains(text(), 'CRN')]]/following-sibling::dd`,
+    documentDate: `//dt[span[contains(text(), 'Document Date:')]]/following-sibling::dd`,
+    filingDate: `//dt[span[contains(text(), 'Date Filed:')]]/following-sibling::dd`,
+};
 
 /**
  * Represents the search options on the UK iXBRL Viewer page.
@@ -25,12 +34,7 @@ export class Search {
      */
     async assertResultCount(expectedCount) {
         this.#codexPage.log(`Asserting result count is ${expectedCount}`);
-        await waitFor(async () => {
-            const cards = await this._getResultCards()
-            if (cards.length !== expectedCount) {
-                throw new Error(`Expected ${expectedCount} results, but found ${cards.length}`);
-            }
-        });
+        await expect(this.#resultCards).toHaveCount(expectedCount);
     }
 
     /**
@@ -43,47 +47,23 @@ export class Search {
      * @returns {Promise<SearchResultCard>} - The search result card that matches the specified criteria.
      */
     async getSearchResult(name = '', crn = '', docDate = '', filingDate = '') {
-        let result = null;
-        await waitFor(async () => {
-            const cards = await this._getResultCards();
-            for (const card of cards) {
-                const [cardName, cardCrn,
-                    cardDocDate, cardFilingDate] = await Promise.all([
-                    await card.companyName.getText(),
-                    await card.crn.getText(),
-                    await card.documentDate.getText(),
-                    await card.filingDate.getText()
-                ]);
-
-                if ((name === '' || cardName === name) &&
-                    (crn === '' || cardCrn === crn) &&
-                    (docDate === '' || cardDocDate === docDate) &&
-                    (filingDate === '' || cardFilingDate === filingDate)) {
-                    result = card;
-                    break;
-                }
-            }
-            if (result === null) {
-                throw new Error(`No search result found with name: ${name}, doc date: ${docDate}, filing date: ${filingDate}`);
-            }
-        }, 30000, 500);
-        return result;
+        this.#codexPage.log(`Finding search result with name: ${name}, crn: ${crn}, doc date: ${docDate}, filing date: ${filingDate}`);
+        const conditions = [
+            [CARD_FIELD_XPATHS.companyName, name],
+            [CARD_FIELD_XPATHS.crn, crn],
+            [CARD_FIELD_XPATHS.documentDate, docDate],
+            [CARD_FIELD_XPATHS.filingDate, filingDate],
+        ]
+            .filter(([, value]) => value !== '')
+            .map(([fieldXpath, value]) => `.${fieldXpath}[.="${value}"]`);
+        const predicate = conditions.length > 0 ? `[${conditions.join(' and ')}]` : '';
+        const cardXpath = `(${RESULT_CARDS_XPATH}${predicate})[1]`;
+        await expect(this.#codexPage.page.locator('xpath=' + cardXpath)).toBeVisible({ timeout: 30000 });
+        return new SearchResultCard(this.#codexPage, cardXpath);
     }
 
-    /**
-     * Gets the search result cards from the search results.
-     * @returns {Promise<SearchResultCard[]>} - for each search result.
-     * @private
-     */
-    async _getResultCards() {
-        const elements = await getElementsByXpath(this.#codexPage.page, '//*[contains(@id,"result")]');
-        if (elements.length === 0) {
-            return elements;
-        }
-        return await Promise.all(elements.map(async (e) => {
-            const elementId = await getProperty(e, 'id');
-            return new SearchResultCard(this.#codexPage, `//*[@id="${elementId}"]`);
-        }));
+    get #resultCards() {
+        return this.#codexPage.page.locator('xpath=' + RESULT_CARDS_XPATH);
     }
 }
 
@@ -130,14 +110,13 @@ export class SearchResultCard {
         this.#codexPage = codexPage;
         this.#locator = locator;
         this.companyName = new Link(this.#codexPage,
-            `${this.#locator}//h3`, 'Company Name');
+            `${this.#locator}${CARD_FIELD_XPATHS.companyName}`, 'Company Name');
         this.crn = new Link(this.#codexPage,
-            `${this.#locator}//dt[span[contains(text(), 'CRN')]]/following-sibling::dd`, 'CRN');
+            `${this.#locator}${CARD_FIELD_XPATHS.crn}`, 'CRN');
         this.registry = new Link(this.#codexPage,
             `${this.#locator}//dt[contains(text(), 'Registry:')]/following-sibling::dd`, 'Registry');
         this.documentDate = new Text(this.#codexPage,
-            `${this.#locator}//dt[span[contains(text(), 'Document Date:')]]/following-sibling::dd`,
-            'Document Date');
+            `${this.#locator}${CARD_FIELD_XPATHS.documentDate}`, 'Document Date');
         this.filingButton = new Button(this.#codexPage,
             `${this.#locator}//a[normalize-space(text())="Filing"]`,
             'Filing Button');
@@ -148,8 +127,7 @@ export class SearchResultCard {
             `${this.#locator}//a[normalize-space(text())="xBRL-JSON"]`,
             'xBRL-JSON Button');
         this.filingDate = new Text(this.#codexPage,
-            `${this.#locator}//dt[span[contains(text(), 'Date Filed:')]]/following-sibling::dd`,
-            'Date Filed');
+            `${this.#locator}${CARD_FIELD_XPATHS.filingDate}`, 'Date Filed');
         this.viewerButton = new Button(this.#codexPage,
             `${this.#locator}//a[normalize-space(text())="Open Viewer"]`, 'Viewer Button');
     }

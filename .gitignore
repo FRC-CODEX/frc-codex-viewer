@@ -2,7 +2,7 @@ _HTTP_CACHE
 .gradle
 .idea
 **/__pycache__
-/puppeteer/artifacts/
+/playwright/artifacts/
 bin
 build
 dev/compose-local.yml
