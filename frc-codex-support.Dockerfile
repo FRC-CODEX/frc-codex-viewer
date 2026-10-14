@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.14.2026.10.05.00
+FROM public.ecr.aws/lambda/python:3.14.2026.10.14.19
 
 # Copy requirements.txt
 COPY requirements-support.txt ${LAMBDA_TASK_ROOT}
