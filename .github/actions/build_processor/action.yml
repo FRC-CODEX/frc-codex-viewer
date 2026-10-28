@@ -4,7 +4,7 @@ description: Builds the frc-codex-processor Docker image
 runs:
   using: composite
   steps:
-    - uses: actions/setup-python@v7.0.0
+    - uses: actions/setup-python@v7.1.0
       with:
         cache: 'pip'
         check-latest: true
