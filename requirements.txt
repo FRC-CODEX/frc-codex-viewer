@@ -1,5 +1,5 @@
 arelle-release==2.47.4
-boto3==1.43.123
-filelock==4.2.6
+boto3==1.43.126
+filelock==4.2.9
 ixbrl-viewer==1.5.9
 requests==2.34.2
