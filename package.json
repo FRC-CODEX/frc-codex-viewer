@@ -1,12 +1,12 @@
 {
   "dependencies": {
     "govuk-frontend": "^6.6.0",
-    "i18next": "^27.0.1",
+    "i18next": "^27.1.2",
     "i18next-browser-languagedetector": "^8.3.0",
-    "ixbrl-viewer": "^1.5.9"
+    "ixbrl-viewer": "^1.5.10"
   },
   "devDependencies": {
-    "@playwright/test": "1.65.0",
+    "@playwright/test": "1.65.1",
     "i18next-parser": "^9.4.0"
   },
   "scripts": {
