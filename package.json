@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "govuk-frontend": "^6.6.0",
-    "i18next": "^27.1.2",
-    "i18next-browser-languagedetector": "^8.3.0",
-    "ixbrl-viewer": "^1.5.10"
+    "i18next": "^27.2.4",
+    "i18next-browser-languagedetector": "^8.3.1",
+    "ixbrl-viewer": "^1.5.11"
   },
   "devDependencies": {
     "@playwright/test": "1.65.1",
