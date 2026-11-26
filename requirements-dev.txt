@@ -1,9 +1,9 @@
-ruff==0.17.5
+ruff==0.17.6
 mypy==2.4.1
 pytest==9.2.0
-types-boto3[s3,sqs]==1.44.3
+types-boto3[s3,sqs]==1.44.9
 types-lxml==2026.2.16
-types-psycopg2==2.9.21.20261030
+types-psycopg2==2.9.21.20261122
 types-requests==2.33.0.20261030
 
 -r requirements.txt
